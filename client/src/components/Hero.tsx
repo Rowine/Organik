@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Banner from '../assets/images/hero/hero.jpg'
 
 const Hero = () => {
+  useEffect(() => {}, [])
   return (
     <div className='w-full py-10 relative'>
       <h1 className='absolute top-36 sm:top-1/2 sm:px-10 font-bold text-slate-700'>
