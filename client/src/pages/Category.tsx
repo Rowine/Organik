@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 const Category = () => {
   const location = useLocation()
 
-  return <div>{location.pathname}</div>
+  return <div className='min-h-screen'>{location.pathname}</div>
 }
 
 export default Category

@@ -33,14 +33,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
     return path === location.pathname
   }
   return (
-    <Disclosure as='nav' className='bg-emerald-800'>
+    <Disclosure as='nav' className='bg-green-600'>
       {({ open }) => (
         <>
           <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
             <div className='relative flex h-16 items-center justify-between'>
               <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
                 {/* Mobile menu button*/}
-                <Disclosure.Button className='inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-emerald-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
+                <Disclosure.Button className='inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
                   <span className='sr-only'>Open main menu</span>
                   {open ? (
                     <XMarkIcon className='block h-6 w-6' aria-hidden='true' />
@@ -53,14 +53,16 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 <div className='flex flex-shrink-0 items-center'>
                   <img
                     className='block h-8 w-auto lg:hidden'
-                    src='./icon.svg'
+                    src='./logo.svg'
                     alt='Company Logo'
                   />
-                  <img
-                    className='hidden h-8 w-auto lg:block'
-                    src='./icon.svg'
-                    alt='Company Logo'
-                  />
+                  <Link to={'/'}>
+                    <img
+                      className='hidden h-8 w-auto lg:block'
+                      src='./logo.svg'
+                      alt='Company Logo'
+                    />
+                  </Link>
                 </div>
                 <div className='hidden sm:ml-6 sm:block'>
                   <div className='flex space-x-4'>
@@ -70,8 +72,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                         to={item.path}
                         className={classNames(
                           checkActive(item.path)
-                            ? 'bg-emerald-900 text-white'
-                            : 'text-gray-300 hover:bg-emerald-700 hover:text-white',
+                            ? 'bg-green-900 text-white'
+                            : 'text-gray-200 hover:bg-green-700 hover:text-white',
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
                         aria-current={
@@ -87,14 +89,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
               <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
                 <button
                   type='button'
-                  className='rounded-full bg-emerald-800 p-1 text-gray-400 hover:text-white'
+                  className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
                 >
                   <span className='sr-only'>View Likes</span>
                   <HeartIcon className='h-6 w-6' aria-hidden='true' />
                 </button>
                 <button
                   type='button'
-                  className='rounded-full bg-emerald-800 p-1 text-gray-400 hover:text-white'
+                  className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
                 >
                   <span className='sr-only'>View Cart</span>
                   <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
@@ -103,7 +105,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 {/* Profile dropdown */}
                 <Menu as='div' className='relative ml-3'>
                   <div>
-                    <Menu.Button className='flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
+                    <Menu.Button className='flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-800'>
                       <span className='sr-only'>Open user menu</span>
                       <img
                         className='h-8 w-8 rounded-full'
@@ -164,8 +166,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   to={item.path}
                   className={classNames(
                     checkActive(item.path)
-                      ? 'bg-emerald-900 text-white'
-                      : 'text-gray-300 hover:bg-emerald-700 hover:text-white',
+                      ? 'bg-green-900 text-white'
+                      : 'text-gray-300 hover:bg-green-700 hover:text-white',
                     'block px-3 py-2 rounded-md text-base font-medium'
                   )}
                   aria-current={checkActive(item.path) ? 'page' : undefined}
