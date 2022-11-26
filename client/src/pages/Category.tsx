@@ -1,5 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import Rating from '../components/Rating'
 // @ts-ignore
 import products from '../products.js'
 
@@ -48,9 +49,12 @@ const Category = () => {
                         {product.name}
                       </a>
                     </h3>
-                    <p className='mt-1 text-sm text-gray-500'>
-                      {product.rating} from {product.numReviews} reviews
-                    </p>
+                    <div>
+                      <Rating
+                        value={product.rating}
+                        text={`${product.numReviews} reviews`}
+                      />
+                    </div>
                   </div>
                   <p className='text-sm font-medium text-gray-900'>
                     ₱{product.price}
