@@ -7,6 +7,7 @@ import {
   ShoppingCartIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
+import Logo from '../assets/logo.svg'
 
 interface INavigationProps {
   category: Array<{
@@ -53,13 +54,13 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 <div className='flex flex-shrink-0 items-center'>
                   <img
                     className='block h-8 w-auto lg:hidden'
-                    src='./logo.svg'
+                    src={Logo}
                     alt='Company Logo'
                   />
                   <Link to={'/'}>
                     <img
                       className='hidden h-8 w-auto lg:block'
-                      src='./logo.svg'
+                      src={Logo}
                       alt='Company Logo'
                     />
                   </Link>

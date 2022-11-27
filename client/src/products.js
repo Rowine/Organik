@@ -2,19 +2,17 @@ const products = [
   {
     id: 1,
     name: 'Banana',
-    href: '#',
     imageSrc: '/src/assets/products/banana.png',
     imageAlt: 'Banana',
     price: 183.0,
     category: 'fruits',
-    countInStock: 10,
+    countInStock: 0,
     rating: 4.5,
     numReviews: 12,
   },
   {
     id: 2,
     name: 'Avocado',
-    href: '#',
     imageSrc: '/src/assets/products/avocado.png',
     imageAlt: 'Avocado',
     price: 378.0,
@@ -26,7 +24,6 @@ const products = [
   {
     id: 3,
     name: 'Beef Tenderloin',
-    href: '#',
     imageSrc: '/src/assets/products/beef-tenderloin.jpg',
     imageAlt: 'Beef Tenderloin',
     price: 500.0,
@@ -38,7 +35,6 @@ const products = [
   {
     id: 4,
     name: 'Pork Loin',
-    href: '#',
     imageSrc: '/src/assets/products/pork-loin.jpg',
     imageAlt: 'Pork Loin',
     price: 480.0,
@@ -50,7 +46,6 @@ const products = [
   {
     id: 5,
     name: 'Carrots',
-    href: '#',
     imageSrc: '/src/assets/products/carrots.png',
     imageAlt: 'Carrots',
     price: 289.0,
@@ -62,7 +57,6 @@ const products = [
   {
     id: 6,
     name: 'Eggplant',
-    href: '#',
     imageSrc: '/src/assets/products/eggplant.png',
     imageAlt: 'Eggplant',
     price: 215.0,
@@ -74,7 +68,6 @@ const products = [
   {
     id: 7,
     name: 'Tuna',
-    href: '#',
     imageSrc: '/src/assets/products/tuna.png',
     imageAlt: 'Tuna',
     price: 679.0,
@@ -86,7 +79,6 @@ const products = [
   {
     id: 8,
     name: 'Shrimp',
-    href: '#',
     imageSrc: '/src/assets/products/shrimp.jpg',
     imageAlt: 'Shrimp',
     price: 289.0,
