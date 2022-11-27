@@ -77,7 +77,7 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
           />
         </span>
       </div>
-      <span className='ml-2'>{text && text}</span>
+      <span className='ml-1 md:ml-2'>{text && text}</span>
     </div>
   )
 }

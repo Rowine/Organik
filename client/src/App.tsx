@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import Home from './pages/Home'
 import Category from './pages/Category'
+import ProductDetails from './pages/ProductDetails'
 import Footer from './components/Footer'
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/:category' element={<Category />} />
+          <Route path='/:category/:id' element={<ProductDetails />} />
         </Routes>
         <Footer />
       </BrowserRouter>

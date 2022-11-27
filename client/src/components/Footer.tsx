@@ -7,6 +7,7 @@ import {
   faInstagram,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons'
+import Logo from '../assets/logo.svg'
 
 const Footer = () => {
   return (
@@ -14,7 +15,7 @@ const Footer = () => {
       <Container>
         <div className='flex justify-between py-8 space-y-4 text-white'>
           <div>
-            <img src='./logo.svg' alt='logo' className='w-1/2' />
+            <img src={Logo} alt='logo' className='w-1/2' />
             <div>
               <h3 className='my-2 text-md font-semibold'>Follow Us</h3>
               <div className='flex space-x-2'>
