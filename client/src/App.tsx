@@ -3,6 +3,8 @@ import Navigation from './components/Navigation'
 import Home from './pages/Home'
 import Category from './pages/Category'
 import ProductDetails from './pages/ProductDetails'
+import Like from './pages/Like'
+import Cart from './pages/Cart'
 import Footer from './components/Footer'
 
 const App = () => {
@@ -35,6 +37,8 @@ const App = () => {
         />
         <Routes>
           <Route path='/' element={<Home />} />
+          <Route path='/like' element={<Like />} />
+          <Route path='/cart' element={<Cart />} />
           <Route path='/:category' element={<Category />} />
           <Route path='/:category/:id' element={<ProductDetails />} />
         </Routes>
