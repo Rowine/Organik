@@ -1,5 +1,5 @@
 export default interface IProductItem {
-  id: number
+  id: string
   name: string
   imageSrc: string
   imageAlt: string

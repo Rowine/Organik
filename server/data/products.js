@@ -1,6 +1,6 @@
 const products = [
   {
-    id: 1,
+    id: '1',
     name: 'Banana',
     imageSrc: '/src/assets/products/banana.png',
     imageAlt: 'Banana',
@@ -11,7 +11,7 @@ const products = [
     numReviews: 12,
   },
   {
-    id: 2,
+    id: '2',
     name: 'Avocado',
     imageSrc: '/src/assets/products/avocado.png',
     imageAlt: 'Avocado',
@@ -22,7 +22,7 @@ const products = [
     numReviews: 7,
   },
   {
-    id: 3,
+    id: '3',
     name: 'Beef Tenderloin',
     imageSrc: '/src/assets/products/beef-tenderloin.jpg',
     imageAlt: 'Beef Tenderloin',
@@ -33,7 +33,7 @@ const products = [
     numReviews: 10,
   },
   {
-    id: 4,
+    id: '4',
     name: 'Pork Loin',
     imageSrc: '/src/assets/products/pork-loin.jpg',
     imageAlt: 'Pork Loin',
@@ -44,7 +44,7 @@ const products = [
     numReviews: 4,
   },
   {
-    id: 5,
+    id: '5',
     name: 'Carrots',
     imageSrc: '/src/assets/products/carrots.png',
     imageAlt: 'Carrots',
@@ -55,7 +55,7 @@ const products = [
     numReviews: 12,
   },
   {
-    id: 6,
+    id: '6',
     name: 'Eggplant',
     imageSrc: '/src/assets/products/eggplant.png',
     imageAlt: 'Eggplant',
@@ -66,7 +66,7 @@ const products = [
     numReviews: 7,
   },
   {
-    id: 7,
+    id: '7',
     name: 'Tuna',
     imageSrc: '/src/assets/products/tuna.png',
     imageAlt: 'Tuna',
@@ -77,7 +77,7 @@ const products = [
     numReviews: 12,
   },
   {
-    id: 8,
+    id: '8',
     name: 'Shrimp',
     imageSrc: '/src/assets/products/shrimp.jpg',
     imageAlt: 'Shrimp',

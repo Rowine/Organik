@@ -1,0 +1,24 @@
+{
+  "name": "Organik",
+  "version": "1.0.0",
+  "description": "E-commerce grocery shop",
+  "main": "index.js",
+  "type": "module",
+  "repository": "https://github.com/Rowine/Organik.git",
+  "author": "Rowine <rowine12345@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server/index",
+    "server": "nodemon server/index",
+    "client": "yarn --cwd ./client dev",
+    "dev": "concurrently \"yarn server\" \"yarn client\""
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20"
+  }
+}
