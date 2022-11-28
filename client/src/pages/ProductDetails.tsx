@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useMatch } from 'react-router-dom'
 import Container from '../components/Container'
 import Rating from '../components/Rating'
@@ -6,16 +6,31 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart as HeartFull } from '@fortawesome/free-solid-svg-icons'
 import { faHeart as HeartEmpty } from '@fortawesome/free-regular-svg-icons'
 import IProductItem from '../interfaces/IProductItem'
-// @ts-ignore
-import products from '../products'
+import axios, { AxiosResponse } from 'axios'
 
 const ProductDetails = () => {
+  const [product, setProduct] = useState<IProductItem>({
+    id: '',
+    name: '',
+    category: '',
+    imageSrc: '',
+    imageAlt: '',
+    price: 0,
+    rating: 0,
+    numReviews: 0,
+    countInStock: 0,
+  })
   const match = useMatch('/:category/:id')
-  const product =
-    match !== null &&
-    products.find(
-      (product: IProductItem) => product.id.toString() === match.params.id
-    )
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const { data }: AxiosResponse<IProductItem> = await axios.get(
+        `/api/products/${match?.params.id}`
+      )
+      setProduct(data)
+    }
+    fetchProduct()
+  }, [match?.params.id, setProduct])
 
   return (
     <Container>

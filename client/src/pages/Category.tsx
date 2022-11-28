@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import Rating from '../components/Rating'
 import IProductItem from '../interfaces/IProductItem'
-// @ts-ignore
-import products from '../products.js'
 
 const Category = () => {
+  const [products, setProducts] = useState([])
   const { category } = useParams()
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await axios.get('/api/products')
+      setProducts(data)
+    }
+    fetchProducts()
+  }, [])
+
   const categoryProducts = products.filter(
     (product: IProductItem) => product.category === category
   )
