@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import Banner from '../assets/images/hero/hero.jpg'
 
 const Hero = () => {
@@ -13,7 +13,7 @@ const Hero = () => {
           delivered straight to your doorstep.
         </span>
       </h1>
-      <img src={Banner} alt='hero' className='mx-auto w-full' />
+      <img src={Banner} alt='hero' className='mx-auto w-full bg-gray-200' />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import {
   HeartIcon,
   ShoppingCartIcon,
   XMarkIcon,
+  UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import Logo from '../assets/logo.svg'
 
@@ -74,7 +75,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                         className={classNames(
                           checkActive(item.path)
                             ? 'bg-green-900 text-white'
-                            : 'text-gray-200 hover:bg-green-700 hover:text-white',
+                            : 'text-gray-200 hover:bg-green-800 hover:text-white',
                           'px-3 py-2 rounded-md text-sm font-medium'
                         )}
                         aria-current={
@@ -88,23 +89,27 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 </div>
               </div>
               <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
-                <button
-                  type='button'
-                  className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
-                >
-                  <span className='sr-only'>View Likes</span>
-                  <HeartIcon className='h-6 w-6' aria-hidden='true' />
-                </button>
-                <button
-                  type='button'
-                  className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
-                >
-                  <span className='sr-only'>View Cart</span>
-                  <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
-                </button>
+                <Link to='/like'>
+                  <button
+                    type='button'
+                    className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                  >
+                    <span className='sr-only'>View Likes</span>
+                    <HeartIcon className='h-6 w-6' aria-hidden='true' />
+                  </button>
+                </Link>
+                <Link to='/cart' className='ml-1'>
+                  <button
+                    type='button'
+                    className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                  >
+                    <span className='sr-only'>View Cart</span>
+                    <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
+                  </button>
+                </Link>
 
                 {/* Profile dropdown */}
-                <Menu as='div' className='relative ml-3'>
+                {/* <Menu as='div' className='relative ml-3'>
                   <div>
                     <Menu.Button className='flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-800'>
                       <span className='sr-only'>Open user menu</span>
@@ -153,7 +158,17 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
+
+                <div className='ml-1 relative'>
+                  <Link
+                    to='/login'
+                    className='flex rounded-lg p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                  >
+                    <UserCircleIcon className='h-6 w-6 ' aria-hidden='true' />
+                    <span>Login</span>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
