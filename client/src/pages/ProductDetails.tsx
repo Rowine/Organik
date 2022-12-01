@@ -10,11 +10,10 @@ import axios, { AxiosResponse } from 'axios'
 
 const ProductDetails = () => {
   const [product, setProduct] = useState<IProductItem>({
-    id: '',
+    _id: '',
     name: '',
     category: '',
-    imageSrc: '',
-    imageAlt: '',
+    image: '',
     price: 0,
     rating: 0,
     numReviews: 0,
@@ -44,8 +43,8 @@ const ProductDetails = () => {
           <div className='col-span-2'>
             <div className='aspect-w-3 aspect-h-2 overflow-hidden rounded-lg lg:block'>
               <img
-                src={product.imageSrc}
-                alt={product.imageAlt}
+                src={product.image}
+                alt={product.name}
                 className='h-full w-full object-contain object-center'
               />
             </div>
