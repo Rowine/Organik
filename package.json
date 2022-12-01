@@ -11,11 +11,17 @@
     "start": "node server/index",
     "server": "nodemon server/index",
     "client": "yarn --cwd ./client dev",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "data:import": "node server/seeder",
+    "data:destroy": "node server/seeder -d"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "chalk": "^5.1.2",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "mongoose": "^6.7.3"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
