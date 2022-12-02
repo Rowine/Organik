@@ -1,0 +1,19 @@
+import React from 'react'
+
+interface IMessageProps {
+  type: 'error' | 'info' | 'alert'
+  children: React.ReactNode
+}
+
+const Message = ({ type, children }: IMessageProps) => {
+  const variant = {
+    error: 'bg-rose-200 text-red-800',
+    info: 'bg-indigo-200 text-blue-800',
+    alert: 'bg-amber-200 text-yellow-800',
+  }
+
+  const theme = variant[type]
+  return <div className={`w-full p-3 rounded-sm ${theme}`}>{children}</div>
+}
+
+export default Message
