@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 import Rating from '../components/Rating'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,6 +13,8 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 
 const ProductDetails = () => {
+  const [qty, setQty] = useState(1)
+
   const dispatch = useAppDispatch()
   const productDetails = useAppSelector((state) => state.productDetails)
   const { loading, error, product } = productDetails
@@ -23,13 +25,18 @@ const ProductDetails = () => {
     const listProductDetailsAction = async () => {
       try {
         const product = await dispatch(listProductDetails(id)).unwrap()
-        console.log(product)
       } catch (err) {
         console.log(err)
       }
     }
     listProductDetailsAction()
   }, [])
+
+  const navigate = useNavigate()
+
+  const addToCartHandler = () => {
+    navigate(`/cart/${id}?qty=${qty}`)
+  }
 
   return (
     <Container>
@@ -72,6 +79,23 @@ const ProductDetails = () => {
                 In Stock:{' '}
                 <span className='font-bold'>{product.countInStock}</span>
               </p>
+
+              {product.countInStock > 0 && (
+                <div className=''>
+                  <select
+                    className='form-select px-4 py-3 rounded-full w-1/3 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent'
+                    value={qty}
+                    onChange={(e) => setQty(Number(e.target.value))}
+                  >
+                    {[...Array(product.countInStock).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div className='grid grid-cols-4 gap-x-1'>
                 <button
                   className={
@@ -80,6 +104,7 @@ const ProductDetails = () => {
                       : 'bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded col-span-3'
                   }
                   disabled={product.countInStock === 0}
+                  onClick={addToCartHandler}
                 >
                   {product.countInStock === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </button>

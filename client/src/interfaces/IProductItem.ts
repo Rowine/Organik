@@ -17,4 +17,5 @@ export default interface IProductItem {
   countInStock: number
   rating: number
   numReviews: number
+  qty: number
 }
