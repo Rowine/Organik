@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { createSlice, createAsyncThunk, createReducer } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import IProductDetailsState from '../interfaces/IProductDetailsState'
 
 export const listProductDetails = createAsyncThunk(
