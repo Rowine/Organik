@@ -151,7 +151,7 @@ const Cart = () => {
 
                 <div className='mt-6'>
                   <button
-                    className='w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700'
+                    className='w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700'
                     disabled={cartItems.length === 0}
                     onClick={checkoutHandler}
                   >
@@ -162,7 +162,7 @@ const Cart = () => {
                     or{' '}
                     <Link
                       to='/'
-                      className='text-indigo-600 font-medium hover:text-indigo-500 underline'
+                      className='text-green-600 font-medium hover:text-green-500 underline'
                     >
                       Continue Shopping
                     </Link>
