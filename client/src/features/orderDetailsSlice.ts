@@ -1,12 +1,10 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { login } from './userLoginSlice'
+import IOrderDetailsState from '../interfaces/IOrderDetailsState'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from './../interfaces/IUserLoginState'
-import IUserDetailsState from '../interfaces/IUserDetailsState'
 
-export const getUserDetails = createAsyncThunk(
-  'user/details',
+export const getOrderDetails = createAsyncThunk(
+  'order/getOrderDetails',
   async (id: string, { rejectWithValue, getState }) => {
     try {
       const {
@@ -15,12 +13,11 @@ export const getUserDetails = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.get(`/api/users/${id}`, config)
+      const { data } = await axios.get(`/api/orders/${id}`, config)
 
       return data
     } catch (error: any) {
@@ -34,37 +31,29 @@ export const getUserDetails = createAsyncThunk(
 )
 
 const initialState = {
-  loading: 'idle',
-  user: {} as IUser,
+  loading: 'pending',
+  order: {},
   error: undefined,
-} as IUserDetailsState
+} as IOrderDetailsState
 
-export const userDetailsSlice = createSlice({
-  name: 'user',
+export const orderDetailsSlice = createSlice({
+  name: 'order',
   initialState,
-  reducers: {
-    resetUserDetails: (state) => {
-      state.loading = 'idle'
-      state.user = {} as IUser
-      state.error = undefined
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUserDetails.pending, (state) => {
+      .addCase(getOrderDetails.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(getUserDetails.fulfilled, (state, action) => {
+      .addCase(getOrderDetails.fulfilled, (state, action) => {
         state.loading = 'succeeded'
-        state.user = action.payload
+        state.order = action.payload
       })
-      .addCase(getUserDetails.rejected, (state, action) => {
+      .addCase(getOrderDetails.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { resetUserDetails } = userDetailsSlice.actions
-
-export default userDetailsSlice.reducer
+export default orderDetailsSlice.reducer

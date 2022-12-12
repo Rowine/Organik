@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { login } from './userLoginSlice'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from './../interfaces/IUserLoginState'
+import { IUser } from '../interfaces/IUserLoginState'
 
 interface IRegister {
   name: string

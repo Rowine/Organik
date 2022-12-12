@@ -1,13 +1,11 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { login } from './userLoginSlice'
+import IOrderListMy from '../interfaces/IOrderListMy'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from './../interfaces/IUserLoginState'
-import IUserDetailsState from '../interfaces/IUserDetailsState'
 
-export const getUserDetails = createAsyncThunk(
-  'user/details',
-  async (id: string, { rejectWithValue, getState }) => {
+export const listMyOrders = createAsyncThunk(
+  'order/listMyOrders',
+  async (thunkAPI, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -15,12 +13,11 @@ export const getUserDetails = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.get(`/api/users/${id}`, config)
+      const { data } = await axios.get(`/api/orders/myorders`, config)
 
       return data
     } catch (error: any) {
@@ -35,36 +32,36 @@ export const getUserDetails = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  user: {} as IUser,
+  orders: [],
   error: undefined,
-} as IUserDetailsState
+} as IOrderListMy
 
-export const userDetailsSlice = createSlice({
-  name: 'user',
+export const orderListMySlice = createSlice({
+  name: 'order',
   initialState,
   reducers: {
-    resetUserDetails: (state) => {
+    resetOrderListMy: (state) => {
       state.loading = 'idle'
-      state.user = {} as IUser
+      state.orders = []
       state.error = undefined
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getUserDetails.pending, (state) => {
+      .addCase(listMyOrders.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(getUserDetails.fulfilled, (state, action) => {
+      .addCase(listMyOrders.fulfilled, (state, action) => {
         state.loading = 'succeeded'
-        state.user = action.payload
+        state.orders = action.payload
       })
-      .addCase(getUserDetails.rejected, (state, action) => {
+      .addCase(listMyOrders.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { resetUserDetails } = userDetailsSlice.actions
+export const { resetOrderListMy } = orderListMySlice.actions
 
-export default userDetailsSlice.reducer
+export default orderListMySlice.reducer

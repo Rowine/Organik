@@ -6,7 +6,7 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import IProductItem from '../interfaces/IProductItem'
 import { listProducts } from '../features/productListSlice'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 
 const Category = () => {
   const dispatch = useAppDispatch()

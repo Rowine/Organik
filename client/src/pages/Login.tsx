@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { login } from '../features/userLoginSlice'
