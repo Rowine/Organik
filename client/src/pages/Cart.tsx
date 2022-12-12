@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../features/cartSlice'
 
@@ -25,7 +25,7 @@ const Cart = () => {
   }
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=shipping')
+    navigate('/login?redirect=/shipping')
   }
 
   return (

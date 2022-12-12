@@ -1,4 +1,3 @@
-import { IUser } from './../interfaces/IUserLoginState'
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import IUserLoginState from '../interfaces/IUserLoginState'

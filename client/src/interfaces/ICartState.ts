@@ -11,5 +11,14 @@ export interface ICartItems {
 export default interface ICartState {
   loading: 'idle' | 'pending' | 'succeeded' | 'failed'
   cartItems: ICartItems[]
+  shippingAddress: {
+    address: string
+    city: string
+    postalCode: string
+  }
+  paymentMethod: string
+  itemsPrice: number
+  shippingPrice: number
+  totalPrice: number
   error: string | undefined
 }

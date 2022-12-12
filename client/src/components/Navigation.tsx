@@ -9,8 +9,11 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
 import Logo from '../assets/logo.svg'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
+import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { logout } from '../features/userLoginSlice'
+import { resetOrderListMy } from '../features/orderListMySlice'
+import { resetUserDetails } from '../features/userDetailsSlice'
+import { resetCart } from '../features/cartSlice'
 
 interface INavigationProps {
   category: Array<{
@@ -35,6 +38,9 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
 
   const logoutHandler = () => {
     dispatch(logout())
+    dispatch(resetOrderListMy())
+    dispatch(resetUserDetails())
+    dispatch(resetCart())
   }
 
   return (
