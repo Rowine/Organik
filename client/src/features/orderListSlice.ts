@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import IOrderListMy from '../interfaces/IOrderListMy'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from '../interfaces/IUserLoginState'
 
-export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
-  async (user: IUser, { rejectWithValue, getState }) => {
+export const listOrders = createAsyncThunk(
+  'order/listOrders',
+  async (thunkAPI, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -13,12 +13,11 @@ export const updateUserProfile = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.put(`/api/users/profile`, user, config)
+      const { data } = await axios.get(`/api/orders`, config)
 
       return data
     } catch (error: any) {
@@ -33,28 +32,28 @@ export const updateUserProfile = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  userInfo: {} as IUser,
+  orders: [],
   error: undefined,
-} as IUserLoginState
+} as IOrderListMy
 
-export const userUpdateProfileSlice = createSlice({
-  name: 'user',
+export const orderListSlice = createSlice({
+  name: 'order',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(updateUserProfile.pending, (state) => {
+      .addCase(listOrders.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      .addCase(listOrders.fulfilled, (state, action) => {
         state.loading = 'succeeded'
-        state.userInfo = action.payload
+        state.orders = action.payload
       })
-      .addCase(updateUserProfile.rejected, (state, action) => {
+      .addCase(listOrders.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export default userUpdateProfileSlice.reducer
+export default orderListSlice.reducer

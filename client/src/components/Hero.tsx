@@ -1,19 +1,18 @@
-import React, { Suspense, useEffect } from 'react'
+import React from 'react'
 import Banner from '../assets/images/hero/hero.jpg'
 
 const Hero = () => {
-  useEffect(() => {}, [])
   return (
-    <div className='w-full py-10 relative'>
-      <h1 className='absolute top-36 sm:top-1/2 sm:px-10 font-bold text-slate-700'>
-        <p className='text-3xl sm:text-4xl lg:text-6xl mb-2'>
+    <div className='w-full py-4 sm:py-10 relative'>
+      <h1 className='absolute top-12 sm:top-1/2 sm:px-10 font-bold text-slate-700 w-40 sm:w-full ml-4 sm:m-0'>
+        <p className='text-2xl sm:text-4xl lg:text-6xl sm:mb-2'>
           Freshly Produced
         </p>
-        <span className='sm:text-xl lg:text-2xl'>
+        <span className='text-sm sm:text-xl lg:text-2xl'>
           delivered straight to your doorstep.
         </span>
       </h1>
-      <img src={Banner} alt='hero' className='mx-auto w-full bg-gray-200' />
+      <img src={Banner} alt='hero' className=' w-full bg-gray-200' />
     </div>
   )
 }

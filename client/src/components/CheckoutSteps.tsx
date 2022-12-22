@@ -16,37 +16,45 @@ const CheckoutSteps: React.FC<ICheckoutStepsProps> = ({
   step4,
 }) => {
   return (
-    <div className='flex justify-center space-x-5 mt-10 content-center'>
+    <div className='flex justify-center sm:space-x-5 mt-10 content-center'>
       {step1 ? (
         <Link to='/login'>
-          <div className='text-green-600 font-bold'>Sign In</div>
+          <div className='text-green-600 font-bold text-sm sm:text-base'>
+            Sign In
+          </div>
         </Link>
       ) : (
-        <div className='text-gray-400'>Sign In</div>
+        <div className='text-gray-400 text-sm sm:text-base'>Sign In</div>
       )}
-      <ChevronRightIcon className='h-5 self-center text-gray-400' />
+      <ChevronRightIcon className='h-4 sm:h-5 self-center text-gray-400' />
       {step2 ? (
         <Link to='/shipping'>
-          <div className='text-green-600 font-bold'>Shipping</div>
+          <div className='text-green-600 font-bold text-sm sm:text-base'>
+            Shipping
+          </div>
         </Link>
       ) : (
-        <div className='text-gray-400'>Shipping</div>
+        <div className='text-gray-400 text-sm sm:text-base'>Shipping</div>
       )}
-      <ChevronRightIcon className='h-5 self-center text-gray-400' />
+      <ChevronRightIcon className='h-4 sm:h-5 self-center text-gray-400' />
       {step3 ? (
         <Link to='/payment'>
-          <div className='text-green-600 font-bold'>Payment</div>
+          <div className='text-green-600 font-bold text-sm sm:text-base'>
+            Payment
+          </div>
         </Link>
       ) : (
-        <div className='text-gray-400'>Payment</div>
+        <div className='text-gray-400 text-sm sm:text-base'>Payment</div>
       )}
-      <ChevronRightIcon className='h-5 self-center text-gray-400' />
+      <ChevronRightIcon className='h-4 sm:h-5 self-center text-gray-400' />
       {step4 ? (
         <Link to='/placeorder'>
-          <div className='text-green-600 font-bold'>Place Order</div>
+          <div className='text-green-600 font-bold text-sm sm:text-base'>
+            Place Order
+          </div>
         </Link>
       ) : (
-        <div className='text-gray-400'>Place Order</div>
+        <div className='text-gray-400 text-sm sm:text-base'>Place Order</div>
       )}
     </div>
   )

@@ -1,24 +1,11 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IOrderPayState from '../interfaces/IOrderPayState'
 import IUserLoginState from '../interfaces/IUserLoginState'
+import IProductItem from '../interfaces/IProductItem'
 
-export interface IPayOrderProps {
-  id: string
-  paymentResult: {
-    id: string
-    status: string
-    update_time: string
-    email_address: string
-  }
-}
-
-export const payOrder = createAsyncThunk(
-  'order/payOrder',
-  async (
-    { id, paymentResult }: IPayOrderProps,
-    { rejectWithValue, getState }
-  ) => {
+export const updateProduct = createAsyncThunk(
+  'order/updateProduct',
+  async (product: IProductItem, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -30,13 +17,13 @@ export const payOrder = createAsyncThunk(
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
+      console.log(userInfo?.token)
 
       const { data } = await axios.put(
-        `/api/orders/${id}/pay`,
-        paymentResult,
+        `/api/products/${product._id}`,
+        product,
         config
       )
-
       return data
     } catch (error: any) {
       return rejectWithValue(
@@ -50,32 +37,39 @@ export const payOrder = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  error: undefined,
-} as IOrderPayState
+  success: false,
+  product: {} as IProductItem,
+  error: undefined as string | undefined,
+}
 
-export const orderPaySlice = createSlice({
-  name: 'order',
+export const productUpdateSlice = createSlice({
+  name: 'products',
   initialState,
   reducers: {
-    payReset: (state) => {
+    resetProductUpdate: (state) => {
       state.loading = 'idle'
+      state.success = false
+      state.product = {} as IProductItem
+      state.error = undefined
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(payOrder.pending, (state) => {
+      .addCase(updateProduct.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(payOrder.fulfilled, (state, action) => {
+      .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = 'succeeded'
+        state.success = true
+        state.product = action.payload
       })
-      .addCase(payOrder.rejected, (state, action) => {
+      .addCase(updateProduct.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { payReset } = orderPaySlice.actions
+export const { resetProductUpdate } = productUpdateSlice.actions
 
-export default orderPaySlice.reducer
+export default productUpdateSlice.reducer

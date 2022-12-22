@@ -1,24 +1,12 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IOrderPayState from '../interfaces/IOrderPayState'
+import { getUserDetails } from './userDetailsSlice'
 import IUserLoginState from '../interfaces/IUserLoginState'
+import { IUser } from '../interfaces/IUserLoginState'
 
-export interface IPayOrderProps {
-  id: string
-  paymentResult: {
-    id: string
-    status: string
-    update_time: string
-    email_address: string
-  }
-}
-
-export const payOrder = createAsyncThunk(
-  'order/payOrder',
-  async (
-    { id, paymentResult }: IPayOrderProps,
-    { rejectWithValue, getState }
-  ) => {
+export const updateUser = createAsyncThunk(
+  'user/updateUser',
+  async (user: IUser, { rejectWithValue, getState, dispatch }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -31,12 +19,9 @@ export const payOrder = createAsyncThunk(
         },
       }
 
-      const { data } = await axios.put(
-        `/api/orders/${id}/pay`,
-        paymentResult,
-        config
-      )
+      const { data } = await axios.put(`/api/users/${user._id}`, user, config)
 
+      dispatch(getUserDetails(user._id))
       return data
     } catch (error: any) {
       return rejectWithValue(
@@ -50,32 +35,35 @@ export const payOrder = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
+  userInfo: {} as IUser,
   error: undefined,
-} as IOrderPayState
+} as IUserLoginState
 
-export const orderPaySlice = createSlice({
-  name: 'order',
+export const userUpdateSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
-    payReset: (state) => {
+    resetUpdateProfile: (state) => {
       state.loading = 'idle'
+      state.userInfo = {} as IUser
+      state.error = undefined
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(payOrder.pending, (state) => {
+      .addCase(updateUser.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(payOrder.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = 'succeeded'
       })
-      .addCase(payOrder.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { payReset } = orderPaySlice.actions
+export const { resetUpdateProfile } = userUpdateSlice.actions
 
-export default orderPaySlice.reducer
+export default userUpdateSlice.reducer

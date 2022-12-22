@@ -1,22 +1,19 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IOrderPayState from '../interfaces/IOrderPayState'
 import IUserLoginState from '../interfaces/IUserLoginState'
 
-export interface IPayOrderProps {
-  id: string
-  paymentResult: {
-    id: string
-    status: string
-    update_time: string
-    email_address: string
+interface ICreateProductReview {
+  productId: string
+  review: {
+    rating: number
+    comment: string
   }
 }
 
-export const payOrder = createAsyncThunk(
-  'order/payOrder',
+export const createProductReview = createAsyncThunk(
+  'product/createProductReview',
   async (
-    { id, paymentResult }: IPayOrderProps,
+    { productId, review }: ICreateProductReview,
     { rejectWithValue, getState }
   ) => {
     try {
@@ -26,17 +23,15 @@ export const payOrder = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.put(
-        `/api/orders/${id}/pay`,
-        paymentResult,
+      const { data } = await axios.post(
+        `/api/products/${productId}/reviews`,
+        review,
         config
       )
-
       return data
     } catch (error: any) {
       return rejectWithValue(
@@ -50,32 +45,36 @@ export const payOrder = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  error: undefined,
-} as IOrderPayState
+  success: false,
+  error: undefined as string | undefined,
+}
 
-export const orderPaySlice = createSlice({
-  name: 'order',
+export const productCreateReviewSlice = createSlice({
+  name: 'products',
   initialState,
   reducers: {
-    payReset: (state) => {
+    resetProductCreateReview: (state) => {
       state.loading = 'idle'
+      state.success = false
+      state.error = undefined
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(payOrder.pending, (state) => {
+      .addCase(createProductReview.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(payOrder.fulfilled, (state, action) => {
+      .addCase(createProductReview.fulfilled, (state, action) => {
         state.loading = 'succeeded'
+        state.success = true
       })
-      .addCase(payOrder.rejected, (state, action) => {
+      .addCase(createProductReview.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { payReset } = orderPaySlice.actions
+export const { resetProductCreateReview } = productCreateReviewSlice.actions
 
-export default orderPaySlice.reducer
+export default productCreateReviewSlice.reducer

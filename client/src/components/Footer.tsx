@@ -7,6 +7,7 @@ import {
   faInstagram,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons'
+import { faPhone } from '@fortawesome/free-solid-svg-icons'
 import Logo from '../assets/logo.svg'
 
 const Footer = () => {
@@ -41,8 +42,8 @@ const Footer = () => {
             </div>
             <h3 className='my-2 text-md font-semibold'>Contact Us</h3>
             <div className='flex'>
-              <button className='rounded-full p-1 text-gray-200 bg-green-800'>
-                <PhoneIcon className='w-5 h-5' />
+              <button className='h-7 w-7 rounded-full p-1 bg-green-800'>
+                <PhoneIcon />
               </button>
               <span className='mx-2 font-bold font-sans'>+1 202-918-2132</span>
             </div>
@@ -67,12 +68,11 @@ const Footer = () => {
             <p className='text-sm'>
               &copy; {new Date().getFullYear()} - All rights reserved
             </p>
-            <p className='text-sm'>
-              Made with{' '}
-              <span role='img' aria-label='love'>
-                ❤️
-              </span>{' '}
-              by Rowine Mabiog
+            <p className='text-sm '>
+              Made by{' '}
+              <a href='https://github.com/Rowine' className='underline'>
+                Rowine Mabiog
+              </a>
             </p>
           </div>
         </div>

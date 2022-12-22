@@ -1,11 +1,10 @@
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from '../interfaces/IUserLoginState'
 
-export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
-  async (user: IUser, { rejectWithValue, getState }) => {
+export const deleteProduct = createAsyncThunk(
+  'order/deleteProduct',
+  async (id: string, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -13,13 +12,11 @@ export const updateUserProfile = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.put(`/api/users/profile`, user, config)
-
+      const { data } = await axios.delete(`/api/products/${id}`, config)
       return data
     } catch (error: any) {
       return rejectWithValue(
@@ -33,28 +30,28 @@ export const updateUserProfile = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  userInfo: {} as IUser,
-  error: undefined,
-} as IUserLoginState
+  success: false,
+  error: undefined as string | undefined,
+}
 
-export const userUpdateProfileSlice = createSlice({
-  name: 'user',
+export const productDeleteSlice = createSlice({
+  name: 'products',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(updateUserProfile.pending, (state) => {
+      .addCase(deleteProduct.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = 'succeeded'
-        state.userInfo = action.payload
+        state.success = true
       })
-      .addCase(updateUserProfile.rejected, (state, action) => {
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export default userUpdateProfileSlice.reducer
+export default productDeleteSlice.reducer

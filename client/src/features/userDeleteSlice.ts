@@ -1,11 +1,11 @@
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from '../interfaces/IUserLoginState'
 
-export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
-  async (user: IUser, { rejectWithValue, getState }) => {
+export const deleteUser = createAsyncThunk(
+  'user/deleteUser',
+  async (id: string, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -13,12 +13,11 @@ export const updateUserProfile = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.put(`/api/users/profile`, user, config)
+      const { data } = await axios.delete(`/api/users/${id}`, config)
 
       return data
     } catch (error: any) {
@@ -33,28 +32,26 @@ export const updateUserProfile = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
-  userInfo: {} as IUser,
-  error: undefined,
-} as IUserLoginState
+  error: undefined as string | undefined,
+}
 
-export const userUpdateProfileSlice = createSlice({
+export const userDeleteSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(updateUserProfile.pending, (state) => {
+      .addCase(deleteUser.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(updateUserProfile.fulfilled, (state, action) => {
+      .addCase(deleteUser.fulfilled, (state) => {
         state.loading = 'succeeded'
-        state.userInfo = action.payload
       })
-      .addCase(updateUserProfile.rejected, (state, action) => {
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export default userUpdateProfileSlice.reducer
+export default userDeleteSlice.reducer
