@@ -1,24 +1,12 @@
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IOrderPayState from '../interfaces/IOrderPayState'
+import IUserListState from '../interfaces/IUserListState'
 import IUserLoginState from '../interfaces/IUserLoginState'
 
-export interface IPayOrderProps {
-  id: string
-  paymentResult: {
-    id: string
-    status: string
-    update_time: string
-    email_address: string
-  }
-}
-
-export const payOrder = createAsyncThunk(
-  'order/payOrder',
-  async (
-    { id, paymentResult }: IPayOrderProps,
-    { rejectWithValue, getState }
-  ) => {
+export const listUsers = createAsyncThunk(
+  'user/listUsers',
+  async (thunkAPI, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
@@ -26,16 +14,11 @@ export const payOrder = createAsyncThunk(
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${userInfo?.token}`,
         },
       }
 
-      const { data } = await axios.put(
-        `/api/orders/${id}/pay`,
-        paymentResult,
-        config
-      )
+      const { data } = await axios.get(`/api/users`, config)
 
       return data
     } catch (error: any) {
@@ -50,32 +33,36 @@ export const payOrder = createAsyncThunk(
 
 const initialState = {
   loading: 'idle',
+  users: [],
   error: undefined,
-} as IOrderPayState
+} as IUserListState
 
-export const orderPaySlice = createSlice({
-  name: 'order',
+export const userListSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
-    payReset: (state) => {
+    userListReset: (state) => {
       state.loading = 'idle'
+      state.users = []
+      state.error = undefined
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(payOrder.pending, (state) => {
+      .addCase(listUsers.pending, (state) => {
         state.loading = 'pending'
       })
-      .addCase(payOrder.fulfilled, (state, action) => {
+      .addCase(listUsers.fulfilled, (state, action) => {
         state.loading = 'succeeded'
+        state.users = action.payload
       })
-      .addCase(payOrder.rejected, (state, action) => {
+      .addCase(listUsers.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload as string
       })
   },
 })
 
-export const { payReset } = orderPaySlice.actions
+export const { userListReset } = userListSlice.actions
 
-export default orderPaySlice.reducer
+export default userListSlice.reducer

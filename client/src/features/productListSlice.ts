@@ -4,9 +4,10 @@ import IProductListState from '../interfaces/IProductListState'
 
 export const listProducts = createAsyncThunk(
   'products/listProducts',
-  async (thunkAPI, { rejectWithValue }) => {
+  async (thunkApi, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get('/api/products')
+      const { data } = await axios.get(`/api/products`)
+
       return data
     } catch (error: any) {
       return rejectWithValue(

@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import { useEffect, useState } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 import axios from 'axios'
 import Loader from './components/Loader'
 import Navigation from './components/Navigation'
 import Home from './pages/Home'
 import Category from './pages/Category'
 import ProductDetails from './pages/ProductDetails'
-import Like from './pages/Like'
 import Cart from './pages/Cart'
+import Like from './pages/Like'
 import Footer from './components/Footer'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -17,6 +18,11 @@ import Shipping from './pages/Shipping'
 import Payment from './pages/Payment'
 import PlaceOrder from './pages/PlaceOrder'
 import Order from './pages/Order'
+import UserList from './pages/UserList'
+import UserEdit from './pages/UserEdit'
+import ProductList from './pages/ProductList'
+import ProductEdit from './pages/ProductEdit'
+import OrderList from './pages/OrderList'
 
 const App = () => {
   const [clientId, setClientId] = useState(null)
@@ -34,7 +40,7 @@ const App = () => {
   }, [clientId])
 
   return (
-    <>
+    <HelmetProvider>
       <BrowserRouter>
         {!clientId ? (
           <Loader />
@@ -79,8 +85,14 @@ const App = () => {
               <Route path='/register' element={<Register />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/like' element={<Like />} />
+              <Route path='/like/:id' element={<Like />} />
               <Route path='/cart' element={<Cart />} />
               <Route path='/cart/:id' element={<Cart />} />
+              <Route path='/admin/userlist' element={<UserList />} />
+              <Route path='/admin/productlist' element={<ProductList />} />
+              <Route path='/admin/orderlist' element={<OrderList />} />
+              <Route path='/admin/user/:id/edit' element={<UserEdit />} />
+              <Route path='/admin/product/:id/edit' element={<ProductEdit />} />
               <Route path='/:category' element={<Category />} />
               <Route path='/:category/:id' element={<ProductDetails />} />
             </Routes>
@@ -88,7 +100,7 @@ const App = () => {
           </PayPalScriptProvider>
         )}
       </BrowserRouter>
-    </>
+    </HelmetProvider>
   )
 }
 

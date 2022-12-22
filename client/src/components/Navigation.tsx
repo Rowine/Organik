@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -14,6 +14,7 @@ import { logout } from '../features/userLoginSlice'
 import { resetOrderListMy } from '../features/orderListMySlice'
 import { resetUserDetails } from '../features/userDetailsSlice'
 import { resetCart } from '../features/cartSlice'
+import { userListReset } from '../features/userListSlice'
 
 interface INavigationProps {
   category: Array<{
@@ -35,12 +36,15 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
   }
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const logoutHandler = () => {
     dispatch(logout())
     dispatch(resetOrderListMy())
     dispatch(resetUserDetails())
     dispatch(resetCart())
+    dispatch(userListReset())
+    navigate('/login')
   }
 
   return (
@@ -62,11 +66,13 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
               </div>
               <div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
                 <div className='flex flex-shrink-0 items-center'>
-                  <img
-                    className='block h-8 w-auto lg:hidden'
-                    src={Logo}
-                    alt='Company Logo'
-                  />
+                  <Link to={'/'}>
+                    <img
+                      className='block h-8 w-auto lg:hidden'
+                      src={Logo}
+                      alt='Company Logo'
+                    />
+                  </Link>
                   <Link to={'/'}>
                     <img
                       className='hidden h-8 w-auto lg:block'
@@ -97,11 +103,11 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   </div>
                 </div>
               </div>
-              <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
+              <div className='absolute inset-y-0 right-0 flex items-center sm:mr-2 sm:static sm:inset-auto sm:ml-6'>
                 <Link to='/like'>
                   <button
                     type='button'
-                    className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                    className='hidden rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800 sm:block'
                   >
                     <span className='sr-only'>View Likes</span>
                     <HeartIcon className='h-6 w-6' aria-hidden='true' />
@@ -110,7 +116,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 <Link to='/cart' className='ml-1'>
                   <button
                     type='button'
-                    className='rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                    className='hidden rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800 sm:block'
                   >
                     <span className='sr-only'>View Cart</span>
                     <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
@@ -152,6 +158,80 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                             </Link>
                           )}
                         </Menu.Item>
+
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              to='/like'
+                              className={classNames(
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700 sm:hidden'
+                              )}
+                            >
+                              Likes
+                            </Link>
+                          )}
+                        </Menu.Item>
+
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              to='/cart'
+                              className={classNames(
+                                active ? 'bg-gray-100' : '',
+                                'block px-4 py-2 text-sm text-gray-700 sm:hidden'
+                              )}
+                            >
+                              Cart
+                            </Link>
+                          )}
+                        </Menu.Item>
+
+                        {userInfo && userInfo.isAdmin && (
+                          <>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to='/admin/userlist'
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Users
+                                </Link>
+                              )}
+                            </Menu.Item>
+
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to='/admin/productlist'
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Products
+                                </Link>
+                              )}
+                            </Menu.Item>
+
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  to='/admin/orderlist'
+                                  className={classNames(
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm text-gray-700'
+                                  )}
+                                >
+                                  Orders
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          </>
+                        )}
                         <Menu.Item>
                           {({ active }) => (
                             <button

@@ -11,7 +11,7 @@
     "start": "node server/index",
     "server": "nodemon server/index",
     "client": "yarn --cwd ./client dev",
-    "dev": "concurrently \"yarn server\" \"yarn client\"",
+    "dev": "concurrently \"yarn server\" \"yarn client --host\"",
     "data:import": "node server/seeder",
     "data:destroy": "node server/seeder -d"
   },
@@ -22,7 +22,9 @@
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.7.3"
+    "mongoose": "^6.7.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",

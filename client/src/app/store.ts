@@ -1,16 +1,25 @@
 import orderCreateSlice from './../features/orderSlice'
-import { IUser } from '../interfaces/IUserLoginState'
 import { configureStore } from '@reduxjs/toolkit'
 import productListSlice from '../features/productListSlice'
 import productDetailsSlice from '../features/productDetailsSlice'
+import productDeleteSlice from '../features/productDeleteSlice'
+import productCreateSlice from '../features/productCreateSlice'
+import productUpdateSlice from '../features/productUpdateSlice'
+import productCreateReviewSlice from '../features/productCreateReviewSlice'
 import cartSlice from '../features/cartSlice'
+import likeSlice from '../features/likeSlice'
 import userLoginSlice from '../features/userLoginSlice'
 import userRegisterSlice from '../features/userRegisterSlice'
 import userDetailsSlice from '../features/userDetailsSlice'
 import userUpdateProfileSlice from '../features/userUpdateProfileSlice'
+import userUpdateSlice from '../features/userUpdateSlice'
 import orderDetailsSlice from '../features/orderDetailsSlice'
 import orderPaySlice from '../features/orderPaySlice'
 import orderListMySlice from '../features/orderListMySlice'
+import orderListSlice from '../features/orderListSlice'
+import orderDeliver from '../features/orderDeliverSlice'
+import userListSlice from '../features/userListSlice'
+import userDeleteSlice from '../features/userDeleteSlice'
 import ICartState from '../interfaces/ICartState'
 import IUserLoginState from '../interfaces/IUserLoginState'
 
@@ -33,15 +42,25 @@ const paymentMethodFromStorage = localStorage.getItem('paymentMethod')
 const reducer = {
   productList: productListSlice,
   productDetails: productDetailsSlice,
+  productDelete: productDeleteSlice,
+  productCreate: productCreateSlice,
+  productUpdate: productUpdateSlice,
+  productCreateReview: productCreateReviewSlice,
   cart: cartSlice,
+  like: likeSlice,
   userLogin: userLoginSlice,
   userRegister: userRegisterSlice,
   userDetails: userDetailsSlice,
   userUpdateProfile: userUpdateProfileSlice,
+  userList: userListSlice,
+  userDelete: userDeleteSlice,
+  userUpdate: userUpdateSlice,
   orderCreate: orderCreateSlice,
   orderDetails: orderDetailsSlice,
   orderPay: orderPaySlice,
   orderListMy: orderListMySlice,
+  orderList: orderListSlice,
+  orderDeliver: orderDeliver,
 }
 
 const preloadedState = {

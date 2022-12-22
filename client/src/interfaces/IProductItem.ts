@@ -1,7 +1,9 @@
 export interface IReview {
+  _id: string
   name: string
   rating: number
   comment: string
+  createdAt: string
   user: string
 }
 
@@ -10,7 +12,7 @@ export default interface IProductItem {
   user: string
   createdAt: string
   name: string
-  reviews: []
+  reviews: IReview[]
   image: string
   price: number
   category: string

@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
+import Meta from '../components/Meta'
+import Container from '../components/Container'
 import IProductItem from '../interfaces/IProductItem'
 import { listProducts } from '../features/productListSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
@@ -15,25 +17,23 @@ const Category = () => {
   const { loading, error, products } = productList
 
   const { category } = useParams()
+
+  const metaCategory = category
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : 'Category'
   useEffect(() => {
-    const listProductsAction = async () => {
-      try {
-        const products = await dispatch(listProducts()).unwrap()
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    listProductsAction()
-  }, [])
+    dispatch(listProducts())
+  }, [dispatch])
 
   const categoryProducts = products.filter(
     (product: IProductItem) => product.category === category
   )
 
   return (
-    <div className='min-h-screen'>
-      <div className='bg-white'>
-        <div className='mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8'>
+    <>
+      <Meta title={`Organik | ${metaCategory}`} />
+      <div className='min-h-screen'>
+        <Container>
           <h2 className='text-3xl font-bold tracking-tight text-gray-900 uppercase'>
             {category}
           </h2>
@@ -83,9 +83,9 @@ const Category = () => {
               ))}
             </div>
           )}
-        </div>
+        </Container>
       </div>
-    </div>
+    </>
   )
 }
 
