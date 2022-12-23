@@ -1,5 +1,4 @@
 import React from 'react'
-import Banner from '../assets/images/hero/hero.jpg'
 
 const Hero = () => {
   return (
@@ -12,7 +11,11 @@ const Hero = () => {
           delivered straight to your doorstep.
         </span>
       </h1>
-      <img src={Banner} alt='hero' className=' w-full bg-gray-200' />
+      <img
+        src='images/hero/hero.jpg'
+        alt='hero'
+        className=' w-full bg-gray-200'
+      />
     </div>
   )
 }

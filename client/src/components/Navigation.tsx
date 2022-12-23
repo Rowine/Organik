@@ -8,7 +8,6 @@ import {
   XMarkIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
-import Logo from '../assets/logo.svg'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { logout } from '../features/userLoginSlice'
 import { resetOrderListMy } from '../features/orderListMySlice'
@@ -69,14 +68,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   <Link to={'/'}>
                     <img
                       className='block h-8 w-auto lg:hidden'
-                      src={Logo}
+                      src='/images/logo.svg'
                       alt='Company Logo'
                     />
                   </Link>
                   <Link to={'/'}>
                     <img
                       className='hidden h-8 w-auto lg:block'
-                      src={Logo}
+                      src='/images/logo.svg'
                       alt='Company Logo'
                     />
                   </Link>
