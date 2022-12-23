@@ -12,7 +12,7 @@ export default interface IProductItem {
   user: string
   createdAt: string
   name: string
-  reviews: IReview[]
+  reviews: [] | IReview[]
   image: string
   price: number
   category: string

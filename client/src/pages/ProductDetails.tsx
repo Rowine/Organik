@@ -46,14 +46,7 @@ const ProductDetails = () => {
       setComment('')
       dispatch(resetProductCreateReview())
     }
-    const listProductDetailsAction = async () => {
-      try {
-        const product = await dispatch(listProductDetails(productId)).unwrap()
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    listProductDetailsAction()
+    dispatch(listProductDetails(productId))
   }, [dispatch, successProductReview])
 
   const navigate = useNavigate()

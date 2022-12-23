@@ -1,6 +1,8 @@
+import { IReview } from './../interfaces/IProductItem'
 import axios from 'axios'
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import IProductDetailsState from '../interfaces/IProductDetailsState'
+import IProductItem from '../interfaces/IProductItem'
 
 export const listProductDetails = createAsyncThunk(
   'products/listProductDetails',
@@ -23,8 +25,8 @@ const initialState = {
   product: {
     reviews: [],
   },
-  error: undefined as string | undefined,
-}
+  error: undefined,
+} as IProductDetailsState
 
 export const productDetailsSlice = createSlice({
   name: 'products',
