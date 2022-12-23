@@ -41,7 +41,7 @@ const App = () => {
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <BrowserRouter basename='/'>
         {!clientId ? (
           <Loader />
         ) : (
