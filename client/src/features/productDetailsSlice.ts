@@ -23,8 +23,8 @@ const initialState = {
   product: {
     reviews: [],
   },
-  error: undefined,
-} as IProductDetailsState
+  error: undefined as string | undefined,
+}
 
 export const productDetailsSlice = createSlice({
   name: 'products',
