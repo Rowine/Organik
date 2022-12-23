@@ -13,7 +13,7 @@ const Footer = () => {
       <Container>
         <div className='flex justify-between py-8 space-y-4 text-white'>
           <div>
-            <img src='images/logo.svg' alt='logo' className='w-1/2' />
+            <img src='/images/logo.svg' alt='logo' className='w-1/2' />
             <div>
               <h3 className='my-2 text-md font-semibold'>Follow Us</h3>
               <div className='flex space-x-2'>

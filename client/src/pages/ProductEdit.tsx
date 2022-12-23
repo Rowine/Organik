@@ -79,7 +79,7 @@ const ProductEdit = () => {
 
       const { data } = await axios.post('/api/upload', formData, config)
 
-      const path = '/' + data.split('/').slice(2).join('/')
+      const path = '/' + data.split('/').slice(3).join('/')
 
       setImage(path)
       setUploading(false)

@@ -68,14 +68,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   <Link to={'/'}>
                     <img
                       className='block h-8 w-auto lg:hidden'
-                      src='../../public/images/logo.svg'
+                      src='/images/logo.svg'
                       alt='Company Logo'
                     />
                   </Link>
                   <Link to={'/'}>
                     <img
                       className='hidden h-8 w-auto lg:block'
-                      src='../../public/images/logo.svg'
+                      src='/images/logo.svg'
                       alt='Company Logo'
                     />
                   </Link>
