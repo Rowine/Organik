@@ -12,7 +12,7 @@ const Hero = () => {
         </span>
       </h1>
       <img
-        src='../../public/images/hero/hero.jpg'
+        src='/images/hero/hero.jpg'
         alt='hero'
         className=' w-full bg-gray-200'
       />
