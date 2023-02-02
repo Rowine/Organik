@@ -14,7 +14,7 @@ interface RatingProps {
 
 const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
   return (
-    <div className='flex justify-between'>
+    <div className='sm:flex sm:justify-between'>
       <div className='flex space-x-0.5'>
         <span className='mx-0.5'>
           <FontAwesomeIcon
@@ -77,7 +77,7 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
           />
         </span>
       </div>
-      <span className='ml-1 md:ml-2'>{text && text}</span>
+      <span className='sm:ml-1 md:ml-2'>{text && text}</span>
     </div>
   )
 }

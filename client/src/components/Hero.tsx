@@ -2,20 +2,20 @@ import React from 'react'
 
 const Hero = () => {
   return (
-    <div className='w-full py-4 sm:py-10 relative'>
-      <h1 className='absolute top-12 sm:top-1/2 sm:px-10 font-bold text-slate-700 w-40 sm:w-full ml-4 sm:m-0'>
-        <p className='text-2xl sm:text-4xl lg:text-6xl sm:mb-2'>
-          Freshly Produced
-        </p>
-        <span className='text-sm sm:text-xl lg:text-2xl'>
-          delivered straight to your doorstep.
-        </span>
-      </h1>
+    <div className='relative w-full py-4 sm:py-0'>
       <img
         src='images/hero/hero.jpg'
         alt='hero'
-        className=' w-full bg-gray-200'
+        className='m-auto w-fit rounded-2xl drop-shadow-lg'
       />
+      <h1 className=' absolute top-1/4 left-4 w-32 font-lato font-extrabold sm:w-60 sm:px-10 md:top-32 md:left-20 md:w-3/4 lg:left-24 lg:top-1/3 xl:left-44 xl:top-1/3'>
+        <p className='text-xl text-green-600 sm:mb-2 sm:text-4xl md:text-4xl lg:text-6xl'>
+          Fresh <br /> Produced
+        </p>
+        <span className='text-sm text-slate-700 lg:text-xl'>
+          delivered straight to your doorstep.
+        </span>
+      </h1>
     </div>
   )
 }

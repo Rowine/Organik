@@ -8,6 +8,8 @@ import {
   XMarkIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import { useAppSelector, useAppDispatch } from '../app/hooks'
 import { logout } from '../features/userLoginSlice'
 import { resetOrderListMy } from '../features/orderListMySlice'
@@ -47,10 +49,10 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
   }
 
   return (
-    <Disclosure as='nav' className='bg-green-600'>
+    <Disclosure as='nav' className='ring-2 ring-slate-100'>
       {({ open }) => (
         <>
-          <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
+          <div className='mx-auto max-w-7xl px-2 pt-2 sm:px-6 lg:px-8'>
             <div className='relative flex h-16 items-center justify-between'>
               <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
                 {/* Mobile menu button*/}
@@ -68,29 +70,29 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   <Link to={'/'}>
                     <img
                       className='block h-8 w-auto lg:hidden'
-                      src='/images/logo.svg'
+                      src='/images/logo-dark.svg'
                       alt='Company Logo'
                     />
                   </Link>
                   <Link to={'/'}>
                     <img
                       className='hidden h-8 w-auto lg:block'
-                      src='/images/logo.svg'
+                      src='/images/logo-dark.svg'
                       alt='Company Logo'
                     />
                   </Link>
                 </div>
                 <div className='hidden sm:ml-6 sm:block'>
-                  <div className='flex space-x-4'>
+                  <div className='flex space-x-4 '>
                     {category.map((item) => (
                       <Link
                         key={item.name}
                         to={item.path}
                         className={classNames(
                           checkActive(item.path)
-                            ? 'bg-green-900 text-white'
-                            : 'text-gray-200 hover:bg-green-800 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
+                            ? 'bg-green-700 text-white'
+                            : 'text-slate-500 hover:bg-green-700 hover:text-white',
+                          'text-md rounded-lg px-2 py-2 font-lato font-bold tracking-wider lg:px-6'
                         )}
                         aria-current={
                           checkActive(item.path) ? 'page' : undefined
@@ -102,23 +104,29 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   </div>
                 </div>
               </div>
-              <div className='absolute inset-y-0 right-0 flex items-center sm:mr-2 sm:static sm:inset-auto sm:ml-6'>
+              <div className='absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:mr-2 sm:ml-6'>
                 <Link to='/like'>
                   <button
                     type='button'
-                    className='hidden rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800 sm:block'
+                    className=' hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'
                   >
                     <span className='sr-only'>View Likes</span>
-                    <HeartIcon className='h-6 w-6' aria-hidden='true' />
+                    <HeartIcon
+                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6 '
+                      aria-hidden='true'
+                    />
                   </button>
                 </Link>
                 <Link to='/cart' className='ml-1'>
                   <button
                     type='button'
-                    className='hidden rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800 sm:block'
+                    className='hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'
                   >
                     <span className='sr-only'>View Cart</span>
-                    <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
+                    <ShoppingCartIcon
+                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6'
+                      aria-hidden='true'
+                    />
                   </button>
                 </Link>
 
@@ -126,7 +134,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 {userInfo ? (
                   <Menu as='div' className='relative ml-3'>
                     <div>
-                      <Menu.Button className='flex rounded-full p-1 text-gray-200 hover:text-white hover:bg-green-800'>
+                      <Menu.Button className='flex rounded-full p-1 text-gray-200 hover:bg-green-800 hover:text-white'>
                         <span className='sr-only'>Open user menu</span>
                         <UserCircleIcon
                           className='h-6 w-6 '
@@ -237,7 +245,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                               type='button'
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700 w-full text-left'
+                                'block w-full px-4 py-2 text-left text-sm text-gray-700'
                               )}
                               onClick={logoutHandler}
                             >
@@ -249,12 +257,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                     </Transition>
                   </Menu>
                 ) : (
-                  <div className='ml-1 relative'>
+                  <div className='relative ml-1'>
                     <Link
                       to='/login'
-                      className='flex rounded-lg p-1 text-gray-200 hover:text-white hover:bg-green-800'
+                      className='flex rounded-lg text-green-600 hover:bg-green-700 hover:text-white sm:p-2'
                     >
-                      <span>Login</span>
+                      <span className='font-lato text-sm font-bold sm:tracking-wider'>
+                        Login
+                      </span>
                     </Link>
                   </div>
                 )}
@@ -271,15 +281,43 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   to={item.path}
                   className={classNames(
                     checkActive(item.path)
-                      ? 'bg-green-900 text-white'
-                      : 'text-gray-300 hover:bg-green-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
+                      ? 'bg-green-700 text-white'
+                      : 'text-green-600 hover:bg-green-700 hover:text-white',
+                    'block rounded-md px-3 py-2 text-base font-medium'
                   )}
                   aria-current={checkActive(item.path) ? 'page' : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
               ))}
+              <div>
+                <Disclosure.Button
+                  as={Link}
+                  to={'/like'}
+                  className={classNames(
+                    checkActive('/like')
+                      ? 'bg-green-700 text-white'
+                      : 'text-green-600 hover:bg-green-700 hover:text-white',
+                    'block rounded-md px-3 py-2 text-base font-medium'
+                  )}
+                >
+                  Likes
+                </Disclosure.Button>
+              </div>
+              <div>
+                <Disclosure.Button
+                  as={Link}
+                  to={'/cart'}
+                  className={classNames(
+                    checkActive('/cart')
+                      ? 'bg-green-700 text-white'
+                      : 'text-green-600 hover:bg-green-700 hover:text-white',
+                    'block rounded-md px-3 py-2 text-base font-medium'
+                  )}
+                >
+                  Cart
+                </Disclosure.Button>
+              </div>
             </div>
           </Disclosure.Panel>
         </>
