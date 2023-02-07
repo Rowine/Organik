@@ -39,8 +39,8 @@ const UserList = () => {
 
   return (
     <Container>
-      <div className='py-10 h-screen'>
-        <h1 className='text-3xl font-bold tracking-tight text-gray-900 uppercase'>
+      <div className='mb-10 max-h-screen'>
+        <h1 className='my-8 font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
           Users
         </h1>
         {loading === 'pending' ? (
@@ -48,37 +48,42 @@ const UserList = () => {
         ) : error ? (
           <Message type='error'>{error}</Message>
         ) : (
-          <table className='table-fixed w-full xl:mx-auto xl:w-max xl:table-auto'>
+          <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>
-              <tr>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+              <tr className='bg-green-600 font-lato font-extrabold text-white'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   ID
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   NAME
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   EMAIL
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 sm:text-left text-center'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   ADMIN
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'></th>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
+                  ACTION
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='bg-white last-of-type:border-b-2 last-of-type:border-green-600'>
               {users.map((user) => (
-                <tr key={user._id}>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words'>
+                <tr
+                  key={user._id}
+                  className='border-b border-slate-200 even:bg-gray-100'
+                >
+                  <td className='truncate  text-slate-900  sm:p-4 sm:pl-8'>
                     {user._id}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900'>
+                  <td className=' text-slate-900  sm:p-4 sm:pl-8'>
                     {user.name}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words'>
+                  <td className='break-words  text-slate-900  sm:p-4 sm:pl-8'>
                     <a href={`mailto${user.email}`}>{user.email}</a>
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 text-center sm:text-left'>
+                  <td className=' text-center text-slate-900  sm:p-4 sm:pl-8 sm:text-left'>
                     {user.isAdmin ? (
                       <FontAwesomeIcon
                         icon={faCheck}
@@ -91,20 +96,20 @@ const UserList = () => {
                       />
                     )}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900'>
+                  <td className='p-1 text-slate-900 sm:p-4 sm:pl-8'>
                     <div className='flex'>
                       <Link to={`/admin/user/${user._id}/edit`}>
-                        <button className='bg-slate-200 hover:bg-slate-300 p-2 rounded-md'>
+                        <button className='rounded-md bg-slate-200 p-1 hover:bg-slate-300 sm:p-2'>
                           <FontAwesomeIcon icon={faEdit} />
                         </button>
                       </Link>
                       <button
-                        className='ml-2 bg-red-500 hover:bg-red-600 p-2 rounded-md text-white'
+                        className='ml-2 rounded-md bg-red-500 p-1 text-white hover:bg-red-600 sm:p-2'
                         onClick={() => deleteHandler(user._id)}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}
-                          className='text-white h-4 w-4'
+                          className='h-4 w-4 text-white'
                         />
                       </button>
                     </div>

@@ -12,6 +12,7 @@ import {
   faEdit,
 } from '@fortawesome/free-solid-svg-icons'
 import { listOrders } from '../features/orderListSlice'
+import { format } from './Profile'
 
 const OrderList = () => {
   const dispatch = useAppDispatch()
@@ -30,8 +31,8 @@ const OrderList = () => {
 
   return (
     <Container>
-      <div className='py-10 h-screen'>
-        <h1 className='text-3xl font-bold tracking-tight text-gray-900 uppercase'>
+      <div className='min-h-screen'>
+        <h1 className='my-8 font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
           Orders
         </h1>
         {loading === 'pending' ? (
@@ -39,48 +40,53 @@ const OrderList = () => {
         ) : error ? (
           <Message type='error'>{error}</Message>
         ) : (
-          <table className='table-fixed w-full xl:mx-auto xl:w-max xl:table-auto'>
+          <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>
-              <tr>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+              <tr className='bg-green-600 font-lato font-extrabold text-white'>
+                <th className='pl-2 text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   ID
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   USER
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   DATE
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 sm:text-left text-center'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   TOTAL
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 sm:text-left text-center'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   PAID
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'>
-                  Delivered
+                <th className='break-words text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
+                  DELIVERED
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'></th>
+                <th className='text-left font-medium sm:p-4 sm:pb-3 md:pl-8'>
+                  DETAILS
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='bg-white last-of-type:border-b-2 last-of-type:border-green-600'>
               {orders.map((order) => (
-                <tr key={order._id}>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900 break-words'>
+                <tr
+                  key={order._id}
+                  className='border-b border-slate-200 even:bg-gray-100'
+                >
+                  <td className='truncate pl-2 pr-2 text-slate-900 sm:p-4 sm:pl-8'>
                     {order._id}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900'>
+                  <td className='pr-2 text-slate-900 sm:p-4 sm:pl-8'>
                     {order.user && order.user.name}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900 break-words'>
-                    {order.createdAt.substring(0, 10)}
+                  <td className='break-words pr-2 text-slate-900 sm:p-4 sm:pl-8'>
+                    {format(order.createdAt.substring(0, 10))}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900 break-words'>
+                  <td className='break-words pr-2 text-slate-900 sm:p-4 sm:pl-8'>
                     ₱{order.totalPrice}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900 text-center sm:text-left'>
+                  <td className='pr-2 text-center text-slate-900 sm:p-4 sm:pl-8 sm:text-left'>
                     {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
+                      format(order.paidAt.substring(0, 10))
                     ) : (
                       <FontAwesomeIcon
                         icon={faTimes}
@@ -88,9 +94,9 @@ const OrderList = () => {
                       />
                     )}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900 text-center sm:text-left'>
+                  <td className='pr-2 text-center text-slate-900 sm:p-4 sm:pl-8 sm:text-left'>
                     {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
+                      format(order.deliveredAt.substring(0, 10))
                     ) : (
                       <FontAwesomeIcon
                         icon={faTimes}
@@ -98,10 +104,10 @@ const OrderList = () => {
                       />
                     )}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 pr-2 sm:p-4 sm:pl-8 text-slate-900'>
+                  <td className='text-white sm:p-4 md:pl-8'>
                     <div className='flex'>
                       <Link to={`/order/${order._id}`}>
-                        <button className='bg-slate-200 hover:bg-slate-300 p-2 rounded-md'>
+                        <button className='rounded-md bg-green-600 p-1 hover:bg-green-900 md:p-2'>
                           Details
                         </button>
                       </Link>

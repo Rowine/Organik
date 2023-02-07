@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js'
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Message from '../components/Message'
 import Container from '../components/Container'
 import Loader from '../components/Loader'
@@ -21,6 +21,7 @@ interface IPayOrderPayload {
 }
 
 const Order = () => {
+  const [clientId, setClientId] = useState('')
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { id } = useParams() as { id: string }
@@ -70,6 +71,18 @@ const Order = () => {
     dispatch(deliverOrder(order))
   }
 
+  useEffect(() => {
+    try {
+      const addPaypalScript = async () => {
+        const { data: clientId } = await axios.get('/api/config/paypal')
+        setClientId(clientId)
+      }
+      addPaypalScript()
+    } catch (error) {
+      console.log('Error')
+    }
+  }, [clientId])
+
   return (
     <Container>
       {loading === 'pending' ? (
@@ -77,10 +90,10 @@ const Order = () => {
       ) : error ? (
         <Message type='error'>{error}</Message>
       ) : (
-        <div className='grid grid-cols-12 gap-x-5 my-10'>
+        <div className='my-10 grid grid-cols-12 gap-x-5'>
           <div className='col-span-12 lg:col-span-8'>
-            <div className='bg-white rounded-lg shadow-lg p-5'>
-              <h2 className='text-2xl font-semibold mb-5'>Shipping</h2>
+            <div className='rounded-lg bg-white p-5 shadow-lg'>
+              <h2 className='mb-5 text-2xl font-semibold'>Shipping</h2>
               <p>
                 <strong>Address: </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
@@ -102,8 +115,8 @@ const Order = () => {
                 <Message type='error'>Not Delivered</Message>
               )}
             </div>
-            <div className='bg-white rounded-lg shadow-lg p-5 mt-5'>
-              <h2 className='text-2xl font-semibold mb-5'>Payment Method</h2>
+            <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
+              <h2 className='mb-5 text-2xl font-semibold'>Payment Method</h2>
               <p className='mb-2'>
                 <strong>Method: </strong>
                 {order.paymentMethod}
@@ -114,8 +127,8 @@ const Order = () => {
                 <Message type='error'>Not Paid</Message>
               )}
             </div>
-            <div className='bg-white rounded-lg shadow-lg p-5 mt-5'>
-              <h2 className='text-2xl font-semibold mb-5'>Order Items</h2>
+            <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
+              <h2 className='mb-5 text-2xl font-semibold'>Order Items</h2>
               {order.orderItems.length === 0 ? (
                 <Message type='info'>Your cart is empty</Message>
               ) : (
@@ -125,12 +138,12 @@ const Order = () => {
                       key={item.product}
                       className='col-span-12 sm:col-span-6 lg:col-span-4'
                     >
-                      <div className='bg-white rounded-lg shadow-lg p-5'>
+                      <div className='rounded-lg bg-white p-5 shadow-lg'>
                         <div className='flex items-center'>
                           <img
                             src={item.image}
                             alt={item.name}
-                            className='w-20 h-20 object-cover'
+                            className='h-20 w-20 object-cover'
                           />
                           <div className='ml-5'>
                             <Link
@@ -153,56 +166,62 @@ const Order = () => {
             </div>
           </div>
           <div className='col-span-12 lg:col-span-4'>
-            <div className='bg-white rounded-lg shadow-lg p-5'>
-              <h2 className='text-2xl font-semibold mb-5'>Order Summary</h2>
-              <div className='flex justify-between items-center mb-5'>
+            <div className='rounded-lg bg-white p-5 shadow-lg'>
+              <h2 className='mb-5 text-2xl font-semibold'>Order Summary</h2>
+              <div className='mb-5 flex items-center justify-between'>
                 <p>Items</p>
                 <p>₱{itemsPriceFixed}</p>
               </div>
-              <div className='flex justify-between items-center mb-5'>
+              <div className='mb-5 flex items-center justify-between'>
                 <p>Shipping</p>
                 <p>₱{order.shippingPrice}</p>
               </div>
-              <div className='flex justify-between items-center mb-5'>
+              <div className='mb-5 flex items-center justify-between'>
                 <p>Total</p>
                 <p>₱{order.totalPrice}</p>
               </div>
             </div>
             {loadingPay === 'pending' && <Loader />}
             {userInfo && !userInfo.isAdmin && !order.isPaid && (
-              <div className='bg-white rounded-lg shadow-lg p-5 mt-5'>
-                <h2 className='text-2xl font-semibold mb-5'>Payment</h2>
+              <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
+                <h2 className='mb-5 text-2xl font-semibold'>Payment</h2>
                 {errorPay && <Message type='error'>{errorPay}</Message>}
                 <div className='mt-10'>
-                  <PayPalButtons
-                    style={{ layout: 'horizontal' }}
-                    disabled={false}
-                    createOrder={(data, actions) => {
-                      return actions.order
-                        .create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                currency_code: 'PHP',
-                                value: order.totalPrice.toString(),
+                  <PayPalScriptProvider
+                    options={{
+                      'client-id': clientId,
+                      currency: 'PHP',
+                    }}
+                  >
+                    <PayPalButtons
+                      disabled={false}
+                      createOrder={(data, actions) => {
+                        return actions.order
+                          .create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  currency_code: 'PHP',
+                                  value: order.totalPrice.toString(),
+                                },
                               },
-                            },
-                          ],
-                        })
-                        .then((orderId) => {
-                          // Your code here after create the order
-                          return orderId
-                        })
-                    }}
-                    onApprove={function (data, actions) {
-                      return (actions.order as any)
-                        .capture()
-                        .then(function (details: any) {
-                          // Your code here after capture the order
-                          successPaymentHandler(details)
-                        })
-                    }}
-                  />
+                            ],
+                          })
+                          .then((orderId) => {
+                            // Your code here after create the order
+                            return orderId
+                          })
+                      }}
+                      onApprove={function (data, actions) {
+                        return (actions.order as any)
+                          .capture()
+                          .then(function (details: any) {
+                            // Your code here after capture the order
+                            successPaymentHandler(details)
+                          })
+                      }}
+                    />
+                  </PayPalScriptProvider>
                 </div>
               </div>
             )}

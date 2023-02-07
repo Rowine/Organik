@@ -33,13 +33,13 @@ const Like = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='bg-white'>
+      <div>
         <div className='mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8'>
-          <h2 className='text-3xl font-bold tracking-tight text-gray-900 uppercase pb-10'>
+          <h2 className='pb-10 font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
             Likes
           </h2>
-          <div className='grid grid-cols-1'>
-            <div className='flex flex-col md:col-span-2'>
+          <div className='grid grid-cols-3'>
+            <div className='col-span-3 flex flex-col md:col-span-2'>
               <div>
                 <div className='border-b border-gray-200'>
                   <h3 className='text-sm font-medium text-gray-900'>
@@ -52,35 +52,35 @@ const Like = () => {
                         You don't have any item that you like.{' '}
                         <Link
                           to='/'
-                          className='text-indigo-600 hover:text-indigo-500 underline'
+                          className='text-indigo-600 underline hover:text-indigo-500'
                         >
                           Go back
                         </Link>
                       </Message>
                     ) : (
-                      <ul className='border-t border-b border-gray-200 divide-y divide-gray-200'>
+                      <ul className='divide-y divide-gray-200 border-t border-b border-gray-200'>
                         {likeItems.map((item) => (
                           <li
                             key={item.product}
-                            className='py-6 flex space-x-5 sm:space-x-10'
+                            className='flex space-x-5 py-6 sm:space-x-10'
                           >
-                            <div className='flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden'>
+                            <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
                               <img
                                 src={item.image}
                                 alt={item.name}
-                                className='w-full h-full object-center object-cover'
+                                className='h-full w-full object-cover object-center'
                               />
                             </div>
 
-                            <div className='ml-4 flex-1 flex flex-col'>
-                              <div className='flex justify-between content-center text-base font-medium text-gray-900'>
+                            <div className='ml-4 flex flex-1 flex-col'>
+                              <div className='flex content-center justify-between text-base font-medium text-gray-900'>
                                 <h3>
                                   <Link to={`/product/${item.product}`}>
                                     {item.name}
                                   </Link>
                                 </h3>
                               </div>
-                              <p className='font-semibold my-2'>
+                              <p className='my-2 font-semibold'>
                                 ₱{item.price}
                               </p>
                             </div>
@@ -88,7 +88,7 @@ const Like = () => {
                             <div className='ml-4 flex flex-col justify-center sm:flex-row'>
                               <button
                                 type='button'
-                                className='font-medium text-blue-600 hover:text-blue-500 mr-4'
+                                className='mr-4 font-medium text-blue-600 hover:text-blue-500'
                                 onClick={() => addToCartHandler(item.product)}
                               >
                                 Add to Cart

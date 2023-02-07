@@ -62,16 +62,16 @@ const ProductList = () => {
   return (
     <Container>
       <div>
-        <div className='my-2 flex justify-between items-center'>
+        <div className='my-2 flex items-center justify-between'>
           <div>
-            <h1 className='text-3xl font-bold tracking-tight text-gray-900 uppercase'>
+            <h1 className='font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
               Products
             </h1>
           </div>
           <div>
             <button
               type='button'
-              className='my-3 group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-center'
+              className='group relative my-3 flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-center text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
               onClick={createProductHandler}
             >
               <FontAwesomeIcon icon={faPlus} className='mr-2 mt-1' />
@@ -88,59 +88,64 @@ const ProductList = () => {
         ) : error ? (
           <Message type='error'>{error}</Message>
         ) : (
-          <table className='table-fixed w-full xl:mx-auto xl:w-full xl:table-auto'>
+          <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>
-              <tr>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left md:text-base text-xs '>
+              <tr className='bg-green-600 font-lato font-extrabold text-white'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3 '>
                   ID
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left md:text-base text-xs'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   NAME
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left md:text-base text-xs '>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3 '>
                   PRICE
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 sm:text-left text-center md:text-base text-xs truncate'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   CATEGORY
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 sm:text-left text-center md:text-base text-xs'>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
                   STOCKS
                 </th>
-                <th className='border-b dark:border-slate-600 font-medium sm:p-4 sm:pl-8 sm:pt-0 sm:pb-3 text-slate-900 text-left'></th>
+                <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
+                  ACTIONS
+                </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='bg-white last-of-type:border-b-2 last-of-type:border-green-600'>
               {products.map((product: IProductItem) => (
-                <tr key={product._id}>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words md:text-sm lg:text-base text-xs '>
+                <tr
+                  key={product._id}
+                  className='border-b border-slate-200 even:bg-gray-100'
+                >
+                  <td className='truncate text-xs text-slate-900  sm:p-4 sm:pl-8 md:text-sm lg:text-base '>
                     {product._id}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words md:text-sm lg:text-base text-xs'>
+                  <td className='break-words  text-xs text-slate-900  sm:p-4 sm:pl-8 md:text-sm lg:text-base'>
                     {product.name}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words md:text-sm lg:text-base text-xs'>
+                  <td className='break-words  text-xs text-slate-900  sm:p-4 sm:pl-8 md:text-sm lg:text-base'>
                     ₱{product.price}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words md:text-sm lg:text-base text-xs truncate'>
+                  <td className='truncate break-words  text-xs text-slate-900  sm:p-4 sm:pl-8 md:text-sm lg:text-base'>
                     {product.category}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900 break-words md:text-sm lg:text-base text-xs'>
+                  <td className='break-words  text-xs text-slate-900  sm:p-4 sm:pl-8 md:text-sm lg:text-base'>
                     {product.countInStock}
                   </td>
-                  <td className='border-b border-slate-200 dark:border-slate-600 sm:p-4 sm:pl-8 text-slate-900'>
+                  <td className=' text-slate-900  sm:p-4 sm:pl-8'>
                     <div className='flex'>
                       <Link to={`/admin/product/${product._id}/edit`}>
-                        <button className='bg-slate-200 p-1 hover:bg-slate-300 md:p-2 rounded-md'>
+                        <button className='rounded-md bg-slate-200 p-1 hover:bg-slate-300 md:p-2'>
                           <FontAwesomeIcon icon={faEdit} className='w-3' />
                         </button>
                       </Link>
                       <button
-                        className='md:ml-2 bg-red-500 hover:bg-red-600 p-1 smd:p-2  text-white rounded-md'
+                        className='smd:p-2 rounded-md bg-red-500 p-1 text-white  hover:bg-red-600 md:ml-2'
                         onClick={() => deleteHandler(product._id)}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}
-                          className='text-white w-3 md:h-4 md:w-4'
+                          className='w-3 text-white md:h-4 md:w-4'
                         />
                       </button>
                     </div>

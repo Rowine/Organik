@@ -14,7 +14,9 @@ const Message = ({ type, children }: IMessageProps) => {
   }
 
   const theme = variant[type]
-  return <div className={`w-full p-3 rounded-sm ${theme}`}>{children}</div>
+  return (
+    <div className={`w-full rounded-sm p-3 font-lato ${theme}`}>{children}</div>
+  )
 }
 
 export default Message

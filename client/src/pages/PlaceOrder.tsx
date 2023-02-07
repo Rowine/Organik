@@ -49,23 +49,27 @@ const PlaceOrder = () => {
   return (
     <Container>
       <CheckoutSteps step1 step2 step3 step4 />
-      <div className='grid grid-cols-12 gap-x-5 my-10'>
+      <div className='my-10 grid grid-cols-12 gap-x-5 gap-y-10'>
         <div className='col-span-12 lg:col-span-8'>
-          <div className='bg-white rounded-lg shadow-lg p-5'>
-            <h2 className='text-2xl font-semibold mb-5'>Shipping</h2>
+          <div className='rounded-lg bg-white p-5 shadow-lg'>
+            <h2 className='mb-5 font-lato text-2xl font-semibold'>Shipping</h2>
             <p>
               <strong>Address: </strong>
               {shippingAddress.address}, {shippingAddress.city}{' '}
               {shippingAddress.postalCode}
             </p>
 
-            <h2 className='text-2xl font-semibold mt-5 mb-5'>Payment Method</h2>
+            <h2 className='mt-5 mb-5 font-lato text-2xl font-semibold'>
+              Payment Method
+            </h2>
             <p>
               <strong>Method: </strong>
               {cart.paymentMethod}
             </p>
 
-            <h2 className='text-2xl font-semibold mt-5 mb-5'>Order Items</h2>
+            <h2 className='mt-5 mb-5 font-lato text-2xl font-semibold'>
+              Order Items
+            </h2>
             {cartItems.length === 0 ? (
               <Message type='info'>Your cart is empty</Message>
             ) : (
@@ -80,7 +84,7 @@ const PlaceOrder = () => {
                           alt={item.name}
                         />
                       </div>
-                      <div className='ml-4 flex-1 flex flex-col'>
+                      <div className='ml-4 flex flex-1 flex-col'>
                         <div>
                           <div className='flex justify-between text-base font-medium text-gray-900'>
                             <h3>
@@ -103,8 +107,10 @@ const PlaceOrder = () => {
           </div>
         </div>
         <div className='col-span-12 lg:col-span-4'>
-          <div className='bg-white rounded-lg shadow-lg p-5'>
-            <h2 className='text-2xl font-semibold mb-5'>Order Summary</h2>
+          <div className='rounded-lg bg-white p-5 shadow-lg'>
+            <h2 className='mb-5 font-lato text-2xl font-semibold'>
+              Order Summary
+            </h2>
             <ul className='divide-y divide-gray-200'>
               <li className='py-5'>
                 <div className='flex justify-between text-base font-medium text-gray-900'>
@@ -128,7 +134,7 @@ const PlaceOrder = () => {
             {error && <Message type='error'>{error}</Message>}
             <button
               onClick={placeOrderHandler}
-              className='mt-5 w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
+              className='mt-5 flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
             >
               Place Order
             </button>

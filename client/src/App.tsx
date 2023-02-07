@@ -25,80 +25,57 @@ import ProductEdit from './pages/ProductEdit'
 import OrderList from './pages/OrderList'
 
 const App = () => {
-  const [clientId, setClientId] = useState(null)
-
-  useEffect(() => {
-    try {
-      const addPaypalScript = async () => {
-        const { data: clientId } = await axios.get('/api/config/paypal')
-        setClientId(clientId)
-      }
-      addPaypalScript()
-    } catch (error) {
-      console.log('Error')
-    }
-  }, [clientId])
-
   return (
     <HelmetProvider>
       <BrowserRouter basename='/'>
-        {!clientId ? (
-          <Loader />
-        ) : (
-          <PayPalScriptProvider
-            options={{
-              'client-id': clientId,
-              currency: 'PHP',
-            }}
-          >
-            <Navigation
-              category={[
-                {
-                  name: 'Meat',
-                  path: '/meat',
-                  active: false,
-                },
-                {
-                  name: 'Fish',
-                  path: '/fish',
-                  active: false,
-                },
-                {
-                  name: 'Vegetables',
-                  path: '/vegetables',
-                  active: false,
-                },
-                {
-                  name: 'Fruits',
-                  path: '/fruits',
-                  active: false,
-                },
-              ]}
-            />
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/login' element={<Login />} />
-              <Route path='/order/:id' element={<Order />} />
-              <Route path='/shipping' element={<Shipping />} />
-              <Route path='/payment' element={<Payment />} />
-              <Route path='/placeorder' element={<PlaceOrder />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/profile' element={<Profile />} />
-              <Route path='/like' element={<Like />} />
-              <Route path='/like/:id' element={<Like />} />
-              <Route path='/cart' element={<Cart />} />
-              <Route path='/cart/:id' element={<Cart />} />
-              <Route path='/admin/userlist' element={<UserList />} />
-              <Route path='/admin/productlist' element={<ProductList />} />
-              <Route path='/admin/orderlist' element={<OrderList />} />
-              <Route path='/admin/user/:id/edit' element={<UserEdit />} />
-              <Route path='/admin/product/:id/edit' element={<ProductEdit />} />
-              <Route path='/:category' element={<Category />} />
-              <Route path='/:category/:id' element={<ProductDetails />} />
-            </Routes>
-            <Footer />
-          </PayPalScriptProvider>
-        )}
+        <div className='flex h-screen flex-col justify-between'>
+          <Navigation
+            category={[
+              {
+                name: 'Meat',
+                path: '/meat',
+                active: false,
+              },
+              {
+                name: 'Fish',
+                path: '/fish',
+                active: false,
+              },
+              {
+                name: 'Vegetables',
+                path: '/vegetables',
+                active: false,
+              },
+              {
+                name: 'Fruits',
+                path: '/fruits',
+                active: false,
+              },
+            ]}
+          />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/order/:id' element={<Order />} />
+            <Route path='/shipping' element={<Shipping />} />
+            <Route path='/payment' element={<Payment />} />
+            <Route path='/placeorder' element={<PlaceOrder />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/like' element={<Like />} />
+            <Route path='/like/:id' element={<Like />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/cart/:id' element={<Cart />} />
+            <Route path='/admin/userlist' element={<UserList />} />
+            <Route path='/admin/productlist' element={<ProductList />} />
+            <Route path='/admin/orderlist' element={<OrderList />} />
+            <Route path='/admin/user/:id/edit' element={<UserEdit />} />
+            <Route path='/admin/product/:id/edit' element={<ProductEdit />} />
+            <Route path='/:category' element={<Category />} />
+            <Route path='/:category/:id' element={<ProductDetails />} />
+          </Routes>
+          <Footer />
+        </div>
       </BrowserRouter>
     </HelmetProvider>
   )

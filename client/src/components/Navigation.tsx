@@ -83,7 +83,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   </Link>
                 </div>
                 <div className='hidden sm:ml-6 sm:block'>
-                  <div className='flex space-x-4 '>
+                  <div className='flex space-x-1 md:space-x-4 '>
                     {category.map((item) => (
                       <Link
                         key={item.name}
@@ -108,11 +108,11 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 <Link to='/like'>
                   <button
                     type='button'
-                    className=' hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'
+                    className=' hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:block sm:py-2 sm:px-3'
                   >
                     <span className='sr-only'>View Likes</span>
                     <HeartIcon
-                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6 '
+                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6'
                       aria-hidden='true'
                     />
                   </button>
@@ -120,7 +120,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                 <Link to='/cart' className='ml-1'>
                   <button
                     type='button'
-                    className='hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'
+                    className='hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:block sm:py-2 sm:px-3'
                   >
                     <span className='sr-only'>View Cart</span>
                     <ShoppingCartIcon
@@ -132,12 +132,12 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
 
                 {/* Profile dropdown */}
                 {userInfo ? (
-                  <Menu as='div' className='relative ml-3'>
+                  <Menu as='div' className='relative'>
                     <div>
-                      <Menu.Button className='flex rounded-full p-1 text-gray-200 hover:bg-green-800 hover:text-white'>
+                      <Menu.Button className='flex rounded-full p-1 text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'>
                         <span className='sr-only'>Open user menu</span>
                         <UserCircleIcon
-                          className='h-6 w-6 '
+                          className='h-8 w-8 stroke-2 sm:mt-1 sm:h-6 sm:w-6'
                           aria-hidden='true'
                         />
                       </Menu.Button>
@@ -260,7 +260,7 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   <div className='relative ml-1'>
                     <Link
                       to='/login'
-                      className='flex rounded-lg text-green-600 hover:bg-green-700 hover:text-white sm:p-2'
+                      className='flex rounded-lg p-2 text-green-600 hover:bg-green-700 hover:text-white'
                     >
                       <span className='font-lato text-sm font-bold sm:tracking-wider'>
                         Login

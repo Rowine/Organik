@@ -30,9 +30,9 @@ const Cart = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='bg-white'>
+      <div>
         <div className='mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8'>
-          <h2 className='text-3xl font-bold tracking-tight text-gray-900 uppercase pb-10'>
+          <h2 className='pb-10 font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
             Shopping Cart
           </h2>
           <div className='grid grid-cols-1 gap-y-10 md:grid-cols-3 md:gap-x-10'>
@@ -49,35 +49,35 @@ const Cart = () => {
                         Your cart is empty.{' '}
                         <Link
                           to='/'
-                          className='text-indigo-600 hover:text-indigo-500 underline'
+                          className='text-indigo-600 underline hover:text-indigo-500'
                         >
                           Go back
                         </Link>
                       </Message>
                     ) : (
-                      <ul className='border-t border-b border-gray-200 divide-y divide-gray-200'>
+                      <ul className='divide-y divide-gray-200 border-t border-b border-gray-200'>
                         {cartItems.map((item) => (
                           <li
                             key={item.product}
-                            className='py-6 flex space-x-5 sm:space-x-10'
+                            className='flex space-x-5 py-6 sm:space-x-10'
                           >
-                            <div className='flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden'>
+                            <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
                               <img
                                 src={item.image}
                                 alt={item.name}
-                                className='w-full h-full object-center object-cover'
+                                className='h-full w-full object-cover object-center'
                               />
                             </div>
 
-                            <div className='ml-4 flex-1 flex flex-col'>
-                              <div className='flex justify-between content-center text-base font-medium text-gray-900'>
+                            <div className='ml-4 flex flex-1 flex-col'>
+                              <div className='flex content-center justify-between text-base font-medium text-gray-900'>
                                 <h3>
                                   <Link to={`/product/${item.product}`}>
                                     {item.name}
                                   </Link>
                                 </h3>
                               </div>
-                              <p className='font-semibold my-2'>
+                              <p className='my-2 font-semibold'>
                                 ₱{item.price}
                               </p>
                             </div>
@@ -89,7 +89,7 @@ const Cart = () => {
                               <select
                                 id='quantity'
                                 name='quantity'
-                                className='py-2 pl-2 pr-7 border-gray-500 bg-transparent text-gray-500 sm:text-sm rounded-md'
+                                className='rounded-md border-gray-500 bg-transparent py-2 pl-2 pr-7 text-gray-500 sm:text-sm'
                                 defaultValue={item.qty}
                                 onChange={(e) =>
                                   dispatch(
@@ -110,7 +110,7 @@ const Cart = () => {
                               </select>
                             </div>
 
-                            <div className='ml-4 flex-shrink-0 flex'>
+                            <div className='ml-4 flex flex-shrink-0'>
                               <button
                                 type='button'
                                 className='font-medium text-red-600 hover:text-red-500'
@@ -130,13 +130,13 @@ const Cart = () => {
               </div>
             </div>
             <div>
-              <div className='border border-gray-50 rounded-md p-4 bg-gray-50'>
+              <div className='rounded-md border border-gray-50 bg-gray-50 p-4'>
                 <h2 className='text-lg font-medium text-gray-900'>
                   Order Summary
                 </h2>
 
                 <div className=''>
-                  <dl className='flex flex-col justify-between mt-6 space-y-4'>
+                  <dl className='mt-6 flex flex-col justify-between space-y-4'>
                     <dt className='text-sm font-medium text-gray-500'>
                       Subtotal
                     </dt>
@@ -151,7 +151,7 @@ const Cart = () => {
 
                 <div className='mt-6'>
                   <button
-                    className='w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700'
+                    className='flex w-full items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700'
                     disabled={cartItems.length === 0}
                     onClick={checkoutHandler}
                   >
@@ -162,7 +162,7 @@ const Cart = () => {
                     or{' '}
                     <Link
                       to='/'
-                      className='text-green-600 font-medium hover:text-green-500 underline'
+                      className='font-medium text-green-600 underline hover:text-green-500'
                     >
                       Continue Shopping
                     </Link>

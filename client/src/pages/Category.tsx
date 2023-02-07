@@ -9,6 +9,8 @@ import Container from '../components/Container'
 import IProductItem from '../interfaces/IProductItem'
 import { listProducts } from '../features/productListSlice'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
+// @ts-ignore
+import PreloadImage from 'react-preload-image'
 
 const Category = () => {
   const dispatch = useAppDispatch()
@@ -34,32 +36,44 @@ const Category = () => {
       <Meta title={`Organik | ${metaCategory}`} />
       <div className='min-h-screen'>
         <Container>
-          <h2 className='text-3xl font-bold tracking-tight text-gray-900 uppercase'>
-            {category}
-          </h2>
+          <div className='relative h-12 rounded-xl bg-green-900 drop-shadow-lg md:h-24'>
+            <img
+              src='/images/banner/bg-leaf.jpg'
+              alt='Leaf pattern'
+              className='absolute h-full w-full rounded-xl object-cover mix-blend-overlay'
+            />
+            <h2 className='p-2 text-center font-lato text-xl font-extrabold uppercase tracking-widest text-white md:p-7 md:text-3xl '>
+              {category}
+            </h2>
+          </div>
           {loading === 'pending' ? (
-            <Loader />
+            <div className='h-screen'>
+              <Loader />
+            </div>
           ) : error ? (
             <Message type={'error'}>{error}</Message>
           ) : (
-            <div className='mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
+            <div className='mt-6 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8'>
               {categoryProducts.map((product: IProductItem) => (
-                <div key={product._id} className='group relative'>
-                  <div className='min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none'>
+                <div
+                  key={product._id}
+                  className='group relative rounded-xl p-1 shadow-lg sm:p-3'
+                >
+                  <div className='min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75'>
                     <Link to={`/${product.category}/${product._id}`}>
-                      <img
+                      <PreloadImage
                         src={product.image}
-                        alt={product.name}
-                        className='h-full w-full object-cover object-center lg:h-full lg:w-full'
+                        className=' h-full w-full object-cover object-center'
+                        lazy
                       />
                     </Link>
                   </div>
-                  <div className='mt-4 flex justify-between'>
+                  <div className='mt-4 sm:flex sm:justify-between'>
                     <div>
-                      <h3 className='text-sm text-gray-700'>
+                      <h3 className='font-lato font-medium text-gray-700'>
                         <Link
                           to={`/${product.category}/${product._id}`}
-                          className='font-semibold hover:underline'
+                          className='font-semibold'
                         >
                           <span
                             aria-hidden='true'
@@ -68,14 +82,14 @@ const Category = () => {
                           {product.name}
                         </Link>
                       </h3>
-                      <div>
+                      <div className='mt-1 truncate font-lato text-xs text-gray-500'>
                         <Rating
                           value={product.rating}
                           text={`${product.numReviews} reviews`}
                         />
                       </div>
                     </div>
-                    <p className='text-sm font-medium text-gray-900'>
+                    <p className='mt-1 font-lato text-sm font-semibold text-gray-900 sm:mt-0'>
                       ₱{product.price}
                     </p>
                   </div>

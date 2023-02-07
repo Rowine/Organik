@@ -90,18 +90,18 @@ const ProductEdit = () => {
   }
   return (
     <Container>
-      <div className='mt-4'>
+      <div className='ml-4 sm:m-0'>
         <Link
           to='/admin/productlist'
-          className='text-green-500 hover:text-green-700 text-xl font-medium'
+          className='group relative my-3 flex w-fit justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-center text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
         >
           Go Back
         </Link>
       </div>
-      <div className='flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-50'>
+      <div className='mb-5 flex max-h-full items-center justify-center px-4 sm:px-6 lg:px-8'>
         <div className='w-full max-w-md space-y-6'>
           <div>
-            <h2 className='my-16 text-center text-4xl font-bold tracking-tight text-gray-900'>
+            <h2 className='my-10 text-center text-4xl font-bold tracking-tight text-gray-900'>
               Edit Product
             </h2>
           </div>
@@ -123,7 +123,7 @@ const ProductEdit = () => {
                     type='text'
                     autoComplete='name'
                     value={name}
-                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                     placeholder='Enter Name'
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -135,8 +135,10 @@ const ProductEdit = () => {
                     name='price'
                     type='number'
                     autoComplete='price'
+                    min='0'
                     value={price}
-                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    step='any'
+                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                     placeholder='Enter Price'
                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
@@ -149,7 +151,7 @@ const ProductEdit = () => {
                     type='text'
                     autoComplete='image'
                     value={image}
-                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                     placeholder='Enter Image Url'
                     onChange={(e) => setImage(e.target.value)}
                   />
@@ -157,7 +159,7 @@ const ProductEdit = () => {
                     type='file'
                     id='image-file'
                     onChange={uploadFileHandler}
-                    className='relative block w-full appearance-none mt-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    className='relative mt-2 block w-full appearance-none text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                   />
                   {uploading && <Loader />}
                 </div>
@@ -168,8 +170,9 @@ const ProductEdit = () => {
                     name='countInStock'
                     type='number'
                     autoComplete='countInStock'
+                    min={0}
                     value={countInStock}
-                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                     placeholder='Enter Name'
                     onChange={(e) => setCountInStock(Number(e.target.value))}
                   />
@@ -182,7 +185,7 @@ const ProductEdit = () => {
                     type='text'
                     autoComplete='category'
                     value={category}
-                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
+                    className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                     placeholder='Enter Category'
                     onChange={(e) => setCategory(e.target.value)}
                   />

@@ -35,10 +35,10 @@ const Register = () => {
   }
   return (
     <>
-      <div className='flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 h-50'>
-        <div className='w-full max-w-md space-y-6'>
+      <div className='flex max-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md space-y-6 rounded-xl bg-gray-200 p-10'>
           <div>
-            <h2 className='my-16 text-center text-4xl font-bold tracking-tight text-gray-900'>
+            <h2 className='text-center text-4xl font-bold tracking-tight text-gray-900'>
               Sign up to your account
             </h2>
           </div>
@@ -131,7 +131,7 @@ const Register = () => {
               <div className='text-sm'>
                 Have an account?{' '}
                 <Link
-                  to={redirect ? `/register?redirect=${redirect}` : '/register'}
+                  to={'/login'}
                   className='font-medium text-green-600 hover:text-green-500'
                 >
                   Sign in

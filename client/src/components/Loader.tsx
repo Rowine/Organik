@@ -2,9 +2,9 @@ import React from 'react'
 
 const Loader = () => {
   return (
-    <div className='grid place-items-center h-screen'>
+    <div className='grid h-full place-items-center'>
       <svg
-        className='animate-spin -ml-1 mr-3 h-20 w-20 text-black'
+        className='-ml-1 mr-3 h-20 w-20 animate-spin text-black'
         fill='none'
         viewBox='0 0 24 24'
       >
