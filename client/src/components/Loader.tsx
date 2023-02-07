@@ -4,7 +4,7 @@ const Loader = () => {
   return (
     <div className='grid h-full place-items-center'>
       <svg
-        className='-ml-1 mr-3 h-20 w-20 animate-spin text-black'
+        className='sm:h-15 sm:w-15 -ml-1 mr-3 h-10 w-10 animate-spin text-black md:h-20 md:w-20'
         fill='none'
         viewBox='0 0 24 24'
       >
