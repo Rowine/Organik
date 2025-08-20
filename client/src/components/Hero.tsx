@@ -18,9 +18,6 @@ const Hero = () => {
         <div className="mx-auto flex min-h-[500px] max-w-7xl items-center px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl space-y-8 py-20 md:py-28">
             <div className="space-y-2">
-              <span className="inline-block rounded-full bg-white/20 px-4 py-1 text-sm font-medium text-white backdrop-blur-sm">
-                🌱 100% Organic Products
-              </span>
               <h1 className="space-y-4">
                 <span className="block text-5xl font-bold tracking-tight text-white sm:text-7xl">
                   Fresh Produce,
