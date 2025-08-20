@@ -10,79 +10,77 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons'
 
 const Footer = () => {
   return (
-    <footer className='w-full bg-green-600'>
+    <footer className='w-full bg-green-600 text-white'>
       <Container>
-        <div className='flex justify-between space-x-10 py-8 text-white'>
-          <div className='lg:flex lg:items-start lg:justify-between lg:space-x-10'>
-            <img
-              src='/images/logo-light.svg'
-              alt='logo'
-              width={200}
-              className=''
-            />
+        <div className='mx-auto max-w-7xl py-16'>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4'>
+            {/* Brand Section */}
             <div>
-              <h3 className='text-md my-2 font-semibold'>Follow Us</h3>
-              <div className='flex space-x-2'>
-                <a href='https://www.facebook.com'>
-                  <FontAwesomeIcon
-                    icon={faFacebook}
-                    className='h-5 w-5 rounded-full bg-green-800 p-1'
-                  />
+              <h2 className='text-2xl font-bold mb-4'>ORGANIK</h2>
+              <p className='text-white/90 mb-6'>
+                Your trusted source for fresh, organic produce delivered straight to your doorstep.
+              </p>
+              <div className='flex space-x-4'>
+                <a href='#' className='text-white hover:text-white/80'>
+                  <FontAwesomeIcon icon={faFacebook} className='h-6 w-6' />
                 </a>
-                <a href='https://www.instagram.com'>
-                  <FontAwesomeIcon
-                    icon={faInstagram}
-                    className='h-5 w-5 rounded-full bg-green-800 p-1'
-                  />
+                <a href='#' className='text-white hover:text-white/80'>
+                  <FontAwesomeIcon icon={faInstagram} className='h-6 w-6' />
                 </a>
-                <a href='https://www.twitter.com'>
-                  <FontAwesomeIcon
-                    icon={faTwitter}
-                    className='h-5 w-5 rounded-full bg-green-800 p-1'
-                  />
+                <a href='#' className='text-white hover:text-white/80'>
+                  <FontAwesomeIcon icon={faTwitter} className='h-6 w-6' />
                 </a>
               </div>
             </div>
-            <div className='flex flex-col'>
-              <h3 className='text-md my-2 font-semibold'>Contact Us</h3>
-              <div className='flex'>
-                <FontAwesomeIcon
-                  icon={faPhone}
-                  className='h-5 w-5 rounded-full bg-green-800 p-1'
-                />
 
-                <p className='font-sans mx-2 text-sm font-bold'>
-                  +1 202-918-2132
+            {/* Quick Links */}
+            <div>
+              <h3 className='text-lg font-semibold mb-4'>Quick Links</h3>
+              <ul className='space-y-3'>
+                <li><a href='#' className='text-white/90 hover:text-white'>About Us</a></li>
+                <li><a href='#' className='text-white/90 hover:text-white'>Our Products</a></li>
+                <li><a href='#' className='text-white/90 hover:text-white'>Delivery Info</a></li>
+                <li><a href='#' className='text-white/90 hover:text-white'>Privacy Policy</a></li>
+              </ul>
+            </div>
+
+            {/* Contact Us */}
+            <div>
+              <h3 className='text-lg font-semibold mb-4'>Contact Us</h3>
+              <div className='space-y-3 text-white/90'>
+                <p className='flex items-center'>
+                  <FontAwesomeIcon icon={faPhone} className='h-5 w-5 mr-2' />
+                  +1 302-918-2132
                 </p>
+                <p>hello@organik.com</p>
               </div>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <h3 className='text-lg font-semibold mb-4'>Subscribe to our Newsletter</h3>
+              <p className='text-white/90 mb-4'>
+                Get the latest updates on fresh products and special offers.
+              </p>
+              <form className='space-y-3'>
+                <input
+                  type='email'
+                  placeholder='Enter your email'
+                  className='w-full px-4 py-2 rounded-md bg-white text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500'
+                />
+                <button
+                  type='submit'
+                  className='w-full bg-green-500 hover:bg-green-400 text-white py-2 rounded-md transition-colors'
+                >
+                  Subscribe
+                </button>
+              </form>
             </div>
           </div>
-          <div>
-            <form className='flex flex-col space-y-2'>
-              <h2 className='text-md font-semibold sm:text-xl'>
-                Subscribe to our Newsletter
-              </h2>
-              <input
-                type='email'
-                placeholder='Enter your Email'
-                className='w-full rounded-md p-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-800 md:p-2'
-              />
-              <button
-                type='submit'
-                className='w-fit rounded-md bg-green-800 px-2 py-1 text-left text-white'
-              >
-                Subscribe
-              </button>
-            </form>
-            <p className='text-sm'>
-              &copy; {new Date().getFullYear()} - All rights reserved
-            </p>
-            <p className='text-sm '>
-              Made by{' '}
-              <a href='https://github.com/Rowine' className='underline'>
-                Rowine Mabiog
-              </a>
-            </p>
+
+          {/* Bottom Bar */}
+          <div className='mt-16 pt-8 border-t border-white/20 text-center text-white/90'>
+            <p>© 2020 ORGANIK. All rights reserved.</p>
           </div>
         </div>
       </Container>
