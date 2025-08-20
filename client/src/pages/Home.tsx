@@ -9,7 +9,6 @@ const Home = () => {
       <Meta title='Organik | Home' />
       <main>
         <Hero />
-
         <CategoryPreview />
       </main>
     </>

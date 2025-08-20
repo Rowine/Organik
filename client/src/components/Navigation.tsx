@@ -49,50 +49,45 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
   }
 
   return (
-    <Disclosure as='nav' className='ring-2 ring-slate-100'>
+    <Disclosure as='nav' className='bg-white shadow-sm'>
       {({ open }) => (
         <>
-          <div className='mx-auto max-w-7xl px-2 pt-2 sm:px-6 lg:px-8'>
-            <div className='relative flex h-16 items-center justify-between'>
-              <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
+          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <div className='relative flex h-20 items-center justify-between'>
+              <div className='absolute inset-y-0 left-0 flex items-center md:hidden'>
                 {/* Mobile menu button*/}
-                <Disclosure.Button className='inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-green-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
+                <Disclosure.Button className='inline-flex items-center justify-center p-2 text-gray-600 transition-colors hover:text-green-600 focus:outline-none'>
                   <span className='sr-only'>Open main menu</span>
                   {open ? (
-                    <XMarkIcon className='block h-6 w-6' aria-hidden='true' />
+                    <XMarkIcon className='block h-7 w-7' aria-hidden='true' />
                   ) : (
-                    <Bars3Icon className='block h-6 w-6' aria-hidden='true' />
+                    <Bars3Icon className='block h-7 w-7' aria-hidden='true' />
                   )}
                 </Disclosure.Button>
               </div>
-              <div className='flex flex-1 items-center justify-center sm:items-stretch sm:justify-start'>
-                <div className='flex flex-shrink-0 items-center'>
+              <div className='flex flex-1 items-center justify-between md:justify-start'>
+                {/* Logo */}
+                <div className='flex flex-1 justify-center md:justify-start md:flex-initial'>
                   <Link to={'/'}>
                     <img
-                      className='block h-8 w-auto lg:hidden'
-                      src='/images/logo-dark.svg'
-                      alt='Company Logo'
-                    />
-                  </Link>
-                  <Link to={'/'}>
-                    <img
-                      className='hidden h-8 w-auto lg:block'
+                      className='block h-10 w-auto'
                       src='/images/logo-dark.svg'
                       alt='Company Logo'
                     />
                   </Link>
                 </div>
-                <div className='hidden sm:ml-6 sm:block'>
-                  <div className='flex space-x-1 md:space-x-4 '>
+                {/* Categories - Center */}
+                <div className='hidden flex-1 md:block'>
+                  <div className='flex justify-center space-x-8'>
                     {category.map((item) => (
                       <Link
                         key={item.name}
                         to={item.path}
                         className={classNames(
                           checkActive(item.path)
-                            ? 'bg-green-700 text-white'
-                            : 'text-slate-500 hover:bg-green-700 hover:text-white',
-                          'text-md rounded-lg px-2 py-2 font-lato font-bold tracking-wider lg:px-6'
+                            ? 'text-green-600'
+                            : 'text-gray-600 hover:text-green-600',
+                          'text-md px-1 py-2 font-medium transition-colors'
                         )}
                         aria-current={
                           checkActive(item.path) ? 'page' : undefined
@@ -104,27 +99,27 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                   </div>
                 </div>
               </div>
-              <div className='absolute inset-y-0 right-0 flex items-center sm:static sm:inset-auto sm:mr-2 sm:ml-6'>
+              <div className='absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
                 <Link to='/like'>
                   <button
                     type='button'
-                    className=' hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:block sm:py-2 sm:px-3'
+                    className='hidden rounded-lg p-2 text-gray-600 hover:bg-green-50 hover:text-green-600 md:block'
                   >
                     <span className='sr-only'>View Likes</span>
                     <HeartIcon
-                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6'
+                      className='h-6 w-6'
                       aria-hidden='true'
                     />
                   </button>
                 </Link>
-                <Link to='/cart' className='ml-1'>
+                <Link to='/cart' className='ml-2'>
                   <button
                     type='button'
-                    className='hidden rounded-full text-green-600 hover:bg-green-700 hover:text-white sm:block sm:py-2 sm:px-3'
+                    className='hidden rounded-lg p-2 text-gray-600 hover:bg-green-50 hover:text-green-600 md:block'
                   >
                     <span className='sr-only'>View Cart</span>
                     <ShoppingCartIcon
-                      className='mt-1 h-5 w-5 stroke-2 sm:h-6 sm:w-6'
+                      className='h-6 w-6'
                       aria-hidden='true'
                     />
                   </button>
@@ -132,12 +127,12 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
 
                 {/* Profile dropdown */}
                 {userInfo ? (
-                  <Menu as='div' className='relative'>
+                  <Menu as='div' className='relative ml-2'>
                     <div>
-                      <Menu.Button className='flex rounded-full p-1 text-green-600 hover:bg-green-700 hover:text-white sm:py-2 sm:px-3 md:block'>
+                      <Menu.Button className='flex rounded-lg p-2 text-gray-600 hover:bg-green-50 hover:text-green-600'>
                         <span className='sr-only'>Open user menu</span>
                         <UserCircleIcon
-                          className='h-8 w-8 stroke-2 sm:mt-1 sm:h-6 sm:w-6'
+                          className='h-6 w-6'
                           aria-hidden='true'
                         />
                       </Menu.Button>
@@ -151,14 +146,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                       leaveFrom='transform opacity-100 scale-100'
                       leaveTo='transform opacity-0 scale-95'
                     >
-                      <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                      <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-lg bg-white py-2 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none'>
                         <Menu.Item>
                           {({ active }) => (
                             <Link
                               to='/profile'
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
+                                active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                'block px-4 py-2 text-sm transition-colors'
                               )}
                             >
                               Your Profile & Orders
@@ -171,8 +166,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                             <Link
                               to='/like'
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700 sm:hidden'
+                                active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                'block px-4 py-2 text-sm transition-colors md:hidden'
                               )}
                             >
                               Likes
@@ -185,8 +180,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                             <Link
                               to='/cart'
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700 sm:hidden'
+                                active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                'block px-4 py-2 text-sm transition-colors md:hidden'
                               )}
                             >
                               Cart
@@ -196,13 +191,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
 
                         {userInfo && userInfo.isAdmin && (
                           <>
+                            <div className='my-2 border-t border-gray-100'></div>
                             <Menu.Item>
                               {({ active }) => (
                                 <Link
                                   to='/admin/userlist'
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                    'block px-4 py-2 text-sm transition-colors'
                                   )}
                                 >
                                   Users
@@ -215,8 +211,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                                 <Link
                                   to='/admin/productlist'
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                    'block px-4 py-2 text-sm transition-colors'
                                   )}
                                 >
                                   Products
@@ -229,8 +225,8 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                                 <Link
                                   to='/admin/orderlist'
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                    'block px-4 py-2 text-sm transition-colors'
                                   )}
                                 >
                                   Orders
@@ -239,13 +235,14 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                             </Menu.Item>
                           </>
                         )}
+                        <div className='my-2 border-t border-gray-100'></div>
                         <Menu.Item>
                           {({ active }) => (
                             <button
                               type='button'
                               className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block w-full px-4 py-2 text-left text-sm text-gray-700'
+                                active ? 'bg-green-50 text-green-600' : 'text-gray-700',
+                                'block w-full px-4 py-2 text-left text-sm transition-colors'
                               )}
                               onClick={logoutHandler}
                             >
@@ -257,12 +254,12 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
                     </Transition>
                   </Menu>
                 ) : (
-                  <div className='relative ml-1'>
+                  <div className='relative ml-2 hidden md:block'>
                     <Link
                       to='/login'
-                      className='flex rounded-lg p-2 text-green-600 hover:bg-green-700 hover:text-white'
+                      className='flex rounded-lg px-4 py-2 text-gray-600 hover:bg-green-50 hover:text-green-600 transition-colors'
                     >
-                      <span className='font-lato text-sm font-bold sm:tracking-wider'>
+                      <span className='text-sm font-medium'>
                         Login
                       </span>
                     </Link>
@@ -272,52 +269,60 @@ const Navigation: React.FC<INavigationProps> = ({ category }) => {
             </div>
           </div>
 
-          <Disclosure.Panel className='sm:hidden'>
-            <div className='space-y-1 px-2 pt-2 pb-3'>
-              {category.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as={Link}
-                  to={item.path}
-                  className={classNames(
-                    checkActive(item.path)
-                      ? 'bg-green-700 text-white'
-                      : 'text-green-600 hover:bg-green-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
-                  aria-current={checkActive(item.path) ? 'page' : undefined}
-                >
-                  {item.name}
-                </Disclosure.Button>
-              ))}
-              <div>
+          <Disclosure.Panel className='md:hidden'>
+            <div className='px-1 pb-3 pt-2'>
+              <div className='space-y-1 px-3'>
+                {category.map((item) => (
+                  <Disclosure.Button
+                    key={item.name}
+                    as={Link}
+                    to={item.path}
+                    className={classNames(
+                      checkActive(item.path)
+                        ? 'text-green-600 font-semibold'
+                        : 'text-gray-600 hover:text-green-600',
+                      'block py-3 text-base font-medium transition-colors text-center border-b border-gray-100'
+                    )}
+                    aria-current={checkActive(item.path) ? 'page' : undefined}
+                  >
+                    {item.name}
+                  </Disclosure.Button>
+                ))}
+              </div>
+
+              <div className='mt-4 flex justify-center space-x-6 px-3'>
                 <Disclosure.Button
                   as={Link}
                   to={'/like'}
-                  className={classNames(
-                    checkActive('/like')
-                      ? 'bg-green-700 text-white'
-                      : 'text-green-600 hover:bg-green-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  className='inline-flex items-center text-gray-600 hover:text-green-600 transition-colors'
                 >
-                  Likes
+                  <HeartIcon className='h-6 w-6' aria-hidden='true' />
+                  <span className='ml-2 text-base font-medium'>Likes</span>
                 </Disclosure.Button>
-              </div>
-              <div>
+
                 <Disclosure.Button
                   as={Link}
                   to={'/cart'}
-                  className={classNames(
-                    checkActive('/cart')
-                      ? 'bg-green-700 text-white'
-                      : 'text-green-600 hover:bg-green-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
+                  className='inline-flex items-center text-gray-600 hover:text-green-600 transition-colors'
                 >
-                  Cart
+                  <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
+                  <span className='ml-2 text-base font-medium'>Cart</span>
                 </Disclosure.Button>
               </div>
+
+              {!userInfo && (
+                <div className='mt-4 px-3'>
+                  <div className='border-t border-gray-100 pt-4'>
+                    <Disclosure.Button
+                      as={Link}
+                      to='/login'
+                      className='flex w-full items-center justify-center rounded-lg bg-green-600 px-4 py-2.5 text-base font-medium text-white hover:bg-green-700 transition-colors'
+                    >
+                      Login
+                    </Disclosure.Button>
+                  </div>
+                </div>
+              )}
             </div>
           </Disclosure.Panel>
         </>
