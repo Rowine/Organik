@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import Container from '../components/Container'
 import Rating from '../components/Rating'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as HeartFull } from '@fortawesome/free-solid-svg-icons'
-import { faHeart as HeartEmpty } from '@fortawesome/free-regular-svg-icons'
 import IProductItem, { IReview } from '../interfaces/IProductItem'
 import { IParams } from '../interfaces/IParams'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
@@ -14,6 +11,13 @@ import { resetProductCreateReview } from '../features/productCreateReviewSlice'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
+import {
+  ArrowLeftIcon,
+  ShoppingCartIcon,
+  HeartIcon,
+  StarIcon
+} from '@heroicons/react/24/outline'
+import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 // @ts-ignore
 import PreloadImage from 'react-preload-image'
 
@@ -73,210 +77,264 @@ const ProductDetails = () => {
     setComment('')
   }
 
+  const ReviewCard = ({ review }: { review: IReview }) => (
+    <div className='bg-white rounded-2xl p-6 shadow-lg ring-1 ring-gray-200 mb-4'>
+      <div className='flex items-center justify-between mb-3'>
+        <div className='flex items-center space-x-3'>
+          <div className='w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'>
+            <span className='text-green-600 font-semibold text-sm'>
+              {review.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <div>
+            <p className='font-medium text-gray-900'>{review.name}</p>
+            <p className='text-sm text-gray-500'>{review.createdAt.substring(0, 10)}</p>
+          </div>
+        </div>
+        <Rating value={review.rating} />
+      </div>
+      <p className='text-gray-700 leading-relaxed'>{review.comment}</p>
+    </div>
+  )
+
   return (
     <>
       <Meta title={product.name} />
-      <Container>
-        <div className='py-10'>
-          <Link to={`/${product.category}`}>
-            <button className='mb-4 rounded bg-green-600 py-2 px-4 font-lato font-bold uppercase text-white hover:bg-green-800'>
-              Back to {product.category}
-            </button>
+      <div className='bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen'>
+        <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
+          {/* Back Button */}
+          <Link
+            to={`/${product.category}`}
+            className='inline-flex items-center space-x-2 text-green-600 hover:text-green-500 transition-colors mb-8'
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+            <span className='font-medium'>Back to {product.category}</span>
           </Link>
+
           {loading === 'pending' ? (
-            <div className='h-screen'>
+            <div className='flex min-h-[400px] items-center justify-center'>
               <Loader />
             </div>
           ) : error ? (
-            <Message type='error'>{error}</Message>
+            <div className='mb-8'>
+              <Message type='error'>{error}</Message>
+            </div>
           ) : (
             <>
-              <div className='grid grid-cols-1 gap-x-2 md:grid-cols-3'>
-                <div className='col-span-2'>
-                  <div className='aspect-w-3 aspect-h-2 overflow-hidden rounded-lg lg:block'>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className='h-full w-full object-contain object-center'
-                    />
+              {/* Product Details Section */}
+              <div className='grid grid-cols-1 gap-8 lg:grid-cols-2 mb-16'>
+                {/* Left Side - Product Image */}
+                <div className='space-y-6'>
+                  {/* Product Image */}
+                  <div className='relative'>
+                    <div className='aspect-w-4 aspect-h-3 overflow-hidden rounded-3xl bg-white shadow-2xl'>
+                      <PreloadImage
+                        src={product.image}
+                        alt={product.name}
+                        className='h-full w-full object-contain object-center'
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className='mt-5 flex flex-col space-y-5'>
-                  <Rating value={product.rating} />
-                  <h1 className='font-lato text-3xl font-bold tracking-tight text-gray-900'>
-                    {product.name}
-                  </h1>
-                  <p className='font-lato text-lg font-bold text-gray-500'>
-                    ₱{product.price}
-                  </p>
-                  <p className='font-lato text-gray-500'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Consectetur sequi ut at dolores autem, corporis voluptate
-                    veniam quia qui non adipisci fugiat repellendus
-                    exercitationem ullam praesentium. In aliquam harum facere?
-                  </p>
-                  <p className='font-lato text-gray-500'>
-                    In Stock:{' '}
-                    <span className='font-bold'>{product.countInStock}</span>
-                  </p>
 
-                  {product.countInStock > 0 && (
-                    <div className=''>
-                      <select
-                        className='form-select w-1/3 rounded-full px-4 py-3 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-green-600'
-                        value={qty}
-                        onChange={(e) => setQty(Number(e.target.value))}
-                      >
-                        {[...Array(product.countInStock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ))}
-                      </select>
+                {/* Right Side - Product Details and Actions */}
+                <div className='flex flex-col'>
+                  <div className='bg-white rounded-2xl p-6 shadow-lg ring-1 ring-gray-200'>
+                    {/* Product Info */}
+                    <div className='mb-6'>
+                      <div className='flex items-center space-x-2 mb-4'>
+                        <Rating value={product.rating} />
+                        <span className='text-sm text-gray-500'>
+                          ({product.numReviews} reviews)
+                        </span>
+                      </div>
+                      <h1 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4'>
+                        {product.name}
+                      </h1>
+                      <p className='text-3xl font-bold text-green-600 mb-6'>
+                        ₱{product.price}
+                      </p>
                     </div>
-                  )}
 
-                  <div className='grid grid-cols-4 gap-x-1 '>
-                    <button
-                      className={
-                        product.countInStock === 0
-                          ? 'col-span-3 rounded bg-gray-500 py-2 px-4 font-bold text-white'
-                          : 'col-span-3 rounded bg-green-600 py-2 px-4 font-bold text-white hover:bg-green-800'
-                      }
-                      disabled={product.countInStock === 0}
-                      onClick={addToCartHandler}
-                    >
-                      {product.countInStock === 0
-                        ? 'Out of Stock'
-                        : 'Add to Cart'}
-                    </button>
+                    <h3 className='text-lg font-semibold text-gray-900 mb-4'>Product Details</h3>
+                    <p className='text-gray-700 leading-relaxed mb-6'>
+                      Fresh, organic produce sourced directly from local farms. This premium quality {' '}
+                      {product.category.toLowerCase()} is carefully selected to ensure the best taste and nutritional value.
+                    </p>
 
-                    <button
-                      className={
-                        product.countInStock === 0
-                          ? 'relative w-full rounded bg-gray-500 py-2 px-4 font-bold text-white'
-                          : 'relative rounded bg-rose-600 py-2 px-4 font-bold text-white hover:bg-rose-800 '
-                      }
-                      disabled={product.countInStock === 0}
-                      onClick={addToLikeHandler}
-                    >
-                      {likeItems.find(
-                        (likeItem) => likeItem.product === product._id
-                      ) ? (
-                        <FontAwesomeIcon icon={HeartFull} className='h-5 w-5' />
+                    <div className='flex items-center space-x-4 mb-6'>
+                      <span className='text-sm font-medium text-gray-700'>Availability:</span>
+                      {product.countInStock > 0 ? (
+                        <span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800'>
+                          In Stock ({product.countInStock} available)
+                        </span>
                       ) : (
-                        <FontAwesomeIcon
-                          icon={HeartEmpty}
-                          className='h-5 w-5'
-                        />
+                        <span className='inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800'>
+                          Out of Stock
+                        </span>
                       )}
-                    </button>
+                    </div>
+
+                    {product.countInStock > 0 && (
+                      <div className='mb-6'>
+                        <label className='block text-sm font-medium text-gray-700 mb-2'>
+                          Quantity
+                        </label>
+                        <select
+                          className='rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 w-32'
+                          value={qty}
+                          onChange={(e) => setQty(Number(e.target.value))}
+                        >
+                          {[...Array(Math.min(product.countInStock, 10)).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    <div className='flex space-x-4'>
+                      <button
+                        className={`flex-1 flex items-center justify-center space-x-2 rounded-xl py-4 px-6 font-medium transition-all ${product.countInStock === 0
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-green-600 text-white hover:bg-green-500 hover:shadow-lg'
+                          }`}
+                        disabled={product.countInStock === 0}
+                        onClick={addToCartHandler}
+                      >
+                        <ShoppingCartIcon className="w-5 h-5" />
+                        <span>
+                          {product.countInStock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        </span>
+                      </button>
+
+                      <button
+                        className={`flex items-center justify-center rounded-xl py-4 px-6 transition-all ${product.countInStock === 0
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-pink-600 text-white hover:bg-pink-500 hover:shadow-lg'
+                          }`}
+                        disabled={product.countInStock === 0}
+                        onClick={addToLikeHandler}
+                      >
+                        {likeItems.find((likeItem) => likeItem.product === product._id) ? (
+                          <HeartSolidIcon className="w-6 h-6" />
+                        ) : (
+                          <HeartIcon className="w-6 h-6" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className='grid grid-cols-1 gap-x-5 md:grid-cols-3'>
-                <div className='col-span-2'>
-                  <h2 className='mt-5 mb-5 font-lato text-2xl font-bold tracking-tight text-gray-900'>
-                    Reviews
-                  </h2>
-                  {product.reviews.length === 0 && (
-                    <Message type='info'>No Reviews</Message>
-                  )}
-                  <div className='mt-5 '>
-                    {product.reviews.map((review) => (
-                      <div key={review._id} className='mb-3 border-b-2 pb-2'>
-                        <div className='flex items-center'>
-                          <p className='mr-1 text-gray-500'>{review.name}</p>
-                          <Rating value={review.rating} />
-                        </div>
-                        <p className='text-gray-500'>
-                          {review.createdAt.substring(0, 10)}
-                        </p>
-                        <p className='text-gray-500'>{review.comment}</p>
-                      </div>
-                    ))}
+
+              {/* Reviews and Write Review Section */}
+              <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
+                {/* Reviews */}
+                <div className='lg:col-span-2'>
+                  <div className='flex items-center justify-between mb-8'>
+                    <h2 className='text-3xl font-bold text-gray-900'>
+                      Customer Reviews
+                    </h2>
+                    <span className='text-sm text-gray-500'>
+                      {product.reviews.length} review{product.reviews.length !== 1 ? 's' : ''}
+                    </span>
                   </div>
-                </div>
-                <div className='col-span-1'>
-                  <h2 className='mt-5 font-lato text-2xl font-bold tracking-tight text-gray-900'>
-                    Write a Customer Review
-                  </h2>
-                  {successProductReview && (
-                    <Message type='success'>
-                      Review submitted successfully
-                    </Message>
-                  )}
-                  {loadingProductReview === 'pending' && <Loader />}
-                  {errorProductReview && (
-                    <Message type='error'>{errorProductReview}</Message>
-                  )}
-                  {userInfo ? (
-                    <form
-                      className='mt-5'
-                      onSubmit={submitHandler}
-                      autoComplete='off'
-                    >
-                      <div className='mb-5'>
-                        <label
-                          htmlFor='rating'
-                          className='block text-sm font-medium text-gray-700'
-                        >
-                          Rating
-                        </label>
-                        <select
-                          id='rating'
-                          name='rating'
-                          value={rating}
-                          onChange={(e) => setRating(Number(e.target.value))}
-                          className='mt-1 block w-full rounded-md border border-gray-300 bg-white py-3 px-4 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm'
-                        >
-                          <option value=''>Select...</option>
-                          <option value='1'>1 - Poor</option>
-                          <option value='2'>2 - Fair</option>
-                          <option value='3'>3 - Good</option>
-                          <option value='4'>4 - Very Good</option>
-                          <option value='5'>5 - Excellent</option>
-                        </select>
+
+                  {product.reviews.length === 0 ? (
+                    <div className='text-center py-12'>
+                      <div className='mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
+                        <StarIcon className="w-8 h-8 text-gray-400" />
                       </div>
-                      <div className='mb-5'>
-                        <label
-                          htmlFor='comment'
-                          className='block text-sm font-medium text-gray-700'
-                        >
-                          Comment
-                        </label>
-                        <div className='mt-1'>
+                      <h3 className='text-lg font-medium text-gray-900 mb-2'>No reviews yet</h3>
+                      <p className='text-gray-600'>Be the first to share your thoughts about this product.</p>
+                    </div>
+                  ) : (
+                    <div className='space-y-4'>
+                      {product.reviews.map((review) => (
+                        <ReviewCard key={review._id} review={review} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Write Review */}
+                <div>
+                  <div className='bg-white rounded-2xl p-6 shadow-lg ring-1 ring-gray-200 sticky top-8'>
+                    <h3 className='text-xl font-bold text-gray-900 mb-4'>
+                      Write a Review
+                    </h3>
+
+                    {successProductReview && (
+                      <Message type='success'>Review submitted successfully</Message>
+                    )}
+                    {loadingProductReview === 'pending' && <Loader />}
+                    {errorProductReview && (
+                      <Message type='error'>{errorProductReview}</Message>
+                    )}
+
+                    {userInfo ? (
+                      <form onSubmit={submitHandler} className='space-y-4'>
+                        <div>
+                          <label htmlFor='rating' className='block text-sm font-medium text-gray-700 mb-2'>
+                            Rating
+                          </label>
+                          <select
+                            id='rating'
+                            value={rating}
+                            onChange={(e) => setRating(Number(e.target.value))}
+                            className='w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500'
+                          >
+                            <option value=''>Select rating...</option>
+                            <option value='1'>⭐ 1 - Poor</option>
+                            <option value='2'>⭐⭐ 2 - Fair</option>
+                            <option value='3'>⭐⭐⭐ 3 - Good</option>
+                            <option value='4'>⭐⭐⭐⭐ 4 - Very Good</option>
+                            <option value='5'>⭐⭐⭐⭐⭐ 5 - Excellent</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label htmlFor='comment' className='block text-sm font-medium text-gray-700 mb-2'>
+                            Your Review
+                          </label>
                           <textarea
                             id='comment'
-                            name='comment'
-                            rows={3}
+                            rows={4}
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            className='mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm'
-                            placeholder='Write your review here'
+                            className='w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500'
+                            placeholder='Share your experience with this product...'
                           />
                         </div>
-                      </div>
-                      <div>
+
                         <button
                           type='submit'
-                          className='inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                          className='w-full bg-green-600 text-white py-3 px-4 rounded-xl font-medium hover:bg-green-500 transition-colors'
                         >
-                          Submit
+                          Submit Review
                         </button>
+                      </form>
+                    ) : (
+                      <div className='text-center py-6'>
+                        <p className='text-gray-600 mb-4'>
+                          Sign in to write a review
+                        </p>
+                        <Link
+                          to='/login'
+                          className='inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-500 transition-colors'
+                        >
+                          Sign In
+                        </Link>
                       </div>
-                    </form>
-                  ) : (
-                    <Message type='info'>
-                      Please <Link to='/login'>sign in</Link> to write a review{' '}
-                    </Message>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </>
           )}
         </div>
-      </Container>
+      </div>
     </>
   )
 }
