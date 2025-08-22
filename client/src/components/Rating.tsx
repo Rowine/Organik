@@ -14,7 +14,7 @@ interface RatingProps {
 
 const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
   return (
-    <div className='sm:flex sm:justify-between'>
+    <div className='flex flex-col sm:flex-row sm:items-center text-sm sm:text-base'>
       <div className='flex space-x-0.5'>
         <span className='mx-0.5'>
           <FontAwesomeIcon
@@ -22,8 +22,8 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
               value >= 1
                 ? faStar
                 : value >= 0.5
-                ? faStarHalfStroke
-                : faStarRegular
+                  ? faStarHalfStroke
+                  : faStarRegular
             }
             className={color ? `text-${color}-500` : 'text-yellow-500'}
           />
@@ -34,8 +34,8 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
               value >= 2
                 ? faStar
                 : value >= 1.5
-                ? faStarHalfStroke
-                : faStarRegular
+                  ? faStarHalfStroke
+                  : faStarRegular
             }
             className={color ? `text-${color}-500` : 'text-yellow-500'}
           />
@@ -46,8 +46,8 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
               value >= 3
                 ? faStar
                 : value >= 2.5
-                ? faStarHalfStroke
-                : faStarRegular
+                  ? faStarHalfStroke
+                  : faStarRegular
             }
             className={color ? `text-${color}-500` : 'text-yellow-500'}
           />
@@ -58,8 +58,8 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
               value >= 4
                 ? faStar
                 : value >= 3.5
-                ? faStarHalfStroke
-                : faStarRegular
+                  ? faStarHalfStroke
+                  : faStarRegular
             }
             className={color ? `text-${color}-500` : 'text-yellow-500'}
           />
@@ -70,14 +70,14 @@ const Rating: React.FC<RatingProps> = ({ value, text, color }) => {
               value >= 5
                 ? faStar
                 : value >= 4.5
-                ? faStarHalfStroke
-                : faStarRegular
+                  ? faStarHalfStroke
+                  : faStarRegular
             }
             className={color ? `text-${color}-500` : 'text-yellow-500'}
           />
         </span>
       </div>
-      <span className='sm:ml-1 md:ml-2'>{text && text}</span>
+      <span className='text-gray-600 text-xs sm:text-sm mt-1 sm:mt-0 sm:ml-2'>{text && text}</span>
     </div>
   )
 }

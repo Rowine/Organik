@@ -26,7 +26,7 @@ const CategoryPreview = () => {
       key={product._id}
       className='group relative overflow-hidden rounded-3xl bg-white transition-all hover:shadow-2xl hover:-translate-y-1'
     >
-      <div className='aspect-w-1 aspect-h-1 w-full overflow-hidden'>
+      <div className='aspect-w-1 aspect-h-1 w-full sm:w-[90%] md:w-[85%] mx-auto overflow-hidden'>
         <PreloadImage
           src={product.image}
           className='h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105'
@@ -34,16 +34,16 @@ const CategoryPreview = () => {
         {/* Overlay with gradient */}
         <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
       </div>
-      <div className='p-6'>
-        <div className='flex flex-col space-y-3'>
+      <div className='p-4 sm:p-5 md:p-6'>
+        <div className='flex flex-col space-y-2 sm:space-y-3'>
           <div className='flex items-start justify-between'>
-            <h3 className='font-lato text-lg font-medium text-gray-900 line-clamp-1'>
+            <h3 className='font-lato sm:text-lg font-medium text-gray-900 line-clamp-1'>
               <Link to={`/${product.category}/${product._id}`}>
                 <span aria-hidden='true' className='absolute inset-0' />
                 {product.name}
               </Link>
             </h3>
-            <p className='font-lato text-xl font-bold text-green-600 pl-4'>
+            <p className='font-lato sm:text-lg font-bold text-green-600 pl-2 sm:pl-4'>
               ₱{product.price}
             </p>
           </div>
@@ -80,7 +80,7 @@ const CategoryPreview = () => {
               <Loader />
             </div>
           ) : (
-            <div className='grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4'>
+            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8'>
               {trendingProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
@@ -98,7 +98,7 @@ const CategoryPreview = () => {
               <Loader />
             </div>
           ) : (
-            <div className='grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4'>
+            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8'>
               {customerPurchase.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
