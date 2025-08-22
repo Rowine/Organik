@@ -3,13 +3,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
-import Container from '../components/Container'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faTimes,
-  faChevronDown,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons'
+  XMarkIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  UserIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  CurrencyDollarIcon
+} from '@heroicons/react/24/outline'
 import { Disclosure } from '@headlessui/react'
 import { getUserDetails } from '../features/userDetailsSlice'
 import { updateUserProfile } from '../features/userUpdateProfileSlice'
@@ -70,266 +72,333 @@ const Profile = () => {
     }
   }
   return (
-    <Container>
-      <div className='grid lg:grid-cols-12 lg:gap-x-12'>
-        <div className='hidden sm:block lg:col-span-3 lg:h-screen'>
-          <div>
-            <h2 className='my-6 text-center font-lato text-2xl font-bold tracking-tight text-gray-900'>
-              User Profile
-            </h2>
-          </div>
-          {message && <Message type='error'>{message}</Message>}
-          {error && <Message type='error'>{error}</Message>}
-          {loading === 'pending' && <Loader />}
-          {updateLoading === 'succeeded' && (
-            <Message type='success'>Profile Updated</Message>
-          )}
-          <form className='space-y-6' onSubmit={submitHandler}>
-            <input type='hidden' name='remember' defaultValue='true' />
-            <div className='space-y-4 rounded-md shadow-sm'>
-              <div>
-                <label htmlFor='name' className='sr-only'>
-                  Name
-                </label>
-                <input
-                  id='name'
-                  name='name'
-                  type='text'
-                  autoComplete='name'
-                  required
-                  value={name}
-                  className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                  placeholder='Enter Name'
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor='email-address' className='sr-only'>
-                  Email address
-                </label>
-                <input
-                  id='email-address'
-                  name='email'
-                  type='email'
-                  autoComplete='email'
-                  required
-                  value={email}
-                  className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                  placeholder='Email address'
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor='password' className='sr-only'>
-                  Password
-                </label>
-                <input
-                  id='password'
-                  name='password'
-                  type='password'
-                  className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                  placeholder='Password'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor='confirm-password' className='sr-only'>
-                  Confirm Password
-                </label>
-                <input
-                  id='confirm-password'
-                  name='confirm-password'
-                  type='password'
-                  required={password ? true : false}
-                  className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                  placeholder='Repeat Password'
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-            </div>
-            <div>
-              <button
-                type='submit'
-                className='group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-              >
-                Update
-              </button>
-            </div>
-          </form>
-        </div>
+    <main className='flex-grow bg-gradient-to-br from-gray-50 via-white to-gray-50'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8'>
+        <div className='grid lg:grid-cols-12 lg:gap-x-12'>
+          {/* Profile Update Section - Desktop */}
+          <div className='hidden sm:block lg:col-span-4'>
+            <div className='sticky top-8'>
+              <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+                <div className='text-center mb-8'>
+                  <div className='mx-auto w-20 h-20 bg-gradient-to-r from-green-500 to-green-400 rounded-full flex items-center justify-center mb-4'>
+                    <UserIcon className='w-10 h-10 text-white' />
+                  </div>
+                  <h2 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl'>
+                    Profile Settings
+                  </h2>
+                  <p className='mt-2 text-sm text-gray-600'>
+                    Update your account information
+                  </p>
+                </div>
 
-        <div className='sm:my-5 lg:col-span-9'>
-          <h2 className='my-6 font-lato text-3xl font-bold tracking-tight text-gray-900'>
-            My Orders
-          </h2>
-          {loadingOrders === 'pending' ? (
-            <Loader />
-          ) : errorOrders ? (
-            <Message type='error'>{errorOrders}</Message>
-          ) : (
-            <table className='w-full table-fixed border-collapse shadow-md'>
-              <thead>
-                <tr className='bg-green-600 font-lato font-extrabold text-white'>
-                  <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
-                    ID
-                  </th>
-                  <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
-                    DATE
-                  </th>
-                  <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
-                    TOTAL
-                  </th>
-                  <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'>
-                    PAID
-                  </th>
-                  <th className='text-center font-medium sm:p-4 sm:pl-8 sm:pb-3'>
-                    DELIVERED
-                  </th>
-                  <th className='text-left font-medium sm:p-4 sm:pl-8 sm:pb-3'></th>
-                </tr>
-              </thead>
-              <tbody className='bg-white last-of-type:border-b-2 last-of-type:border-green-600'>
-                {orders.map((order) => (
-                  <tr
-                    key={order._id}
-                    className='border-b border-slate-200 even:bg-gray-100'
-                  >
-                    <td className='truncate text-slate-900 sm:p-4 sm:pl-8'>
-                      {order._id}
-                    </td>
-                    <td className='break-words text-slate-900 sm:p-4 sm:pl-8'>
-                      {format(order.createdAt.substring(0, 10))}
-                    </td>
-                    <td className=' text-slate-900 sm:p-4 sm:pl-8'>
-                      ₱{order.totalPrice}
-                    </td>
-                    <td className=' break-words text-slate-900 sm:p-4 sm:pl-8'>
-                      {order.isPaid ? (
-                        format(order.paidAt.substring(0, 10))
-                      ) : (
-                        <FontAwesomeIcon icon={faTimes} color='red' />
-                      )}
-                    </td>
-                    <td className='break-words text-center text-slate-900 sm:p-4 sm:pl-8'>
-                      {order.isDelivered ? (
-                        format(order.deliveredAt.substring(0, 10))
-                      ) : (
-                        <FontAwesomeIcon icon={faTimes} color='red' />
-                      )}
-                    </td>
-                    <td className='border-b border-slate-200 text-slate-900 dark:text-slate-900 sm:p-4 sm:pl-8'>
-                      <Link to={`/order/${order._id}`}>
-                        <button className='group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'>
-                          Details
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-        <div className='my-6  sm:hidden'>
-          <Disclosure>
-            {({ open }) => (
-              <>
-                <Disclosure.Button className='flex w-full items-center justify-center gap-2 rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'>
-                  Update Profile{' '}
-                  <FontAwesomeIcon
-                    icon={open ? faChevronDown : faChevronRight}
-                  />
-                </Disclosure.Button>
-                <Disclosure.Panel>
-                  {message && <Message type='error'>{message}</Message>}
-                  {error && <Message type='error'>{error}</Message>}
-                  {loading === 'pending' && <Loader />}
-                  {updateLoading === 'succeeded' && (
-                    <Message type='success'>Profile Updated</Message>
-                  )}
-                  <form className='space-y-6' onSubmit={submitHandler}>
-                    <input type='hidden' name='remember' defaultValue='true' />
-                    <div className='space-y-4 rounded-md shadow-sm'>
-                      <div>
-                        <label htmlFor='name' className='sr-only'>
-                          Name
-                        </label>
-                        <input
-                          id='name'
-                          name='name'
-                          type='text'
-                          autoComplete='name'
-                          required
-                          value={name}
-                          className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                          placeholder='Enter Name'
-                          onChange={(e) => setName(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor='email-address' className='sr-only'>
-                          Email address
-                        </label>
-                        <input
-                          id='email-address'
-                          name='email'
-                          type='email'
-                          autoComplete='email'
-                          required
-                          value={email}
-                          className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                          placeholder='Email address'
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor='password' className='sr-only'>
-                          Password
-                        </label>
-                        <input
-                          id='password'
-                          name='password'
-                          type='password'
-                          className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                          placeholder='Password'
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor='confirm-password' className='sr-only'>
-                          Confirm Password
-                        </label>
-                        <input
-                          id='confirm-password'
-                          name='confirm-password'
-                          type='password'
-                          required={password ? true : false}
-                          className='relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm'
-                          placeholder='Repeat Password'
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                      </div>
+                {message && <Message type='error'>{message}</Message>}
+                {error && <Message type='error'>{error}</Message>}
+                {loading === 'pending' && <Loader />}
+                {updateLoading === 'succeeded' && (
+                  <Message type='success'>Profile Updated</Message>
+                )}
+
+                <form className='space-y-6' onSubmit={submitHandler}>
+                  <div className='space-y-5'>
+                    <div>
+                      <label htmlFor='name' className='block text-sm font-medium text-gray-700'>
+                        Full Name
+                      </label>
+                      <input
+                        id='name'
+                        name='name'
+                        type='text'
+                        autoComplete='name'
+                        required
+                        value={name}
+                        className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                        placeholder='Enter your full name'
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                     <div>
-                      <button
-                        type='submit'
-                        className='group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                      >
-                        Update
-                      </button>
+                      <label htmlFor='email-address' className='block text-sm font-medium text-gray-700'>
+                        Email Address
+                      </label>
+                      <input
+                        id='email-address'
+                        name='email'
+                        type='email'
+                        autoComplete='email'
+                        required
+                        value={email}
+                        className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                        placeholder='Enter your email'
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
-                  </form>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
+                    <div>
+                      <label htmlFor='password' className='block text-sm font-medium text-gray-700'>
+                        New Password
+                      </label>
+                      <input
+                        id='password'
+                        name='password'
+                        type='password'
+                        className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                        placeholder='Leave blank to keep current password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor='confirm-password' className='block text-sm font-medium text-gray-700'>
+                        Confirm Password
+                      </label>
+                      <input
+                        id='confirm-password'
+                        name='confirm-password'
+                        type='password'
+                        required={password ? true : false}
+                        className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                        placeholder='Confirm your new password'
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type='submit'
+                    className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-3 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                  >
+                    <span>Update Profile</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          {/* Orders Section */}
+          <div className='lg:col-span-8'>
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+              <div className='mb-8'>
+                <h2 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl'>
+                  Order History
+                </h2>
+                <p className='mt-2 text-sm text-gray-600'>
+                  Track your orders and view purchase history
+                </p>
+              </div>
+
+              {loadingOrders === 'pending' ? (
+                <div className='flex min-h-[400px] items-center justify-center'>
+                  <Loader />
+                </div>
+              ) : errorOrders ? (
+                <Message type='error'>{errorOrders}</Message>
+              ) : orders.length === 0 ? (
+                <div className='text-center py-12'>
+                  <div className='mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
+                    <ClockIcon className='w-8 h-8 text-gray-400' />
+                  </div>
+                  <h3 className='text-lg font-medium text-gray-900 mb-2'>No orders yet</h3>
+                  <p className='text-gray-500 mb-6'>Start shopping to see your orders here</p>
+                  <Link to='/'>
+                    <button className='inline-flex items-center rounded-xl bg-green-600 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg'>
+                      Start Shopping
+                    </button>
+                  </Link>
+                </div>
+              ) : (
+                <div className='space-y-4'>
+                  {orders.map((order) => (
+                    <div
+                      key={order._id}
+                      className='border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow'
+                    >
+                      <div className='space-y-4'>
+                        {/* Top Row - Order Info */}
+                        <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4'>
+                          <div>
+                            <p className='text-xs font-medium text-gray-500 uppercase tracking-wide'>
+                              Order ID
+                            </p>
+                            <p className='text-sm font-medium text-gray-900 truncate'>
+                              {order._id.slice(-8)}
+                            </p>
+                          </div>
+                          <div>
+                            <p className='text-xs font-medium text-gray-500 uppercase tracking-wide'>
+                              Date
+                            </p>
+                            <p className='text-sm font-medium text-gray-900'>
+                              {format(order.createdAt.substring(0, 10))}
+                            </p>
+                          </div>
+                          <div className='col-span-2 sm:col-span-1'>
+                            <p className='text-xs font-medium text-gray-500 uppercase tracking-wide'>
+                              Total
+                            </p>
+                            <p className='text-sm font-bold text-green-600'>
+                              ₱{order.totalPrice}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Bottom Row - Status and Action */}
+                        <div className='flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0'>
+                          <div>
+                            <p className='text-xs font-medium text-gray-500 uppercase tracking-wide mb-2'>
+                              Status
+                            </p>
+                            <div className='flex flex-wrap items-center gap-3'>
+                              <div className='flex items-center space-x-1'>
+                                {order.isPaid ? (
+                                  <CheckCircleIcon className='w-4 h-4 text-green-500' />
+                                ) : (
+                                  <XMarkIcon className='w-4 h-4 text-red-500' />
+                                )}
+                                <span className={`text-xs font-medium ${order.isPaid ? 'text-green-600' : 'text-red-600'
+                                  }`}>
+                                  {order.isPaid ? 'Paid' : 'Unpaid'}
+                                </span>
+                              </div>
+                              <div className='flex items-center space-x-1'>
+                                {order.isDelivered ? (
+                                  <CheckCircleIcon className='w-4 h-4 text-green-500' />
+                                ) : (
+                                  <ClockIcon className='w-4 h-4 text-yellow-500' />
+                                )}
+                                <span className={`text-xs font-medium ${order.isDelivered ? 'text-green-600' : 'text-yellow-600'
+                                  }`}>
+                                  {order.isDelivered ? 'Delivered' : 'Processing'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='flex-shrink-0'>
+                            <Link to={`/order/${order._id}`}>
+                              <button className='w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-green-600 px-6 py-2 text-sm font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'>
+                                View Details
+                              </button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Mobile Profile Update */}
+          <div className='lg:hidden mb-8'>
+            <Disclosure>
+              {({ open }) => (
+                <>
+                  <Disclosure.Button className='flex w-full items-center justify-center space-x-2 rounded-xl bg-green-600 py-3 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'>
+                    <UserIcon className='w-5 h-5' />
+                    <span>Update Profile</span>
+                    {open ? (
+                      <ChevronDownIcon className='w-5 h-5' />
+                    ) : (
+                      <ChevronRightIcon className='w-5 h-5' />
+                    )}
+                  </Disclosure.Button>
+                  <Disclosure.Panel className='mt-4'>
+                    <div className='rounded-3xl bg-white p-6 shadow-xl ring-1 ring-gray-200'>
+                      <div className='text-center mb-6'>
+                        <div className='mx-auto w-16 h-16 bg-gradient-to-r from-green-500 to-green-400 rounded-full flex items-center justify-center mb-3'>
+                          <UserIcon className='w-8 h-8 text-white' />
+                        </div>
+                        <h3 className='text-lg font-bold text-gray-900'>
+                          Profile Settings
+                        </h3>
+                        <p className='mt-1 text-sm text-gray-600'>
+                          Update your account information
+                        </p>
+                      </div>
+
+                      {message && <Message type='error'>{message}</Message>}
+                      {error && <Message type='error'>{error}</Message>}
+                      {loading === 'pending' && <Loader />}
+                      {updateLoading === 'succeeded' && (
+                        <Message type='success'>Profile Updated</Message>
+                      )}
+
+                      <form className='space-y-5' onSubmit={submitHandler}>
+                        <div>
+                          <label htmlFor='mobile-name' className='block text-sm font-medium text-gray-700'>
+                            Full Name
+                          </label>
+                          <input
+                            id='mobile-name'
+                            name='name'
+                            type='text'
+                            autoComplete='name'
+                            required
+                            value={name}
+                            className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                            placeholder='Enter your full name'
+                            onChange={(e) => setName(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor='mobile-email' className='block text-sm font-medium text-gray-700'>
+                            Email Address
+                          </label>
+                          <input
+                            id='mobile-email'
+                            name='email'
+                            type='email'
+                            autoComplete='email'
+                            required
+                            value={email}
+                            className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                            placeholder='Enter your email'
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor='mobile-password' className='block text-sm font-medium text-gray-700'>
+                            New Password
+                          </label>
+                          <input
+                            id='mobile-password'
+                            name='password'
+                            type='password'
+                            className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                            placeholder='Leave blank to keep current password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor='mobile-confirm-password' className='block text-sm font-medium text-gray-700'>
+                            Confirm Password
+                          </label>
+                          <input
+                            id='mobile-confirm-password'
+                            name='confirm-password'
+                            type='password'
+                            required={password ? true : false}
+                            className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                            placeholder='Confirm your new password'
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                        </div>
+                        <button
+                          type='submit'
+                          className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-3 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                        >
+                          <span>Update Profile</span>
+                        </button>
+                      </form>
+                    </div>
+                  </Disclosure.Panel>
+                </>
+              )}
+            </Disclosure>
+          </div>
         </div>
       </div>
-    </Container>
+    </main>
   )
 }
 

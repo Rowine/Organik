@@ -102,14 +102,7 @@ const ProductDetails = () => {
       <Meta title={product.name} />
       <div className='bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen'>
         <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
-          {/* Back Button */}
-          <Link
-            to={`/${product.category}`}
-            className='inline-flex items-center space-x-2 text-green-600 hover:text-green-500 transition-colors mb-8'
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-            <span className='font-medium'>Back to {product.category}</span>
-          </Link>
+
 
           {loading === 'pending' ? (
             <div className='flex min-h-[400px] items-center justify-center'>
@@ -159,7 +152,7 @@ const ProductDetails = () => {
                     <h3 className='text-lg font-semibold text-gray-900 mb-4'>Product Details</h3>
                     <p className='text-gray-700 leading-relaxed mb-6'>
                       Fresh, organic produce sourced directly from local farms. This premium quality {' '}
-                      {product.category.toLowerCase()} is carefully selected to ensure the best taste and nutritional value.
+                      {product.category?.toLowerCase() || 'product'} is carefully selected to ensure the best taste and nutritional value.
                     </p>
 
                     <div className='flex items-center space-x-4 mb-6'>

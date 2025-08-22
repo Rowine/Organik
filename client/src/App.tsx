@@ -71,8 +71,8 @@ const App = () => {
             <Route path='/admin/orderlist' element={<OrderList />} />
             <Route path='/admin/user/:id/edit' element={<UserEdit />} />
             <Route path='/admin/product/:id/edit' element={<ProductEdit />} />
+            <Route path='/product/:id' element={<ProductDetails />} />
             <Route path='/:category' element={<Category />} />
-            <Route path='/:category/:id' element={<ProductDetails />} />
           </Routes>
           <Footer />
         </div>

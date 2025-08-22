@@ -38,7 +38,7 @@ const CategoryPreview = () => {
         <div className='flex flex-col space-y-2 sm:space-y-3'>
           <div className='flex items-start justify-between'>
             <h3 className='font-lato sm:text-lg font-medium text-gray-900 line-clamp-1'>
-              <Link to={`/${product.category}/${product._id}`}>
+              <Link to={`/product/${product._id}`}>
                 <span aria-hidden='true' className='absolute inset-0' />
                 {product.name}
               </Link>

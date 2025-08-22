@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { Link, useNavigate } from 'react-router-dom'
 import Message from '../components/Message'
-import Container from '../components/Container'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { savePrices } from '../features/cartSlice'
 import { createOrder } from '../features/orderSlice'
+import {
+  CheckCircleIcon,
+  TruckIcon,
+  CreditCardIcon,
+  MapPinIcon,
+  ShoppingBagIcon,
+  LockClosedIcon
+} from '@heroicons/react/24/outline'
 
 const PlaceOrder = () => {
   const dispatch = useAppDispatch()
@@ -47,101 +54,192 @@ const PlaceOrder = () => {
     )
   }
   return (
-    <Container>
-      <CheckoutSteps step1 step2 step3 step4 />
-      <div className='my-10 grid grid-cols-12 gap-x-5 gap-y-10'>
-        <div className='col-span-12 lg:col-span-8'>
-          <div className='rounded-lg bg-white p-5 shadow-lg'>
-            <h2 className='mb-5 font-lato text-2xl font-semibold'>Shipping</h2>
-            <p>
-              <strong>Address: </strong>
-              {shippingAddress.address}, {shippingAddress.city}{' '}
-              {shippingAddress.postalCode}
-            </p>
+    <div className='bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen'>
+      <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
+        <CheckoutSteps step1 step2 step3 step4 />
 
-            <h2 className='mt-5 mb-5 font-lato text-2xl font-semibold'>
-              Payment Method
-            </h2>
-            <p>
-              <strong>Method: </strong>
-              {cart.paymentMethod}
-            </p>
+        <div className='grid lg:grid-cols-12 lg:gap-12 mt-8'>
+          {/* Main Content - Order Review */}
+          <div className='lg:col-span-8 space-y-8'>
+            {/* Header */}
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+              <div className='flex items-center space-x-3 mb-6'>
+                <div className='w-12 h-12 bg-green-100 rounded-full flex items-center justify-center'>
+                  <CheckCircleIcon className='w-6 h-6 text-green-600' />
+                </div>
+                <div>
+                  <h1 className='text-2xl font-bold text-gray-900 sm:text-3xl'>
+                    Review Your Order
+                  </h1>
+                  <p className='text-gray-600 mt-1'>
+                    Almost there! Please review your order before placing it.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-            <h2 className='mt-5 mb-5 font-lato text-2xl font-semibold'>
-              Order Items
-            </h2>
-            {cartItems.length === 0 ? (
-              <Message type='info'>Your cart is empty</Message>
-            ) : (
-              <ul className='divide-y divide-gray-200'>
-                {cartItems.map((item, index) => (
-                  <li key={index} className='py-5'>
-                    <div className='flex items-center'>
-                      <div className='flex-shrink-0'>
+            {/* Shipping Information */}
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+              <div className='flex items-center space-x-3 mb-6'>
+                <div className='w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center'>
+                  <TruckIcon className='w-5 h-5 text-blue-600' />
+                </div>
+                <h2 className='text-xl font-semibold text-gray-900'>Shipping Address</h2>
+              </div>
+              <div className='bg-gray-50 rounded-2xl p-6'>
+                <div className='flex items-start space-x-3'>
+                  <MapPinIcon className='w-5 h-5 text-gray-400 mt-0.5' />
+                  <div>
+                    <p className='font-medium text-gray-900'>{shippingAddress.address}</p>
+                    <p className='text-gray-600'>
+                      {shippingAddress.city}, {shippingAddress.postalCode}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Method */}
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+              <div className='flex items-center space-x-3 mb-6'>
+                <div className='w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center'>
+                  <CreditCardIcon className='w-5 h-5 text-purple-600' />
+                </div>
+                <h2 className='text-xl font-semibold text-gray-900'>Payment Method</h2>
+              </div>
+              <div className='bg-gray-50 rounded-2xl p-6'>
+                <div className='flex items-center space-x-3'>
+                  <div className='w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center'>
+                    <CreditCardIcon className='w-4 h-4 text-blue-600' />
+                  </div>
+                  <div>
+                    <p className='font-medium text-gray-900'>{cart.paymentMethod}</p>
+                    <p className='text-sm text-gray-600'>Secure payment processing</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Order Items */}
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+              <div className='flex items-center space-x-3 mb-6'>
+                <div className='w-10 h-10 bg-green-100 rounded-full flex items-center justify-center'>
+                  <ShoppingBagIcon className='w-5 h-5 text-green-600' />
+                </div>
+                <h2 className='text-xl font-semibold text-gray-900'>Order Items</h2>
+              </div>
+
+              {cartItems.length === 0 ? (
+                <Message type='info'>Your cart is empty</Message>
+              ) : (
+                <div className='space-y-4'>
+                  {cartItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className='flex items-center space-x-4 p-4 bg-gray-50 rounded-2xl'
+                    >
+                      <div className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl'>
                         <img
-                          className='h-12 w-12 rounded-lg object-cover'
+                          className='h-full w-full object-contain object-center'
                           src={item.image}
                           alt={item.name}
                         />
                       </div>
-                      <div className='ml-4 flex flex-1 flex-col'>
-                        <div>
-                          <div className='flex justify-between text-base font-medium text-gray-900'>
-                            <h3>
-                              <Link to={`/product/₱{item.product}`}>
-                                {item.name}
-                              </Link>
-                            </h3>
-                            <p className='ml-4'>₱{item.price}</p>
-                          </div>
-                          <p className='mt-1 text-sm text-gray-500'>
-                            Qty: {item.qty}
-                          </p>
-                        </div>
+                      <div className='flex-1 min-w-0'>
+                        <h3 className='font-medium text-gray-900 truncate'>
+                          <Link
+                            to={`/product/${item.product}`}
+                            className='hover:text-green-600 transition-colors'
+                          >
+                            {item.name}
+                          </Link>
+                        </h3>
+                        <p className='text-sm text-gray-600'>Quantity: {item.qty}</p>
+                      </div>
+                      <div className='text-right'>
+                        <p className='font-medium text-gray-900'>₱{item.price}</p>
+                        <p className='text-sm text-gray-600'>each</p>
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        <div className='col-span-12 lg:col-span-4'>
-          <div className='rounded-lg bg-white p-5 shadow-lg'>
-            <h2 className='mb-5 font-lato text-2xl font-semibold'>
-              Order Summary
-            </h2>
-            <ul className='divide-y divide-gray-200'>
-              <li className='py-5'>
-                <div className='flex justify-between text-base font-medium text-gray-900'>
-                  <p>Items</p>
-                  <p>₱{itemsPrice}</p>
+
+          {/* Sidebar - Order Summary */}
+          <div className='lg:col-span-4 mt-8 lg:mt-0'>
+            <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200 sticky top-8'>
+              <h2 className='text-xl font-semibold text-gray-900 mb-6'>
+                Order Summary
+              </h2>
+
+              <div className='space-y-4 mb-6'>
+                <div className='flex justify-between text-gray-600'>
+                  <span>Items ({cartItems.reduce((acc, item) => acc + item.qty, 0)})</span>
+                  <span>₱{itemsPrice}</span>
                 </div>
-              </li>
-              <li className='py-5'>
-                <div className='flex justify-between text-base font-medium text-gray-900'>
-                  <p>Shipping</p>
-                  <p>₱{shippingPrice}</p>
+                <div className='flex justify-between text-gray-600'>
+                  <span>Shipping</span>
+                  <span>{Number(shippingPrice) === 0 ? 'Free' : `₱${shippingPrice}`}</span>
                 </div>
-              </li>
-              <li className='py-5'>
-                <div className='flex justify-between text-base font-medium text-gray-900'>
-                  <p>Total</p>
-                  <p>₱{totalPrice}</p>
+                <div className='border-t pt-4'>
+                  <div className='flex justify-between text-lg font-bold text-gray-900'>
+                    <span>Total</span>
+                    <span>₱{totalPrice}</span>
+                  </div>
                 </div>
-              </li>
-            </ul>
-            {error && <Message type='error'>{error}</Message>}
-            <button
-              onClick={placeOrderHandler}
-              className='mt-5 flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-            >
-              Place Order
-            </button>
+              </div>
+
+              {error && (
+                <div className='mb-6'>
+                  <Message type='error'>{error}</Message>
+                </div>
+              )}
+
+              <button
+                onClick={placeOrderHandler}
+                className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-4 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+              >
+                <LockClosedIcon className='w-5 h-5' />
+                <span>Place Order</span>
+              </button>
+
+              {/* Trust Elements */}
+              <div className='mt-6 pt-6 border-t border-gray-200'>
+                <div className='space-y-3'>
+                  <div className='flex items-center space-x-2 text-sm text-gray-600'>
+                    <CheckCircleIcon className='w-4 h-4 text-green-600' />
+                    <span>30-day money back guarantee</span>
+                  </div>
+                  <div className='flex items-center space-x-2 text-sm text-gray-600'>
+                    <TruckIcon className='w-4 h-4 text-blue-600' />
+                    <span>Free delivery on orders over ₱1,000</span>
+                  </div>
+                  <div className='flex items-center space-x-2 text-sm text-gray-600'>
+                    <LockClosedIcon className='w-4 h-4 text-purple-600' />
+                    <span>Secure & encrypted checkout</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Processing Info */}
+              <div className='mt-6 pt-6 border-t border-gray-200'>
+                <div className='bg-blue-50 rounded-xl p-4'>
+                  <h4 className='font-medium text-blue-900 mb-2'>What happens next?</h4>
+                  <ul className='text-sm text-blue-800 space-y-1'>
+                    <li>• Order confirmation via email</li>
+                    <li>• Items prepared for shipping</li>
+                    <li>• Tracking information sent</li>
+                    <li>• Fresh delivery to your door</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   )
 }
 
