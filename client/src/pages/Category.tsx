@@ -69,7 +69,7 @@ const Category = () => {
   )
 
   const CategoryHeader = () => (
-    <div className='relative mb-16 overflow-hidden rounded-3xl bg-gradient-to-r from-green-600 to-green-700 px-8 py-16 text-center shadow-2xl'>
+    <div className='relative mb-12 overflow-hidden rounded-3xl bg-gradient-to-r from-green-600 to-green-700 px-8 py-10 text-center shadow-2xl'>
       {/* Background image with overlay */}
       <img
         src='/images/banner/bg-leaf.jpg'
@@ -154,7 +154,7 @@ const Category = () => {
                 </div>
               </div>
 
-              <div className='grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
+              <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 xl:gap-x-12'>
                 {categoryProducts.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}

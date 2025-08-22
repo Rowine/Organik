@@ -80,7 +80,7 @@ const CategoryPreview = () => {
               <Loader />
             </div>
           ) : (
-            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8'>
+            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-12'>
               {trendingProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
@@ -98,7 +98,7 @@ const CategoryPreview = () => {
               <Loader />
             </div>
           ) : (
-            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8'>
+            <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-12'>
               {customerPurchase.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
