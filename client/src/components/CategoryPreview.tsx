@@ -26,10 +26,10 @@ const CategoryPreview = () => {
       key={product._id}
       className='group relative overflow-hidden rounded-3xl bg-white transition-all hover:shadow-2xl hover:-translate-y-1'
     >
-      <div className='aspect-w-1 aspect-h-1 w-full sm:w-[90%] md:w-[85%] mx-auto overflow-hidden'>
+      <div className='aspect-w-4 aspect-h-3 w-full mx-auto overflow-hidden'>
         <PreloadImage
           src={product.image}
-          className='h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105'
+          className='h-full w-full object-contain object-center transition-transform duration-300 group-hover:scale-105'
         />
         {/* Overlay with gradient */}
         <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
