@@ -28,7 +28,7 @@ const App = () => {
   return (
     <HelmetProvider>
       <BrowserRouter basename='/'>
-        <div className='flex h-screen flex-col justify-between'>
+        <div className='flex min-h-screen flex-col'>
           <Navigation
             category={[
               {
