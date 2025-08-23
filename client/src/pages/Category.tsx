@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Rating from '../components/Rating'
 import Loader from '../components/Loader'
@@ -7,29 +6,29 @@ import Message from '../components/Message'
 import Meta from '../components/Meta'
 import Container from '../components/Container'
 import IProductItem from '../interfaces/IProductItem'
-import { listProducts } from '../features/productListSlice'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useProducts } from '../hooks/useProducts'
 // @ts-ignore
 import PreloadImage from 'react-preload-image'
 
 const Category = () => {
-  const dispatch = useAppDispatch()
-
-  const productList = useAppSelector((state) => state.productList)
-  const { loading, error, products } = productList
-
   const { category } = useParams()
+
+  // Use the enhanced products hook with category filtering
+  const {
+    products: categoryProducts,
+    isLoading,
+    isInitialLoading,
+    error,
+    isStale,
+    refetch
+  } = useProducts({
+    category,
+    enableBackgroundRefresh: true
+  })
 
   const metaCategory = category
     ? category.charAt(0).toUpperCase() + category.slice(1)
     : 'Category'
-  useEffect(() => {
-    dispatch(listProducts())
-  }, [dispatch])
-
-  const categoryProducts = products.filter(
-    (product: IProductItem) => product.category === category
-  )
 
   const ProductCard = ({ product }: { product: IProductItem }) => (
     <div
@@ -122,7 +121,7 @@ const Category = () => {
         <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
           <CategoryHeader />
 
-          {loading === 'pending' ? (
+          {isInitialLoading ? (
             <div className='flex min-h-[400px] items-center justify-center'>
               <Loader />
             </div>
@@ -139,9 +138,22 @@ const Category = () => {
                   <h2 className='text-2xl font-bold text-gray-900 sm:text-3xl'>
                     Fresh {metaCategory}
                   </h2>
-                  <p className='text-gray-600 mt-1'>
-                    {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''} available
-                  </p>
+                  <div className='flex items-center gap-4 mt-1'>
+                    <p className='text-gray-600'>
+                      {categoryProducts.length} product{categoryProducts.length !== 1 ? 's' : ''} available
+                    </p>
+                    {isStale && (
+                      <button
+                        onClick={refetch}
+                        className='inline-flex items-center text-sm text-green-600 hover:text-green-500 font-medium'
+                      >
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Refresh
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className='hidden sm:flex items-center space-x-4'>
                   <span className='text-sm text-gray-500'>Sort by:</span>

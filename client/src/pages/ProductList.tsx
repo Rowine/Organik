@@ -45,7 +45,7 @@ const ProductList = () => {
     if (successCreate) {
       navigate(`/admin/product/${createdProduct?._id}/edit`)
     } else {
-      dispatch(listProducts())
+      dispatch(listProducts({}))
     }
   }, [dispatch, navigate, userInfo, successCreate, successDelete])
 

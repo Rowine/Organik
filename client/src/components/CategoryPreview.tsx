@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { listProducts } from '../features/productListSlice'
-import { useAppSelector, useAppDispatch } from '../app/hooks'
+import { useTrendingProducts, useCustomerPurchaseProducts } from '../hooks/useProducts'
 import Rating from './Rating'
 import ProductSkeleton from './ProductSkeleton'
 // @ts-ignore
@@ -9,17 +7,13 @@ import PreloadImage from 'react-preload-image'
 import Loader from './Loader'
 
 const CategoryPreview = () => {
-  const dispatch = useAppDispatch()
+  // Use specialized hooks for different product sections
+  const { trendingProducts, isLoading: trendingLoading, error: trendingError } = useTrendingProducts()
+  const { customerPurchase, isLoading: customerLoading, error: customerError } = useCustomerPurchaseProducts()
 
-  const productList = useAppSelector((state) => state.productList)
-  const { products, loading } = productList
-
-  useEffect(() => {
-    dispatch(listProducts())
-  }, [])
-
-  const trendingProducts = products.slice(0, 4)
-  const customerPurchase = products.slice(5, 9)
+  // Determine overall loading state
+  const isLoading = trendingLoading || customerLoading
+  const hasError = trendingError || customerError
 
   const ProductCard = ({ product }: { product: any }) => (
     <div
@@ -75,7 +69,7 @@ const CategoryPreview = () => {
         <div className='mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8'>
           <SectionHeader subtitle="Our Selection" title="Trending Products" />
 
-          {loading === 'pending' ? (
+          {trendingLoading ? (
             <div className='flex min-h-[300px] items-center justify-center'>
               <Loader />
             </div>
@@ -93,7 +87,7 @@ const CategoryPreview = () => {
         <div className='mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8'>
           <SectionHeader subtitle="Popular Choices" title="Customers Also Purchased" />
 
-          {loading === 'pending' ? (
+          {customerLoading ? (
             <div className='flex min-h-[300px] items-center justify-center'>
               <Loader />
             </div>
