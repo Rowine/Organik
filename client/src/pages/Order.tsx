@@ -9,6 +9,14 @@ import Loader from '../components/Loader'
 import { getOrderDetails } from '../features/orderDetailsSlice'
 import { payOrder, IPayOrderProps, payReset } from '../features/orderPaySlice'
 import { orderDeliverReset, deliverOrder } from '../features/orderDeliverSlice'
+import {
+  TruckIcon,
+  CreditCardIcon,
+  ShoppingBagIcon,
+  CheckCircleIcon,
+  XMarkIcon,
+  ClockIcon
+} from '@heroicons/react/24/outline'
 
 interface IPayOrderPayload {
   id: string
@@ -84,165 +92,241 @@ const Order = () => {
   }, [clientId])
 
   return (
-    <Container>
-      {loading === 'pending' ? (
-        <Loader />
-      ) : error ? (
-        <Message type='error'>{error}</Message>
-      ) : (
-        <div className='my-10 grid grid-cols-12 gap-x-5'>
-          <div className='col-span-12 lg:col-span-8'>
-            <div className='rounded-lg bg-white p-5 shadow-lg'>
-              <h2 className='mb-5 text-2xl font-semibold'>Shipping</h2>
-              <p>
-                <strong>Address: </strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
-                {order.shippingAddress.postalCode}
-              </p>
-              <p>
-                <strong>Name: </strong>
-                {order.user.name}
-              </p>
-              <p className='mb-2'>
-                <strong>Email: </strong>
-                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
-              </p>
-              {order.isDelivered ? (
-                <Message type='success'>
-                  Delivered on {order.deliveredAt}
-                </Message>
-              ) : (
-                <Message type='error'>Not Delivered</Message>
-              )}
-            </div>
-            <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
-              <h2 className='mb-5 text-2xl font-semibold'>Payment Method</h2>
-              <p className='mb-2'>
-                <strong>Method: </strong>
-                {order.paymentMethod}
-              </p>
-              {order.isPaid ? (
-                <Message type='success'>Paid on {order.paidAt}</Message>
-              ) : (
-                <Message type='error'>Not Paid</Message>
-              )}
-            </div>
-            <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
-              <h2 className='mb-5 text-2xl font-semibold'>Order Items</h2>
-              {order.orderItems.length === 0 ? (
-                <Message type='info'>Your cart is empty</Message>
-              ) : (
-                <div className='grid grid-cols-12 gap-x-5 gap-y-3'>
-                  {order.orderItems.map((item: any) => (
-                    <div
-                      key={item.product}
-                      className='col-span-12 sm:col-span-6 lg:col-span-4'
-                    >
-                      <div className='rounded-lg bg-white p-5 shadow-lg'>
-                        <div className='flex items-center'>
+    <main className='flex-grow bg-gradient-to-br from-gray-50 via-white to-gray-50'>
+      <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8'>
+        {loading === 'pending' ? (
+          <div className='flex min-h-[400px] items-center justify-center'>
+            <Loader />
+          </div>
+        ) : error ? (
+          <Message type='error'>{error}</Message>
+        ) : (
+          <div className='grid lg:grid-cols-12 lg:gap-x-12'>
+            {/* Main Content Section */}
+            <div className='lg:col-span-8'>
+              {/* Shipping Information */}
+              <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200 mb-8'>
+                <div className='flex items-center mb-6'>
+                  <div className='h-12 w-12 flex items-center justify-center rounded-full bg-green-100'>
+                    <TruckIcon className='h-6 w-6 text-green-600' />
+                  </div>
+                  <div className='ml-4'>
+                    <h2 className='text-2xl font-bold tracking-tight text-gray-900'>Shipping Details</h2>
+                    <p className='text-sm text-gray-600'>Delivery information and tracking</p>
+                  </div>
+                </div>
+
+                <div className='space-y-4'>
+                  <div className='rounded-2xl bg-gray-50 p-4'>
+                    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+                      <div>
+                        <p className='text-sm font-medium text-gray-500'>Shipping Address</p>
+                        <p className='mt-1 text-sm text-gray-900'>
+                          {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
+                          {order.shippingAddress.postalCode}
+                        </p>
+                      </div>
+                      <div>
+                        <p className='text-sm font-medium text-gray-500'>Customer Details</p>
+                        <p className='mt-1 text-sm text-gray-900'>{order.user.name}</p>
+                        <a href={`mailto:${order.user.email}`} className='text-sm text-green-600 hover:text-green-500'>
+                          {order.user.email}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='flex items-center space-x-2'>
+                    {order.isDelivered ? (
+                      <>
+                        <CheckCircleIcon className='h-5 w-5 text-green-500' />
+                        <span className='text-sm font-medium text-green-600'>
+                          Delivered on {order.deliveredAt}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <ClockIcon className='h-5 w-5 text-yellow-500' />
+                        <span className='text-sm font-medium text-yellow-600'>
+                          Pending Delivery
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Payment Information */}
+              <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200 mb-8'>
+                <div className='flex items-center mb-6'>
+                  <div className='h-12 w-12 flex items-center justify-center rounded-full bg-green-100'>
+                    <CreditCardIcon className='h-6 w-6 text-green-600' />
+                  </div>
+                  <div className='ml-4'>
+                    <h2 className='text-2xl font-bold tracking-tight text-gray-900'>Payment Details</h2>
+                    <p className='text-sm text-gray-600'>Transaction information</p>
+                  </div>
+                </div>
+
+                <div className='space-y-4'>
+                  <div className='rounded-2xl bg-gray-50 p-4'>
+                    <p className='text-sm font-medium text-gray-500'>Payment Method</p>
+                    <p className='mt-1 text-sm text-gray-900'>{order.paymentMethod}</p>
+                  </div>
+
+                  <div className='flex items-center space-x-2'>
+                    {order.isPaid ? (
+                      <>
+                        <CheckCircleIcon className='h-5 w-5 text-green-500' />
+                        <span className='text-sm font-medium text-green-600'>
+                          Paid on {order.paidAt}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <XMarkIcon className='h-5 w-5 text-red-500' />
+                        <span className='text-sm font-medium text-red-600'>
+                          Payment Pending
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Order Items */}
+              <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+                <div className='flex items-center mb-6'>
+                  <div className='h-12 w-12 flex items-center justify-center rounded-full bg-green-100'>
+                    <ShoppingBagIcon className='h-6 w-6 text-green-600' />
+                  </div>
+                  <div className='ml-4'>
+                    <h2 className='text-2xl font-bold tracking-tight text-gray-900'>Order Items</h2>
+                    <p className='text-sm text-gray-600'>Products in your order</p>
+                  </div>
+                </div>
+
+                {order.orderItems.length === 0 ? (
+                  <Message type='info'>Your cart is empty</Message>
+                ) : (
+                  <div className='space-y-4'>
+                    {order.orderItems.map((item: any) => (
+                      <div
+                        key={item.product}
+                        className='rounded-2xl border border-gray-200 p-4 hover:shadow-lg transition-shadow'
+                      >
+                        <div className='flex items-center space-x-4'>
                           <img
                             src={item.image}
                             alt={item.name}
-                            className='h-20 w-20 object-cover'
+                            className='h-24 w-24 rounded-xl object-cover'
                           />
-                          <div className='ml-5'>
+                          <div className='flex-1 min-w-0'>
                             <Link
                               to={`/product/${item.product}`}
-                              className='text-lg font-semibold hover:underline'
+                              className='text-lg font-medium text-gray-900 hover:text-green-600 truncate block'
                             >
                               {item.name}
                             </Link>
-                            <p className='text-gray-500'>
-                              {item.qty} x ₱{item.price} = ₱
-                              {item.qty * item.price}
+                            <p className='text-sm text-gray-500 mt-1'>
+                              Quantity: {item.qty}
                             </p>
+                          </div>
+                          <div className='text-right'>
+                            <p className='text-lg font-bold text-green-600'>₱{item.qty * item.price}</p>
+                            <p className='text-sm text-gray-500'>₱{item.price} each</p>
                           </div>
                         </div>
                       </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Order Summary Section */}
+            <div className='lg:col-span-4 mt-8 lg:mt-0'>
+              <div className='sticky top-8 space-y-8'>
+                <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+                  <h2 className='text-2xl font-bold tracking-tight text-gray-900 mb-6'>Order Summary</h2>
+                  <div className='space-y-4'>
+                    <div className='flex justify-between items-center py-2'>
+                      <span className='text-gray-600'>Items Total</span>
+                      <span className='text-lg font-medium text-gray-900'>₱{itemsPriceFixed}</span>
                     </div>
-                  ))}
+                    <div className='flex justify-between items-center py-2'>
+                      <span className='text-gray-600'>Shipping Fee</span>
+                      <span className='text-lg font-medium text-gray-900'>₱{order.shippingPrice}</span>
+                    </div>
+                    <div className='border-t border-gray-200 pt-4'>
+                      <div className='flex justify-between items-center'>
+                        <span className='text-lg font-bold text-gray-900'>Total</span>
+                        <span className='text-xl font-bold text-green-600'>₱{order.totalPrice}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-          <div className='col-span-12 lg:col-span-4'>
-            <div className='rounded-lg bg-white p-5 shadow-lg'>
-              <h2 className='mb-5 text-2xl font-semibold'>Order Summary</h2>
-              <div className='mb-5 flex items-center justify-between'>
-                <p>Items</p>
-                <p>₱{itemsPriceFixed}</p>
-              </div>
-              <div className='mb-5 flex items-center justify-between'>
-                <p>Shipping</p>
-                <p>₱{order.shippingPrice}</p>
-              </div>
-              <div className='mb-5 flex items-center justify-between'>
-                <p>Total</p>
-                <p>₱{order.totalPrice}</p>
-              </div>
-            </div>
-            {loadingPay === 'pending' && <Loader />}
-            {userInfo && !userInfo.isAdmin && !order.isPaid && (
-              <div className='mt-5 rounded-lg bg-white p-5 shadow-lg'>
-                <h2 className='mb-5 text-2xl font-semibold'>Payment</h2>
-                {errorPay && <Message type='error'>{errorPay}</Message>}
-                <div className='mt-10'>
-                  <PayPalScriptProvider
-                    options={{
-                      'client-id': clientId,
-                      currency: 'PHP',
-                    }}
-                  >
-                    <PayPalButtons
-                      disabled={false}
-                      createOrder={(data, actions) => {
-                        return actions.order
-                          .create({
-                            purchase_units: [
-                              {
-                                amount: {
-                                  currency_code: 'PHP',
-                                  value: order.totalPrice.toString(),
+
+                {loadingPay === 'pending' && <Loader />}
+                {userInfo && !userInfo.isAdmin && !order.isPaid && (
+                  <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
+                    <h2 className='text-2xl font-bold tracking-tight text-gray-900 mb-6'>Payment</h2>
+                    {errorPay && <Message type='error'>{errorPay}</Message>}
+                    <PayPalScriptProvider
+                      options={{
+                        'client-id': clientId,
+                        currency: 'PHP',
+                      }}
+                    >
+                      <PayPalButtons
+                        disabled={false}
+                        createOrder={(data, actions) => {
+                          return actions.order
+                            .create({
+                              purchase_units: [
+                                {
+                                  amount: {
+                                    currency_code: 'PHP',
+                                    value: order.totalPrice.toString(),
+                                  },
                                 },
-                              },
-                            ],
-                          })
-                          .then((orderId) => {
-                            // Your code here after create the order
-                            return orderId
-                          })
-                      }}
-                      onApprove={function (data, actions) {
-                        return (actions.order as any)
-                          .capture()
-                          .then(function (details: any) {
-                            // Your code here after capture the order
-                            successPaymentHandler(details)
-                          })
-                      }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
+                              ],
+                            })
+                            .then((orderId) => {
+                              return orderId
+                            })
+                        }}
+                        onApprove={function (data, actions) {
+                          return (actions.order as any)
+                            .capture()
+                            .then(function (details: any) {
+                              successPaymentHandler(details)
+                            })
+                        }}
+                      />
+                    </PayPalScriptProvider>
+                  </div>
+                )}
+
+                {loadingDeliver === 'pending' && <Loader />}
+                {userInfo &&
+                  userInfo.isAdmin &&
+                  order.isPaid &&
+                  !order.isDelivered && (
+                    <button
+                      onClick={deliverHandler}
+                      className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-3 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                    >
+                      <TruckIcon className='h-5 w-5' />
+                      <span>Mark As Delivered</span>
+                    </button>
+                  )}
               </div>
-            )}
-            {loadingDeliver === 'pending' && <Loader />}
-            {userInfo &&
-              userInfo.isAdmin &&
-              order.isPaid &&
-              !order.isDelivered && (
-                <div className='mt-5'>
-                  <button
-                    className='group relative flex w-full justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
-                    onClick={deliverHandler}
-                  >
-                    Mark As Delivered
-                  </button>
-                </div>
-              )}
+            </div>
           </div>
-        </div>
-      )}
-    </Container>
+        )}
+      </div>
+    </main>
   )
 }
 
