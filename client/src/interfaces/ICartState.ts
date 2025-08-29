@@ -1,4 +1,4 @@
-import { CartError } from "../types/errors";
+import { CartError, ResourceError } from "../types/errors";
 
 export interface ICartItems {
   _id: string;
@@ -22,5 +22,5 @@ export default interface ICartState {
   itemsPrice: number;
   shippingPrice: number;
   totalPrice: number;
-  error: CartError | undefined;
+  error: CartError | ResourceError | undefined;
 }

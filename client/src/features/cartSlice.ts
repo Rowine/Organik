@@ -1,17 +1,18 @@
-import axios from 'axios'
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit'
-import ICartState from '../interfaces/ICartState'
+import axios, { AxiosError } from "axios";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import ICartState from "../interfaces/ICartState";
+import { CartError, ResourceError } from "../types/errors";
 
 interface IAddToCart {
-  id: string
-  qty: number
+  id: string;
+  qty: number;
 }
 
 export const addToCart = createAsyncThunk(
-  'cart/addToCart',
+  "cart/addToCart",
   async ({ id, qty }: IAddToCart, { getState, rejectWithValue, dispatch }) => {
     try {
-      const { data } = await axios.get(`/api/products/${id}`)
+      const { data } = await axios.get(`/api/products/${id}`);
 
       dispatch(
         cartSlice.actions.addToCart({
@@ -22,97 +23,144 @@ export const addToCart = createAsyncThunk(
           countInStock: data.countInStock,
           qty,
         })
-      )
+      );
 
       const {
         cart: { cartItems },
-      } = getState() as { cart: ICartState }
-      localStorage.setItem('cartItems', JSON.stringify(cartItems))
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      )
+      } = getState() as { cart: ICartState };
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 404) {
+          // Product not found
+          const resourceError: ResourceError = {
+            message: "Product not found",
+            code: "NOT_FOUND",
+            status: 404,
+            resourceType: "product",
+            resourceId: id,
+          };
+          return rejectWithValue(resourceError);
+        }
+      }
+
+      // Generic cart error
+      return rejectWithValue({
+        message: "Failed to add item to cart",
+        code: "CART_EMPTY",
+        status: 500,
+        productId: id,
+      } as CartError);
     }
   }
-)
+);
 
 const initialState = {
-  loading: 'idle',
+  loading: "idle",
   cartItems: [],
   shippingAddress: {
-    address: '',
-    city: '',
-    postalCode: '',
+    address: "",
+    city: "",
+    postalCode: "",
   },
-  paymentMethod: '',
+  paymentMethod: "",
   itemsPrice: 0,
   shippingPrice: 0,
   totalPrice: 0,
   error: undefined,
-} as ICartState
+} as ICartState;
 
 export const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const item = action.payload
+      const item = action.payload;
+      const existItem = state.cartItems.find((x) => x.product === item.product);
 
-      const existItem = state.cartItems.find((x) => x.product === item.product)
+      // Check stock availability
+      if (item.qty > item.countInStock) {
+        state.error = {
+          message: "Not enough items in stock",
+          code: "QUANTITY_EXCEEDED",
+          status: 400,
+          productId: item.product,
+          availableQuantity: item.countInStock,
+        } as CartError;
+        return;
+      }
+
+      // Check if item is out of stock
+      if (item.countInStock === 0) {
+        state.error = {
+          message: "This item is out of stock",
+          code: "ITEM_OUT_OF_STOCK",
+          status: 400,
+          productId: item.product,
+        } as CartError;
+        return;
+      }
+
+      // Clear any previous errors
+      state.error = undefined;
 
       if (existItem) {
         state.cartItems = state.cartItems.map((x) =>
           x.product === existItem.product ? item : x
-        )
+        );
       } else {
-        state.cartItems.push(item)
+        state.cartItems.push(item);
       }
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
         (x) => x.product !== action.payload
-      )
+      );
 
-      localStorage.setItem('cartItems', JSON.stringify(state.cartItems))
+      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
     },
     saveShippingAddress: (state, action) => {
-      state.shippingAddress = action.payload
+      state.shippingAddress = action.payload;
 
       localStorage.setItem(
-        'shippingAddress',
+        "shippingAddress",
         JSON.stringify(state.shippingAddress)
-      )
+      );
     },
     savePaymentMethod: (state, action) => {
-      state.paymentMethod = action.payload
+      state.paymentMethod = action.payload;
 
-      localStorage.setItem('paymentMethod', JSON.stringify(state.paymentMethod))
+      localStorage.setItem(
+        "paymentMethod",
+        JSON.stringify(state.paymentMethod)
+      );
     },
     savePrices: (state, action) => {
-      state.itemsPrice = action.payload.itemsPrice
-      state.shippingPrice = action.payload.shippingPrice
-      state.totalPrice = action.payload.totalPrice
+      state.itemsPrice = action.payload.itemsPrice;
+      state.shippingPrice = action.payload.shippingPrice;
+      state.totalPrice = action.payload.totalPrice;
     },
     resetCart: (state) => {
-      state.cartItems = []
-      localStorage.removeItem('cartItems')
+      state.cartItems = [];
+      localStorage.removeItem("cartItems");
     },
   },
   extraReducers: (builder) => {
     builder.addCase(addToCart.pending, (state) => {
-      state.loading = 'pending'
-    })
+      state.loading = "pending";
+    });
     builder.addCase(addToCart.fulfilled, (state) => {
-      state.loading = 'idle'
-    })
+      state.loading = "idle";
+    });
     builder.addCase(addToCart.rejected, (state, action) => {
-      state.loading = 'idle'
-      state.error = action.payload as string
-    })
+      state.loading = "idle";
+      state.error = action.payload as CartError | ResourceError;
+    });
   },
-})
+});
 
 export const {
   removeFromCart,
@@ -120,6 +168,6 @@ export const {
   savePaymentMethod,
   savePrices,
   resetCart,
-} = cartSlice.actions
+} = cartSlice.actions;
 
-export default cartSlice.reducer
+export default cartSlice.reducer;
