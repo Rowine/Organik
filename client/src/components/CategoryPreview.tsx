@@ -1,9 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTrendingProducts, useCustomerPurchaseProducts } from '../hooks/useProducts'
 import Rating from './Rating'
-import ProductSkeleton from './ProductSkeleton'
-// @ts-ignore
-import PreloadImage from 'react-preload-image'
 import Loader from './Loader'
 
 const CategoryPreview = () => {
@@ -21,8 +18,9 @@ const CategoryPreview = () => {
       className='group relative overflow-hidden rounded-3xl bg-white transition-all hover:shadow-2xl hover:-translate-y-1'
     >
       <div className='aspect-w-4 aspect-h-3 w-full mx-auto overflow-hidden'>
-        <PreloadImage
+        <img
           src={product.image}
+          alt={product.name}
           className='h-full w-full object-contain object-center transition-transform duration-300 group-hover:scale-105'
         />
         {/* Overlay with gradient */}

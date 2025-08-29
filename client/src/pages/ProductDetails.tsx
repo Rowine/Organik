@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import Container from '../components/Container'
 import Rating from '../components/Rating'
 import IProductItem, { IReview } from '../interfaces/IProductItem'
 import { IParams } from '../interfaces/IParams'
@@ -12,14 +11,11 @@ import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
 import {
-  ArrowLeftIcon,
   ShoppingCartIcon,
   HeartIcon,
   StarIcon
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
-// @ts-ignore
-import PreloadImage from 'react-preload-image'
 
 const ProductDetails = () => {
   const [qty, setQty] = useState(1)
@@ -121,7 +117,7 @@ const ProductDetails = () => {
                   {/* Product Image */}
                   <div className='relative'>
                     <div className='aspect-w-4 aspect-h-3 overflow-hidden rounded-3xl bg-white shadow-2xl'>
-                      <PreloadImage
+                      <img
                         src={product.image}
                         alt={product.name}
                         className='h-full w-full object-contain object-center'

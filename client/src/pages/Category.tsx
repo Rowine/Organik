@@ -4,11 +4,8 @@ import Rating from '../components/Rating'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import Meta from '../components/Meta'
-import Container from '../components/Container'
 import IProductItem from '../interfaces/IProductItem'
 import { useProducts } from '../hooks/useProducts'
-// @ts-ignore
-import PreloadImage from 'react-preload-image'
 
 const Category = () => {
   const { category } = useParams()
@@ -36,8 +33,10 @@ const Category = () => {
       className='group relative overflow-hidden rounded-3xl bg-white transition-all hover:shadow-2xl hover:-translate-y-1'
     >
       <div className='aspect-w-4 aspect-h-3 w-full mx-auto overflow-hidden'>
-        <PreloadImage
+        <img
           src={product.image}
+          alt={product.name}
+          loading="lazy"
           className='h-full w-full object-contain object-center transition-transform duration-300 group-hover:scale-105'
         />
         {/* Overlay with gradient */}
