@@ -1,8 +1,8 @@
-import IProductItem from './IProductItem'
-import { IReview } from './IProductItem'
+import IProductItem from "./IProductItem";
+import { ApiError } from "../types/errors";
 
 export default interface IProductDetailsState {
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed'
-  product: IProductItem
-  error: string | undefined
+  loading: "idle" | "pending" | "succeeded" | "failed";
+  product: IProductItem;
+  error: ApiError | undefined;
 }
