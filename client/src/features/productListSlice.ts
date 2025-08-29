@@ -1,7 +1,8 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IProductItem from "../interfaces/IProductItem";
 import IProductListState from "../interfaces/IProductListState";
+import { ApiError, ResourceError } from "../types/errors";
 
 // Configuration constants
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -44,12 +45,33 @@ export const listProducts = createAsyncThunk(
         fromCache: false,
         timestamp: currentTime,
       };
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to fetch products"
-      );
+    } catch (error) {
+      let apiError: ResourceError = {
+        message: "Failed to fetch products",
+        code: "NOT_FOUND",
+        status: 404,
+        resourceType: "product",
+      };
+
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          apiError = {
+            message: error.response.data.message || error.message,
+            code: error.response.status === 404 ? "NOT_FOUND" : "FORBIDDEN",
+            status: error.response.status,
+            resourceType: "product",
+          };
+        } else if (error.request) {
+          apiError = {
+            message: "Network error while fetching products",
+            code: "NOT_FOUND",
+            status: 0,
+            resourceType: "product",
+          };
+        }
+      }
+
+      return rejectWithValue(apiError);
     }
   }
 );
@@ -154,7 +176,7 @@ export const productListSlice = createSlice({
         if (state.products.length === 0) {
           state.loading = "failed";
         }
-        state.error = action.payload as string;
+        state.error = action.payload as ResourceError;
         state.isStale = true;
       });
   },

@@ -1,6 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IUserLoginState from "../interfaces/IUserLoginState";
+import { ValidationError, AuthError, ResourceError } from "../types/errors";
 
 interface ICreateProductReview {
   productId: string;
@@ -33,12 +34,49 @@ export const createProductReview = createAsyncThunk(
         config
       );
       return data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 401 || status === 403) {
+          // Auth error
+          const authError: AuthError = {
+            message: message || "Not authorized to review products",
+            code: status === 401 ? "UNAUTHORIZED" : "ACCESS_FORBIDDEN",
+            status,
+          };
+          return rejectWithValue(authError);
+        } else if (status === 404) {
+          // Product not found
+          const resourceError: ResourceError = {
+            message: "Product not found",
+            code: "NOT_FOUND",
+            status: 404,
+            resourceType: "product",
+            resourceId: productId,
+          };
+          return rejectWithValue(resourceError);
+        } else {
+          // Validation error (invalid rating/comment)
+          const validationError: ValidationError = {
+            message: message || "Invalid review data",
+            code: "VALIDATION_ERROR",
+            status: 400,
+            field: message.toLowerCase().includes("rating")
+              ? "rating"
+              : "comment",
+          };
+          return rejectWithValue(validationError);
+        }
+      }
+
+      return rejectWithValue({
+        message: "Failed to submit review",
+        code: "VALIDATION_ERROR",
+        status: 400,
+        field: "unknown",
+      } as ValidationError);
     }
   }
 );
@@ -46,7 +84,7 @@ export const createProductReview = createAsyncThunk(
 const initialState = {
   loading: "idle",
   success: false,
-  error: undefined as string | undefined,
+  error: undefined as ValidationError | AuthError | ResourceError | undefined,
 };
 
 export const productCreateReviewSlice = createSlice({
@@ -70,7 +108,10 @@ export const productCreateReviewSlice = createSlice({
       })
       .addCase(createProductReview.rejected, (state, action) => {
         state.loading = "failed";
-        state.error = action.payload as string;
+        state.error = action.payload as
+          | ValidationError
+          | AuthError
+          | ResourceError;
       });
   },
 });

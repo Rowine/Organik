@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login } from "./userLoginSlice";
 import IUserLoginState from "../interfaces/IUserLoginState";
+import { IUser } from "../interfaces/IUserLoginState";
 import { ValidationError, ApiError } from "../types/errors";
 
 interface IRegister {

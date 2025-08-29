@@ -1,9 +1,10 @@
 import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { login } from "./userLoginSlice";
 import IUserLoginState from "../interfaces/IUserLoginState";
 import { IUser } from "./../interfaces/IUserLoginState";
 import IUserDetailsState from "../interfaces/IUserDetailsState";
-import { ApiError } from "../types/errors";
+import { ApiError, AuthError } from "../types/errors";
 
 export const getUserDetails = createAsyncThunk(
   "user/details",
