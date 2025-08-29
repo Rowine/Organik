@@ -1,72 +1,104 @@
-import axios from 'axios'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IUserLoginState from '../interfaces/IUserLoginState'
+import axios, { AxiosError } from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import IUserLoginState, { IUser } from "../interfaces/IUserLoginState";
+import { ApiError, AuthError } from "../types/errors";
 
 interface ILogin {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export const login = createAsyncThunk(
-  'user/login',
+  "user/login",
   async ({ email, password }: ILogin, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-      }
+      };
 
       const { data } = await axios.post(
-        '/api/users/login',
+        "/api/users/login",
         { email, password },
         config
-      )
+      );
 
-      localStorage.setItem('userInfo', JSON.stringify(data))
+      localStorage.setItem("userInfo", JSON.stringify(data));
 
-      return data
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      )
+      return data;
+    } catch (error) {
+      let apiError: ApiError = {
+        message: "An unexpected error occurred",
+        code: "NETWORK_ERROR",
+        status: 500,
+      };
+
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          // Server responded with an error status
+          const authError: AuthError = {
+            message: error.response.data.message || error.message,
+            code:
+              error.response.status === 401
+                ? "INVALID_CREDENTIALS"
+                : "UNAUTHORIZED",
+            status: error.response.status,
+          };
+          apiError = authError;
+        } else if (error.request) {
+          // Request was made but no response received (network error)
+          apiError = {
+            message: "Please check your internet connection and try again",
+            code: "NETWORK_ERROR",
+            status: 0,
+          };
+        } else {
+          // Something else happened
+          apiError = {
+            message: error.message || "An unexpected error occurred",
+            code: "NETWORK_ERROR",
+            status: 0,
+          };
+        }
+      }
+
+      return rejectWithValue(apiError);
     }
   }
-)
+);
 
-const initialState = {
-  loading: 'idle',
-  userInfo: {},
+const initialState: IUserLoginState = {
+  loading: "idle",
+  userInfo: null,
   error: undefined,
-} as IUserLoginState
+};
 
 export const userLoginSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     logout: (state) => {
-      state.userInfo = null
-      localStorage.removeItem('userInfo')
+      state.userInfo = null;
+      localStorage.removeItem("userInfo");
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.loading = 'pending'
+        state.loading = "pending";
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = 'succeeded'
-        state.userInfo = action.payload
+        state.loading = "succeeded";
+        state.userInfo = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = 'failed'
-        state.error = action.payload as string
-      })
+        state.loading = "failed";
+        state.error = action.payload as AuthError;
+      });
   },
-})
+});
 
-export const { logout } = userLoginSlice.actions
+export const { logout } = userLoginSlice.actions;
 
-export default userLoginSlice.reducer
+export default userLoginSlice.reducer;

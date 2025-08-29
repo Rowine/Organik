@@ -4,12 +4,14 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { login } from '../features/userLoginSlice'
+import { getUserFriendlyMessage } from '../types/errors'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   const dispatch = useAppDispatch()
   const userLogin = useAppSelector((state) => state.userLogin)
@@ -42,7 +44,7 @@ const Login = () => {
                 </p>
               </div>
 
-              {error && <Message type='error'>{error}</Message>}
+              {error && <Message type='error'>{getUserFriendlyMessage(error)}</Message>}
 
               {loading === 'pending' ? (
                 <div className='flex min-h-[300px] items-center justify-center'>
