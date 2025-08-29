@@ -1,67 +1,84 @@
-import axios from 'axios'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IOrderListMy from '../interfaces/IOrderListMy'
-import IUserLoginState from '../interfaces/IUserLoginState'
+import axios, { AxiosError } from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import IOrderListMy from "../interfaces/IOrderListMy";
+import IUserLoginState from "../interfaces/IUserLoginState";
+import { AuthError, ApiError } from "../types/errors";
 
 export const listMyOrders = createAsyncThunk(
-  'order/listMyOrders',
+  "order/listMyOrders",
   async (thunkAPI, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
-      } = getState() as { userLogin: IUserLoginState }
+      } = getState() as { userLogin: IUserLoginState };
 
       const config = {
         headers: {
           Authorization: `Bearer ${userInfo?.token}`,
         },
+      };
+
+      const { data } = await axios.get(`/api/orders/myorders`, config);
+
+      return data;
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 401 || status === 403) {
+          // Auth error
+          const authError: AuthError = {
+            message: message || "Not authorized to view orders",
+            code: status === 401 ? "UNAUTHORIZED" : "ACCESS_FORBIDDEN",
+            status,
+          };
+          return rejectWithValue(authError);
+        }
       }
 
-      const { data } = await axios.get(`/api/orders/myorders`, config)
-
-      return data
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      )
+      // Generic error or network error
+      return rejectWithValue({
+        message: "Failed to fetch your orders",
+        code: "NETWORK_ERROR",
+        status: 0,
+      } as ApiError);
     }
   }
-)
+);
 
 const initialState = {
-  loading: 'idle',
+  loading: "idle",
   orders: [],
   error: undefined,
-} as IOrderListMy
+} as IOrderListMy;
 
 export const orderListMySlice = createSlice({
-  name: 'order',
+  name: "order",
   initialState,
   reducers: {
     resetOrderListMy: (state) => {
-      state.loading = 'idle'
-      state.orders = []
-      state.error = undefined
+      state.loading = "idle";
+      state.orders = [];
+      state.error = undefined;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(listMyOrders.pending, (state) => {
-        state.loading = 'pending'
+        state.loading = "pending";
       })
       .addCase(listMyOrders.fulfilled, (state, action) => {
-        state.loading = 'succeeded'
-        state.orders = action.payload
+        state.loading = "succeeded";
+        state.orders = action.payload;
       })
       .addCase(listMyOrders.rejected, (state, action) => {
-        state.loading = 'failed'
-        state.error = action.payload as string
-      })
+        state.loading = "failed";
+        state.error = action.payload as AuthError | ApiError;
+      });
   },
-})
+});
 
-export const { resetOrderListMy } = orderListMySlice.actions
+export const { resetOrderListMy } = orderListMySlice.actions;
 
-export default orderListMySlice.reducer
+export default orderListMySlice.reducer;
