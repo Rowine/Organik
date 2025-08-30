@@ -1,60 +1,88 @@
-import axios from 'axios'
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import IUserLoginState from '../interfaces/IUserLoginState'
-import { IUser } from '../interfaces/IUserLoginState'
+import axios, { AxiosError } from "axios";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import IUserLoginState from "../interfaces/IUserLoginState";
+import { IUser } from "../interfaces/IUserLoginState";
+import { ApiError, ValidationError } from "../types/errors";
 
 export const updateUserProfile = createAsyncThunk(
-  'user/updateUserProfile',
+  "user/updateUserProfile",
   async (user: IUser, { rejectWithValue, getState }) => {
     try {
       const {
         userLogin: { userInfo },
-      } = getState() as { userLogin: IUserLoginState }
+      } = getState() as { userLogin: IUserLoginState };
 
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${userInfo?.token}`,
         },
+      };
+
+      const { data } = await axios.put(`/api/users/profile`, user, config);
+
+      return data;
+    } catch (error) {
+      let apiError: ApiError | ValidationError = {
+        message: "Failed to update profile",
+        code: "UPDATE_FAILED",
+        status: 400,
+      };
+
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 400) {
+          apiError = {
+            message,
+            code: "VALIDATION_ERROR",
+            field: message.toLowerCase().includes("email")
+              ? "email"
+              : message.toLowerCase().includes("password")
+              ? "password"
+              : "name",
+            status: 400,
+          } as ValidationError;
+        } else {
+          apiError = {
+            message:
+              message || "An unexpected error occurred during profile update",
+            code: status === 401 ? "auth/unauthorized" : "server/error",
+            status: status || 500,
+          };
+        }
       }
 
-      const { data } = await axios.put(`/api/users/profile`, user, config)
-
-      return data
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      )
+      return rejectWithValue(apiError);
     }
   }
-)
+);
 
 const initialState = {
-  loading: 'idle',
+  loading: "idle",
   userInfo: {} as IUser,
   error: undefined,
-} as IUserLoginState
+} as IUserLoginState;
 
 export const userUpdateProfileSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(updateUserProfile.pending, (state) => {
-        state.loading = 'pending'
+        state.loading = "pending";
       })
       .addCase(updateUserProfile.fulfilled, (state, action) => {
-        state.loading = 'succeeded'
-        state.userInfo = action.payload
+        state.loading = "succeeded";
+        state.userInfo = action.payload;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
-        state.loading = 'failed'
-        state.error = action.payload as string
-      })
+        state.loading = "failed";
+        state.error = action.payload as ApiError | ValidationError;
+      });
   },
-})
+});
 
-export default userUpdateProfileSlice.reducer
+export default userUpdateProfileSlice.reducer;

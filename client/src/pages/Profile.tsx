@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -10,7 +10,6 @@ import {
   UserIcon,
   ClockIcon,
   CheckCircleIcon,
-  CurrencyDollarIcon
 } from '@heroicons/react/24/outline'
 import { Disclosure } from '@headlessui/react'
 import { getUserDetails } from '../features/userDetailsSlice'
@@ -33,8 +32,8 @@ const Profile = () => {
   const [message, setMessage] = useState('')
 
   const navigate = useNavigate()
-
   const dispatch = useAppDispatch()
+
   const userDetails = useAppSelector((state) => state.userDetails)
   const { loading, error, user } = userDetails
 
@@ -71,6 +70,7 @@ const Profile = () => {
       )
     }
   }
+
   return (
     <main className='flex-grow bg-gradient-to-br from-gray-50 via-white to-gray-50'>
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8'>
@@ -91,11 +91,30 @@ const Profile = () => {
                   </p>
                 </div>
 
-                {message && <Message type='error'>{message}</Message>}
-                {error && <Message type='error'>{error}</Message>}
+                {message && (
+                  <Message
+                    type='error'
+                    onClose={() => setMessage('')}
+                  >
+                    {message}
+                  </Message>
+                )}
+                {error && (
+                  <Message
+                    type='error'
+                  >
+                    {error.code === "UNAUTHORIZED" ? "You need to login" :
+                      error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                        error.message + ". Please try again later."}
+                  </Message>
+                )}
                 {loading === 'pending' && <Loader />}
                 {updateLoading === 'succeeded' && (
-                  <Message type='success'>Profile Updated</Message>
+                  <Message
+                    type='success'
+                  >
+                    Profile Updated Successfully
+                  </Message>
                 )}
 
                 <form className='space-y-6' onSubmit={submitHandler}>
@@ -190,7 +209,11 @@ const Profile = () => {
                   <Loader />
                 </div>
               ) : errorOrders ? (
-                <Message type='error'>{errorOrders}</Message>
+                <Message
+                  type='error'
+                >
+                  {errorOrders.message + ". Please try again later."}
+                </Message>
               ) : orders.length === 0 ? (
                 <div className='text-center py-12'>
                   <div className='mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4'>
@@ -253,8 +276,7 @@ const Profile = () => {
                                 ) : (
                                   <XMarkIcon className='w-4 h-4 text-red-500' />
                                 )}
-                                <span className={`text-xs font-medium ${order.isPaid ? 'text-green-600' : 'text-red-600'
-                                  }`}>
+                                <span className={`text-xs font-medium ${order.isPaid ? 'text-green-600' : 'text-red-600'}`}>
                                   {order.isPaid ? 'Paid' : 'Unpaid'}
                                 </span>
                               </div>
@@ -264,8 +286,7 @@ const Profile = () => {
                                 ) : (
                                   <ClockIcon className='w-4 h-4 text-yellow-500' />
                                 )}
-                                <span className={`text-xs font-medium ${order.isDelivered ? 'text-green-600' : 'text-yellow-600'
-                                  }`}>
+                                <span className={`text-xs font-medium ${order.isDelivered ? 'text-green-600' : 'text-yellow-600'}`}>
                                   {order.isDelivered ? 'Delivered' : 'Processing'}
                                 </span>
                               </div>
@@ -286,6 +307,7 @@ const Profile = () => {
               )}
             </div>
           </div>
+
           {/* Mobile Profile Update */}
           <div className='lg:hidden mb-8'>
             <Disclosure>
@@ -314,11 +336,30 @@ const Profile = () => {
                         </p>
                       </div>
 
-                      {message && <Message type='error'>{message}</Message>}
-                      {error && <Message type='error'>{error}</Message>}
+                      {message && (
+                        <Message
+                          type='error'
+                          onClose={() => setMessage('')}
+                        >
+                          {message}
+                        </Message>
+                      )}
+                      {error && (
+                        <Message
+                          type='error'
+                        >
+                          {error.code === "UNAUTHORIZED" ? "You need to login" :
+                            error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                              error.message + ". Please try again later."}
+                        </Message>
+                      )}
                       {loading === 'pending' && <Loader />}
                       {updateLoading === 'succeeded' && (
-                        <Message type='success'>Profile Updated</Message>
+                        <Message
+                          type='success'
+                        >
+                          Profile Updated Successfully
+                        </Message>
                       )}
 
                       <form className='space-y-5' onSubmit={submitHandler}>

@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { register } from '../features/userRegisterSlice'
+import { getUserFriendlyMessage, getErrorActions, isRetryableError } from '../utils/errorUtils'
+import { ValidationError } from '../types/errors'
 
 const Register = () => {
   const [name, setName] = useState('')
@@ -11,7 +13,7 @@ const Register = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({})
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: ValidationError }>({})
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({})
 
   const navigate = useNavigate()
@@ -29,24 +31,57 @@ const Register = () => {
   }, [userInfo])
 
   const validateField = (field: string, value: string) => {
-    const errors: { [key: string]: string } = {}
+    const errors: { [key: string]: ValidationError } = {}
 
     switch (field) {
       case 'name':
-        if (value.trim().length < 2) errors.name = 'Name must be at least 2 characters'
+        if (value.trim().length < 2) {
+          errors.name = {
+            message: 'Name must be at least 2 characters',
+            code: "VALIDATION_ERROR",
+            field: 'name',
+            status: 400
+          }
+        }
         break
       case 'email':
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(value)) errors.email = 'Please enter a valid email address'
+        if (!emailRegex.test(value)) {
+          errors.email = {
+            message: 'Please enter a valid email address',
+            code: "VALIDATION_ERROR",
+            field: 'email',
+            status: 400
+          }
+        }
         break
       case 'password':
-        if (value.length < 6) errors.password = 'Password must be at least 6 characters'
+        if (value.length < 6) {
+          errors.password = {
+            message: 'Password must be at least 6 characters',
+            code: "VALIDATION_ERROR",
+            field: 'password',
+            status: 400
+          }
+        }
         if (confirmPassword && touched.confirmPassword && value !== confirmPassword) {
-          errors.confirmPassword = 'Passwords do not match'
+          errors.confirmPassword = {
+            message: 'Passwords do not match',
+            code: "VALIDATION_ERROR",
+            field: 'confirmPassword',
+            status: 400
+          }
         }
         break
       case 'confirmPassword':
-        if (value !== password) errors.confirmPassword = 'Passwords do not match'
+        if (value !== password) {
+          errors.confirmPassword = {
+            message: 'Passwords do not match',
+            code: "VALIDATION_ERROR",
+            field: 'confirmPassword',
+            status: 400
+          }
+        }
         break
     }
 
@@ -57,7 +92,7 @@ const Register = () => {
       } else {
         delete newErrors[field]
         // Clear confirmPassword error when password is fixed
-        if (field === 'password' && newErrors.confirmPassword === 'Passwords do not match') {
+        if (field === 'password' && newErrors.confirmPassword?.code === 'VALIDATION_ERROR' && newErrors.confirmPassword?.field === 'confirmPassword') {
           delete newErrors.confirmPassword
         }
       }
@@ -150,11 +185,20 @@ const Register = () => {
               </div>
 
               {message && (
-                <Message type='error' onClose={() => setMessage('')}>
+                <Message
+                  type='error'
+                  onClose={() => setMessage('')}
+                >
                   {message}
                 </Message>
               )}
-              {error && <Message type='error'>{error}</Message>}
+              {error && (
+                <Message
+                  type='error'
+                >
+                  {error.message + ". Please try again later."}
+                </Message>
+              )}
 
               {loading === 'pending' ? (
                 <div className='flex min-h-[300px] items-center justify-center'>
@@ -188,14 +232,9 @@ const Register = () => {
                               onBlur={(e) => handleFieldBlur('name', e.target.value)}
                             />
                             {fieldErrors.name && (
-                              <div className='mt-2 flex items-center space-x-2'>
-                                <div className='flex-shrink-0 w-4 h-4 rounded-full bg-red-100 flex items-center justify-center'>
-                                  <svg className="w-2.5 h-2.5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                                <p className='text-sm text-red-600 font-medium'>{fieldErrors.name}</p>
-                              </div>
+                              <p className="mt-2 text-sm text-red-600">
+                                {fieldErrors.name.message}
+                              </p>
                             )}
                           </div>
 
@@ -219,14 +258,9 @@ const Register = () => {
                               onBlur={(e) => handleFieldBlur('email', e.target.value)}
                             />
                             {fieldErrors.email && (
-                              <div className='mt-2 flex items-center space-x-2'>
-                                <div className='flex-shrink-0 w-4 h-4 rounded-full bg-red-100 flex items-center justify-center'>
-                                  <svg className="w-2.5 h-2.5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                                <p className='text-sm text-red-600 font-medium'>{fieldErrors.email}</p>
-                              </div>
+                              <p className="mt-2 text-sm text-red-600">
+                                {fieldErrors.email.message}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -254,14 +288,9 @@ const Register = () => {
                               onBlur={(e) => handleFieldBlur('password', e.target.value)}
                             />
                             {fieldErrors.password && (
-                              <div className='mt-2 flex items-center space-x-2'>
-                                <div className='flex-shrink-0 w-4 h-4 rounded-full bg-red-100 flex items-center justify-center'>
-                                  <svg className="w-2.5 h-2.5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                                <p className='text-sm text-red-600 font-medium'>{fieldErrors.password}</p>
-                              </div>
+                              <p className="mt-2 text-sm text-red-600">
+                                {fieldErrors.password.message}
+                              </p>
                             )}
 
                             {/* Password Strength Indicator */}
@@ -306,14 +335,9 @@ const Register = () => {
                               onBlur={(e) => handleFieldBlur('confirmPassword', e.target.value)}
                             />
                             {fieldErrors.confirmPassword && (
-                              <div className='mt-2 flex items-center space-x-2'>
-                                <div className='flex-shrink-0 w-4 h-4 rounded-full bg-red-100 flex items-center justify-center'>
-                                  <svg className="w-2.5 h-2.5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                                <p className='text-sm text-red-600 font-medium'>{fieldErrors.confirmPassword}</p>
-                              </div>
+                              <p className="mt-2 text-sm text-red-600">
+                                {fieldErrors.confirmPassword.message}
+                              </p>
                             )}
                           </div>
                         </div>
