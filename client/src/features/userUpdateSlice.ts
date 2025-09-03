@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getUserDetails } from "./userDetailsSlice";
 import IUserLoginState from "../interfaces/IUserLoginState";
 import { IUser } from "../interfaces/IUserLoginState";
+import { ApiError, ValidationError } from "../types/errors";
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
@@ -24,11 +25,49 @@ export const updateUser = createAsyncThunk(
       dispatch(getUserDetails(user._id));
       return data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 400) {
+          const validationError: ValidationError = {
+            message: "User validation failed",
+            code: "VALIDATION_ERROR",
+            status: 400,
+            field: "user",
+          };
+          return rejectWithValue(validationError);
+        } else if (status === 401) {
+          const apiError: ApiError = {
+            message: "Authentication required",
+            code: "UNAUTHORIZED",
+            status: 401,
+          };
+          return rejectWithValue(apiError);
+        } else if (status === 403) {
+          const apiError: ApiError = {
+            message: "Access forbidden",
+            code: "ACCESS_FORBIDDEN",
+            status: 401,
+          };
+          return rejectWithValue(apiError);
+        } else if (status === 500) {
+          const apiError: ApiError = {
+            message: "Failed to update user",
+            code: "SERVER_ERROR",
+            status: 500,
+          };
+          return rejectWithValue(apiError);
+        }
+      }
+
+      // Generic API error
+      const apiError: ApiError = {
+        message: error.message || "Failed to update user",
+        code: "SERVER_ERROR",
+        status: 500,
+      };
+      return rejectWithValue(apiError);
     }
   }
 );
@@ -59,7 +98,7 @@ export const userUpdateSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = "failed";
-        state.error = action.payload as string;
+        state.error = action.payload as ApiError | ValidationError;
       });
   },
 });

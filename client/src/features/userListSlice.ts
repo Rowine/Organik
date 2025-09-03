@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IUserListState from "../interfaces/IUserListState";
 import IUserLoginState from "../interfaces/IUserLoginState";
+import { ApiError } from "../types/errors";
 
 export const listUsers = createAsyncThunk(
   "user/listUsers",
@@ -22,11 +23,41 @@ export const listUsers = createAsyncThunk(
 
       return data;
     } catch (error: any) {
-      return rejectWithValue(
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message
-      );
+      if (error instanceof AxiosError && error.response) {
+        const status = error.response.status;
+        const message = error.response.data.message || error.message;
+
+        if (status === 401) {
+          const apiError: ApiError = {
+            message: "Authentication required",
+            code: "UNAUTHORIZED",
+            status: 401,
+          };
+          return rejectWithValue(apiError);
+        } else if (status === 403) {
+          const apiError: ApiError = {
+            message: "Access forbidden",
+            code: "ACCESS_FORBIDDEN",
+            status: 403,
+          };
+          return rejectWithValue(apiError);
+        } else if (status === 500) {
+          const apiError: ApiError = {
+            message: "Failed to fetch users",
+            code: "SERVER_ERROR",
+            status: 500,
+          };
+          return rejectWithValue(apiError);
+        }
+      }
+
+      // Generic API error
+      const apiError: ApiError = {
+        message: error.message || "Failed to fetch users",
+        code: "SERVER_ERROR",
+        status: 500,
+      };
+      return rejectWithValue(apiError);
     }
   }
 );
@@ -58,7 +89,7 @@ export const userListSlice = createSlice({
       })
       .addCase(listUsers.rejected, (state, action) => {
         state.loading = "failed";
-        state.error = action.payload as string;
+        state.error = action.payload as ApiError;
       });
   },
 });
