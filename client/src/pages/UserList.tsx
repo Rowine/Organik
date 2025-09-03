@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { listUsers } from '../features/userListSlice'
 import { deleteUser } from '../features/userDeleteSlice'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const UserList = () => {
   const dispatch = useAppDispatch()
@@ -21,7 +22,7 @@ const UserList = () => {
 
   const { userInfo } = useAppSelector((state) => state.userLogin)
 
-  const { loading: loadingDelete } = useAppSelector((state) => state.userDelete)
+  const { loading: loadingDelete, error: errorDelete } = useAppSelector((state) => state.userDelete)
 
   useEffect(() => {
     if (!userInfo || !userInfo.isAdmin) {
@@ -43,10 +44,20 @@ const UserList = () => {
         <h1 className='my-8 font-lato text-3xl font-bold uppercase tracking-tight text-gray-900'>
           Users
         </h1>
+        {errorDelete && (
+          <Message type='error'>
+            {typeof errorDelete === 'string' ? errorDelete : getUserFriendlyMessage(errorDelete)}
+            . Please try again later.
+          </Message>
+        )}
         {loading === 'pending' ? (
           <Loader />
         ) : error ? (
-          <Message type='error'>{error}</Message>
+          <Message type='error'>
+            {error.code === "UNAUTHORIZED" ? "You need to login" :
+              error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                getUserFriendlyMessage(error) + ". Please try again later."}
+          </Message>
         ) : (
           <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>

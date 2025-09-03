@@ -8,6 +8,7 @@ import { updateUser } from '../features/userUpdateSlice'
 import { resetUpdateProfile } from '../features/userUpdateSlice'
 import Container from '../components/Container'
 import { IUser } from '../interfaces/IUserLoginState'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const UserEdit = () => {
   const [name, setName] = useState('')
@@ -62,11 +63,20 @@ const UserEdit = () => {
             </h2>
           </div>
           {loadingUpdate === 'pending' && <Loader />}
-          {errorUpdate && <Message type='error'>{errorUpdate}</Message>}
+          {errorUpdate && (
+            <Message type='error'>
+              {typeof errorUpdate === 'string' ? errorUpdate : getUserFriendlyMessage(errorUpdate)}
+              . Please try again later.
+            </Message>
+          )}
           {loading === 'pending' ? (
             <Loader />
           ) : error ? (
-            <Message type='error'>{error}</Message>
+            <Message type='error'>
+              {error.code === "UNAUTHORIZED" ? "You need to login" :
+                error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                  getUserFriendlyMessage(error) + ". Please try again later."}
+            </Message>
           ) : (
             <form className='space-y-6' onSubmit={submitHandler}>
               <input type='hidden' name='remember' defaultValue='true' />
