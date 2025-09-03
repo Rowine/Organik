@@ -6,7 +6,7 @@ import Loader from '../components/Loader'
 import Container from '../components/Container'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faEdit, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { listProducts } from '../features/productListSlice'
+import { useProducts } from '../hooks/useProducts'
 import { deleteProduct } from '../features/productDeleteSlice'
 import {
   createProduct,
@@ -18,8 +18,11 @@ import { getUserFriendlyMessage } from '../utils/errorUtils'
 const ProductList = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const productList = useAppSelector((state) => state.productList)
-  const { loading, error, products } = productList
+
+  // Use the enhanced products hook to prevent duplicate API calls
+  const { products, isLoading: loading, error } = useProducts({
+    autoFetch: false // Don't auto-fetch, we'll handle it manually
+  })
 
   const productDelete = useAppSelector((state) => state.productDelete)
   const {
@@ -45,9 +48,8 @@ const ProductList = () => {
     }
     if (successCreate) {
       navigate(`/admin/product/${createdProduct?._id}/edit`)
-    } else {
-      dispatch(listProducts({}))
     }
+    // Note: Products are now fetched automatically by the useProducts hook
   }, [dispatch, navigate, userInfo, successCreate, successDelete])
 
   const deleteHandler = (id: string) => {
@@ -94,13 +96,13 @@ const ProductList = () => {
             . Please try again later.
           </Message>
         )}
-        {loading === 'pending' ? (
+        {loading ? (
           <Loader />
         ) : error ? (
           <Message type='error'>
-            {error.code === "UNAUTHORIZED" ? "You need to login" :
-              error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
-                getUserFriendlyMessage(error) + ". Please try again later."}
+            {typeof error === 'object' && error.code === "UNAUTHORIZED" ? "You need to login" :
+              typeof error === 'object' && error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                (typeof error === 'string' ? error : getUserFriendlyMessage(error)) + ". Please try again later."}
           </Message>
         ) : (
           <table className='w-full table-fixed border-collapse shadow-md'>

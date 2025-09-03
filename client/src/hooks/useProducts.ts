@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   listProducts as fetchProducts,
@@ -46,6 +46,7 @@ interface UseProductsReturn {
  * - Offers background refresh capabilities
  * - Optimizes rendering with memoized selectors
  * - Centralizes product fetching logic
+ * - Prevents route change duplicate calls
  */
 export const useProducts = (
   options: UseProductsOptions = {}
@@ -58,6 +59,10 @@ export const useProducts = (
   } = options;
 
   const dispatch = useAppDispatch();
+
+  // Track if this hook instance has already triggered a fetch
+  const hasTriggeredFetch = useRef(false);
+  const lastCategory = useRef<string | undefined>(category);
 
   // Use memoized selectors for better performance
   const productsState = useAppSelector(selectProductsState);
@@ -92,10 +97,12 @@ export const useProducts = (
 
   // Action creators
   const refetch = useCallback(() => {
+    hasTriggeredFetch.current = false; // Reset flag for manual refresh
     dispatch(fetchProducts({ forceRefresh: true, category }));
   }, [dispatch, category]);
 
   const invalidate = useCallback(() => {
+    hasTriggeredFetch.current = false; // Reset flag for invalidation
     dispatch(invalidateCache());
   }, [dispatch]);
 
@@ -107,12 +114,19 @@ export const useProducts = (
   useEffect(() => {
     if (!autoFetch) return;
 
+    // Check if category has changed
+    const categoryChanged = lastCategory.current !== category;
+    lastCategory.current = category;
+
     const shouldFetch =
       allProducts.length === 0 || // No data yet
       forceRefresh || // Force refresh requested
-      isDataStale; // Data is stale
+      isDataStale || // Data is stale
+      (categoryChanged && category); // Category changed and we have a category
 
-    if (shouldFetch) {
+    // Prevent duplicate fetches from the same hook instance
+    if (shouldFetch && !hasTriggeredFetch.current) {
+      hasTriggeredFetch.current = true;
       dispatch(fetchProducts({ forceRefresh, category }));
     }
   }, [
@@ -124,21 +138,21 @@ export const useProducts = (
     isDataStale,
   ]);
 
-  // Background refresh effect
+  // Background refresh effect - only run once per component
   useEffect(() => {
     if (!enableBackgroundRefresh) return;
 
     const interval = setInterval(() => {
-      // Only do background refresh if the tab is visible
-      if (document.visibilityState === "visible") {
+      // Only do background refresh if the tab is visible and data is stale
+      if (document.visibilityState === "visible" && isDataStale) {
         dispatch(backgroundRefreshProducts());
       }
     }, 2 * 60 * 1000); // Check every 2 minutes
 
     return () => clearInterval(interval);
-  }, [dispatch, enableBackgroundRefresh]);
+  }, [dispatch, enableBackgroundRefresh, isDataStale]);
 
-  // Handle visibility change for smart refreshing
+  // Handle visibility change for smart refreshing - only run once per component
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible" && isDataStale) {
@@ -195,9 +209,10 @@ export const useProductsData = (category?: string) => {
 
 /**
  * Hook for trending products (first 4 products)
+ * Uses useProductsData to avoid duplicate API calls
  */
 export const useTrendingProducts = () => {
-  const { products, isLoading, error } = useProducts();
+  const { products, isLoading, error } = useProductsData();
 
   const trendingProducts = useMemo(() => products.slice(0, 4), [products]);
 
@@ -210,9 +225,10 @@ export const useTrendingProducts = () => {
 
 /**
  * Hook for customer purchase recommendations (products 5-8)
+ * Uses useProductsData to avoid duplicate API calls
  */
 export const useCustomerPurchaseProducts = () => {
-  const { products, isLoading, error } = useProducts();
+  const { products, isLoading, error } = useProductsData();
 
   const customerPurchase = useMemo(() => products.slice(5, 9), [products]);
 

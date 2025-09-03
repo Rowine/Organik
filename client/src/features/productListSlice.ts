@@ -8,7 +8,10 @@ import { ApiError, ResourceError } from "../types/errors";
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 const BACKGROUND_REFRESH_THRESHOLD = 3 * 60 * 1000; // 3 minutes
 
-// Enhanced async thunk with caching logic (backward compatible name)
+// Request deduplication tracking
+let pendingRequests: Map<string, Promise<any>> = new Map();
+
+// Enhanced async thunk with caching logic and request deduplication
 export const listProducts = createAsyncThunk(
   "products/listProducts",
   async (
@@ -37,14 +40,38 @@ export const listProducts = createAsyncThunk(
         };
       }
 
-      // Fetch fresh data from API
-      const { data } = await axios.get("/api/products");
+      // Create a unique key for this request
+      const requestKey = `products_${
+        options.category || "all"
+      }_${shouldForceRefresh}`;
 
-      return {
-        products: data,
-        fromCache: false,
-        timestamp: currentTime,
-      };
+      // Check if there's already a pending request for this data
+      if (pendingRequests.has(requestKey)) {
+        // Wait for the existing request to complete
+        const result = await pendingRequests.get(requestKey);
+        return result;
+      }
+
+      // Create new request promise
+      const requestPromise = (async () => {
+        try {
+          const { data } = await axios.get("/api/products");
+          return {
+            products: data,
+            fromCache: false,
+            timestamp: currentTime,
+          };
+        } finally {
+          // Clean up the pending request
+          pendingRequests.delete(requestKey);
+        }
+      })();
+
+      // Store the pending request
+      pendingRequests.set(requestKey, requestPromise);
+
+      // Return the result
+      return await requestPromise;
     } catch (error) {
       let apiError: ResourceError = {
         message: "Failed to fetch products",
@@ -81,15 +108,12 @@ export const backgroundRefreshProducts = createAsyncThunk(
   "products/backgroundRefresh",
   async (_, { getState, dispatch }) => {
     const state = getState() as { productList: IProductListState };
-    const { lastFetched } = state.productList;
     const currentTime = Date.now();
+    const { lastFetched, cacheExpiry } = state.productList;
 
-    // Only refresh if data is getting stale but not completely expired
-    if (
-      lastFetched &&
-      currentTime - lastFetched > BACKGROUND_REFRESH_THRESHOLD
-    ) {
-      return dispatch(listProducts({ forceRefresh: true }));
+    // Only refresh if data is stale
+    if (!lastFetched || currentTime - lastFetched > cacheExpiry) {
+      dispatch(listProducts({ forceRefresh: true }));
     }
   }
 );
