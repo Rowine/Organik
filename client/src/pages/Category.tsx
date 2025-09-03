@@ -6,6 +6,7 @@ import Message from '../components/Message'
 import Meta from '../components/Meta'
 import IProductItem from '../interfaces/IProductItem'
 import { useProducts } from '../hooks/useProducts'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const Category = () => {
   const { category } = useParams()
@@ -126,7 +127,13 @@ const Category = () => {
             </div>
           ) : error ? (
             <div className='mb-8'>
-              <Message type='error'>{error}</Message>
+              <Message type='error'>
+                {typeof error === 'string' ? error + ". Please try again later." :
+                  error.code === "UNAUTHORIZED" ? "You need to login" :
+                    error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                      error.code === "NOT_FOUND" ? "Category not found" :
+                        getUserFriendlyMessage(error) + ". Please try again later."}
+              </Message>
             </div>
           ) : categoryProducts.length === 0 ? (
             <EmptyState />

@@ -11,6 +11,7 @@ import {
   resetProductUpdate,
 } from '../features/productUpdateSlice'
 import IProductItem from '../interfaces/IProductItem'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const ProductEdit = () => {
   const [name, setName] = useState('')
@@ -19,6 +20,7 @@ const ProductEdit = () => {
   const [category, setCategory] = useState('')
   const [countInStock, setCountInStock] = useState(0)
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   const navigate = useNavigate()
   const { id: productId } = useParams()
@@ -66,9 +68,12 @@ const ProductEdit = () => {
 
   const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0]
+    if (!file) return
+
     const formData = new FormData()
     formData.append('image', file)
     setUploading(true)
+    setUploadError(null)
 
     try {
       const config = {
@@ -83,8 +88,10 @@ const ProductEdit = () => {
 
       setImage(path)
       setUploading(false)
-    } catch (error) {
+      // Clear any previous upload errors on success
+    } catch (error: any) {
       console.error(error)
+      setUploadError(error.response?.data?.message || 'Failed to upload image. Please try again.')
       setUploading(false)
     }
   }
@@ -106,11 +113,20 @@ const ProductEdit = () => {
             </h2>
           </div>
           {loadingUpdate === 'pending' && <Loader />}
-          {errorUpdate && <Message type='error'>{errorUpdate}</Message>}
+          {errorUpdate && (
+            <Message type='error'>
+              {typeof errorUpdate === 'string' ? errorUpdate : getUserFriendlyMessage(errorUpdate)}
+              . Please try again later.
+            </Message>
+          )}
           {loading === 'pending' ? (
             <Loader />
           ) : error ? (
-            <Message type='error'>{error}</Message>
+            <Message type='error'>
+              {error.code === "UNAUTHORIZED" ? "You need to login" :
+                error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                  getUserFriendlyMessage(error) + ". Please try again later."}
+            </Message>
           ) : (
             <form className='space-y-6' onSubmit={submitHandler}>
               <input type='hidden' name='remember' defaultValue='true' />
@@ -162,6 +178,11 @@ const ProductEdit = () => {
                     className='relative mt-2 block w-full appearance-none text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-600 focus:outline-none focus:ring-green-600 sm:text-sm'
                   />
                   {uploading && <Loader />}
+                  {uploadError && (
+                    <Message type='error'>
+                      {uploadError}
+                    </Message>
+                  )}
                 </div>
                 <div>
                   <label htmlFor='countInStock'>Count In Stock</label>

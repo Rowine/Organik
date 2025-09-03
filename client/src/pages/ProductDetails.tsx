@@ -16,6 +16,7 @@ import {
   StarIcon
 } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const ProductDetails = () => {
   const [qty, setQty] = useState(1)
@@ -106,7 +107,12 @@ const ProductDetails = () => {
             </div>
           ) : error ? (
             <div className='mb-8'>
-              <Message type='error'>{error}</Message>
+              <Message type='error'>
+                {error.code === "UNAUTHORIZED" ? "You need to login" :
+                  error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                    error.code === "NOT_FOUND" ? "Product not found" :
+                      getUserFriendlyMessage(error) + ". Please try again later."}
+              </Message>
             </div>
           ) : (
             <>
@@ -259,7 +265,10 @@ const ProductDetails = () => {
                     )}
                     {loadingProductReview === 'pending' && <Loader />}
                     {errorProductReview && (
-                      <Message type='error'>{errorProductReview}</Message>
+                      <Message type='error'>
+                        {typeof errorProductReview === 'string' ? errorProductReview : getUserFriendlyMessage(errorProductReview)}
+                        . Please try again later.
+                      </Message>
                     )}
 
                     {userInfo ? (

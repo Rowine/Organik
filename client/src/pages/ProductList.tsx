@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
@@ -13,6 +13,7 @@ import {
   resetProductCreate,
 } from '../features/productCreateSlice'
 import IProductItem from '../interfaces/IProductItem'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const ProductList = () => {
   const dispatch = useAppDispatch()
@@ -80,13 +81,27 @@ const ProductList = () => {
           </div>
         </div>
         {loadingDelete === 'pending' && <Loader />}
-        {errorDelete && <Message type='error'>{errorDelete}</Message>}
+        {errorDelete && (
+          <Message type='error'>
+            {typeof errorDelete === 'string' ? errorDelete : getUserFriendlyMessage(errorDelete)}
+            . Please try again later.
+          </Message>
+        )}
         {loadingCreate === 'pending' && <Loader />}
-        {errorCreate && <Message type='error'>{errorCreate}</Message>}
+        {errorCreate && (
+          <Message type='error'>
+            {typeof errorCreate === 'string' ? errorCreate : getUserFriendlyMessage(errorCreate)}
+            . Please try again later.
+          </Message>
+        )}
         {loading === 'pending' ? (
           <Loader />
         ) : error ? (
-          <Message type='error'>{error}</Message>
+          <Message type='error'>
+            {error.code === "UNAUTHORIZED" ? "You need to login" :
+              error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                getUserFriendlyMessage(error) + ". Please try again later."}
+          </Message>
         ) : (
           <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>

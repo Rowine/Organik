@@ -10,6 +10,7 @@ import {
   invalidateCache,
 } from "../features/productListSlice";
 import IProductItem from "../interfaces/IProductItem";
+import { AppError } from "../types/errors";
 
 interface UseProductsOptions {
   category?: string;
@@ -23,7 +24,7 @@ interface UseProductsReturn {
   allProducts: IProductItem[];
   isLoading: boolean;
   isInitialLoading: boolean;
-  error?: string;
+  error?: AppError | string;
   isStale: boolean;
   lastFetched?: number;
 

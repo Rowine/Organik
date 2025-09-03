@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useTrendingProducts, useCustomerPurchaseProducts } from '../hooks/useProducts'
 import Rating from './Rating'
 import Loader from './Loader'
+import Message from './Message'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const CategoryPreview = () => {
   // Use specialized hooks for different product sections
@@ -71,6 +73,13 @@ const CategoryPreview = () => {
             <div className='flex min-h-[300px] items-center justify-center'>
               <Loader />
             </div>
+          ) : trendingError ? (
+            <div className='mb-8'>
+              <Message type='error'>
+                {typeof trendingError === 'string' ? trendingError : getUserFriendlyMessage(trendingError)}
+                . Please try again later.
+              </Message>
+            </div>
           ) : (
             <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-12'>
               {trendingProducts.map((product) => (
@@ -88,6 +97,13 @@ const CategoryPreview = () => {
           {customerLoading ? (
             <div className='flex min-h-[300px] items-center justify-center'>
               <Loader />
+            </div>
+          ) : customerError ? (
+            <div className='mb-8'>
+              <Message type='error'>
+                {typeof customerError === 'string' ? customerError : getUserFriendlyMessage(customerError)}
+                . Please try again later.
+              </Message>
             </div>
           ) : (
             <div className='grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 md:gap-x-8 lg:grid-cols-4 lg:gap-x-12'>
