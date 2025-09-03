@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { listOrders } from '../features/orderListSlice'
 import { format } from './Profile'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 
 const OrderList = () => {
   const dispatch = useAppDispatch()
@@ -38,7 +39,15 @@ const OrderList = () => {
         {loading === 'pending' ? (
           <Loader />
         ) : error ? (
-          <Message type='error'>{error}</Message>
+          <div className='mb-8'>
+            <Message type='error'>
+              {typeof error === 'string' ? error + ". Please try again later." :
+                error?.code === "UNAUTHORIZED" ? "You need to login" :
+                  error?.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                    error?.code === "NOT_FOUND" ? "Orders not found" :
+                      getUserFriendlyMessage(error) + ". Please try again later."}
+            </Message>
+          </div>
         ) : (
           <table className='w-full table-fixed border-collapse shadow-md'>
             <thead>

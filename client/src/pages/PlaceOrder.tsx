@@ -5,6 +5,7 @@ import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
 import { savePrices } from '../features/cartSlice'
 import { createOrder } from '../features/orderSlice'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 import {
   CheckCircleIcon,
   TruckIcon,
@@ -193,7 +194,14 @@ const PlaceOrder = () => {
 
               {error && (
                 <div className='mb-6'>
-                  <Message type='error'>{error}</Message>
+                  <Message type='error'>
+                    {typeof error === 'string' ? error + ". Please try again later." :
+                      error.code === "UNAUTHORIZED" ? "You need to login" :
+                        error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                          error.code === "VALIDATION_ERROR" ? "Please check your order details and try again." :
+                            error.code === "INSUFFICIENT_STOCK" ? "Some items are out of stock. Please check availability." :
+                              getUserFriendlyMessage(error) + ". Please try again later."}
+                  </Message>
                 </div>
               )}
 

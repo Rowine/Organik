@@ -9,6 +9,7 @@ import Loader from '../components/Loader'
 import { getOrderDetails } from '../features/orderDetailsSlice'
 import { payOrder, IPayOrderProps, payReset } from '../features/orderPaySlice'
 import { orderDeliverReset, deliverOrder } from '../features/orderDeliverSlice'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 import {
   TruckIcon,
   CreditCardIcon,
@@ -50,7 +51,7 @@ const Order = () => {
   }
 
   const itemsPrice = order.orderItems
-    ? order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    ? order.orderItems.reduce((acc: number, item: any) => acc + item.price * item.qty, 0)
     : 0
 
   const itemsPriceFixed = itemsPrice ? addDecimal(itemsPrice) : 0
@@ -99,7 +100,15 @@ const Order = () => {
             <Loader />
           </div>
         ) : error ? (
-          <Message type='error'>{error}</Message>
+          <div className='mb-8'>
+            <Message type='error'>
+              {typeof error === 'string' ? error + ". Please try again later." :
+                error.code === "UNAUTHORIZED" ? "You need to login" :
+                  error.code === "ACCESS_FORBIDDEN" ? "You do not have permission" :
+                    error.code === "NOT_FOUND" ? "Order not found" :
+                      getUserFriendlyMessage(error) + ". Please try again later."}
+            </Message>
+          </div>
         ) : (
           <div className='grid lg:grid-cols-12 lg:gap-x-12'>
             {/* Main Content Section */}
@@ -271,7 +280,16 @@ const Order = () => {
                 {userInfo && !userInfo.isAdmin && !order.isPaid && (
                   <div className='rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200'>
                     <h2 className='text-2xl font-bold tracking-tight text-gray-900 mb-6'>Payment</h2>
-                    {errorPay && <Message type='error'>{errorPay}</Message>}
+                    {errorPay && (
+                      <div className='mb-6'>
+                        <Message type='error'>
+                          {typeof errorPay === 'string' ? errorPay + ". Please try again later." :
+                            errorPay.code === "PAYMENT_FAILED" ? "Payment processing failed. Please try again." :
+                              errorPay.code === "INSUFFICIENT_FUNDS" ? "Insufficient funds. Please check your payment method." :
+                                getUserFriendlyMessage(errorPay) + ". Please try again later."}
+                        </Message>
+                      </div>
+                    )}
                     <PayPalScriptProvider
                       options={{
                         'client-id': clientId,

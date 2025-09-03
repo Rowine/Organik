@@ -3,6 +3,7 @@ import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../features/cartSlice'
+import { getUserFriendlyMessage } from '../utils/errorUtils'
 import {
   ShoppingCartIcon,
   ArrowLeftIcon,
@@ -18,7 +19,7 @@ const Cart = () => {
 
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
-  const { cartItems } = useAppSelector((state) => state.cart)
+  const { cartItems, error: cartError } = useAppSelector((state) => state.cart)
 
   useEffect(() => {
     if (id) {
@@ -91,12 +92,19 @@ const Cart = () => {
 
         <button
           className='w-full mt-6 bg-green-600 text-white py-4 px-6 rounded-xl font-medium hover:bg-green-500 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2'
-          disabled={cartItems.length === 0}
+          disabled={cartItems.length === 0 || cartItems.some(item => item.countInStock === 0)}
           onClick={checkoutHandler}
         >
           <LockClosedIcon className="w-5 h-5" />
           <span>Proceed to Checkout</span>
         </button>
+
+        {/* Checkout Warning */}
+        {cartItems.some(item => item.countInStock === 0) && (
+          <div className='mt-3 text-sm text-red-600 bg-red-50 p-3 rounded-lg'>
+            ⚠️ Remove out-of-stock items before checkout
+          </div>
+        )}
 
         <p className='mt-4 text-center text-sm text-gray-500'>
           <Link to='/' className='font-medium text-green-600 hover:text-green-500 transition-colors'>
@@ -111,6 +119,18 @@ const Cart = () => {
     <div className='bg-gradient-to-br from-gray-50 via-white to-gray-50 min-h-screen'>
       <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
 
+        {/* Cart Error Display */}
+        {cartError && (
+          <div className='mb-8'>
+            <Message type='error'>
+              {cartError.code === "ITEM_OUT_OF_STOCK" ? "This item is out of stock. Please remove it from your cart." :
+                cartError.code === "QUANTITY_EXCEEDED" ? `Not enough items in stock. Maximum available: ${cartError.availableQuantity}` :
+                  cartError.code === "CART_EMPTY" ? "Failed to add item to cart. Please try again." :
+                    cartError.code === "NOT_FOUND" ? "Product not found. It may have been removed." :
+                      getUserFriendlyMessage(cartError) + ". Please try again later."}
+            </Message>
+          </div>
+        )}
 
         {cartItems.length === 0 ? (
           <EmptyState />
@@ -178,6 +198,18 @@ const Cart = () => {
                             ))}
                           </select>
                         </div>
+
+                        {/* Stock Status Display */}
+                        {item.countInStock === 0 && (
+                          <div className='text-sm text-red-600 bg-red-50 px-2 py-1 rounded-md'>
+                            Out of Stock
+                          </div>
+                        )}
+                        {item.countInStock > 0 && item.countInStock < 5 && (
+                          <div className='text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-md'>
+                            Only {item.countInStock} left
+                          </div>
+                        )}
 
                         <button
                           type='button'
