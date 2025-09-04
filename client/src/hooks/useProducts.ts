@@ -212,7 +212,7 @@ export const useProductsData = (category?: string) => {
  * Uses useProductsData to avoid duplicate API calls
  */
 export const useTrendingProducts = () => {
-  const { products, isLoading, error } = useProductsData();
+  const { products, isLoading, error } = useProducts({ autoFetch: true });
 
   const trendingProducts = useMemo(() => products.slice(0, 4), [products]);
 
@@ -228,7 +228,7 @@ export const useTrendingProducts = () => {
  * Uses useProductsData to avoid duplicate API calls
  */
 export const useCustomerPurchaseProducts = () => {
-  const { products, isLoading, error } = useProductsData();
+  const { products, isLoading, error } = useProducts({ autoFetch: true });
 
   const customerPurchase = useMemo(() => products.slice(5, 9), [products]);
 

@@ -1,3 +1,159 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Loading Component Animations */
+@layer utilities {
+  /* Shimmer animations */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes shimmer-slow {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes shimmer-fast {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes shimmer-overlay {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Pulse animations */
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes pulse-fast {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  /* Loading component utility classes */
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-shimmer-slow {
+    animation: shimmer-slow 3s infinite;
+  }
+
+  .animate-shimmer-fast {
+    animation: shimmer-fast 1s infinite;
+  }
+
+  .animate-shimmer-overlay {
+    animation: shimmer-overlay 2s infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-fast {
+    animation: pulse-fast 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Loading state base styles */
+  .loading-state {
+    @apply relative;
+  }
+
+  .loading-state--center {
+    @apply flex items-center justify-center;
+  }
+
+  .loading-state--top {
+    @apply flex items-start justify-center;
+  }
+
+  .loading-state--bottom {
+    @apply flex items-end justify-center;
+  }
+
+  .loading-state--left {
+    @apply flex items-center justify-start;
+  }
+
+  .loading-state--right {
+    @apply flex items-center justify-end;
+  }
+
+  /* Size variants */
+  .loading-state--xs {
+    @apply text-xs;
+  }
+
+  .loading-state--sm {
+    @apply text-sm;
+  }
+
+  .loading-state--md {
+    @apply text-base;
+  }
+
+  .loading-state--lg {
+    @apply text-lg;
+  }
+
+  .loading-state--xl {
+    @apply text-xl;
+  }
+
+  /* Skeleton loader base styles */
+  .skeleton-loader {
+    @apply relative overflow-hidden;
+  }
+
+  /* Shimmer loader base styles */
+  .shimmer-loader {
+    @apply relative overflow-hidden;
+  }
+
+  /* Inline loader base styles */
+  .inline-loader {
+    @apply inline-flex items-center;
+  }
+
+  /* Accessibility improvements */
+  .loading-state [role="status"] {
+    @apply sr-only;
+  }
+
+  .loading-state [aria-live="polite"] {
+    @apply sr-only;
+  }
+}
