@@ -17,8 +17,16 @@ const Login = () => {
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  // Initialize form with validation
-  const form = useFormState({
+  const {
+    values,
+    hasFieldError,
+    getFieldError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+  } = useFormState({
     email: {
       initialValue: "",
       required: true,
@@ -43,6 +51,7 @@ const Login = () => {
   const handleLogin = async (values: Record<string, any>) => {
     dispatch(login({ email: values.email, password: values.password }));
   };
+
   return (
     <>
       <main className="flex-grow bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -71,7 +80,7 @@ const Login = () => {
                   <div className="rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200">
                     <form
                       className="space-y-6"
-                      onSubmit={form.handleSubmit(handleLogin)}
+                      onSubmit={handleSubmit(handleLogin)}
                     >
                       <div className="space-y-5">
                         <div>
@@ -88,18 +97,18 @@ const Login = () => {
                             autoComplete="email"
                             required
                             className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                              form.hasFieldError("email")
+                              hasFieldError("email")
                                 ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                 : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                             }`}
                             placeholder="Enter your email"
-                            value={form.values.email}
-                            onChange={form.handleChange("email")}
-                            onBlur={form.handleBlur("email")}
+                            value={values.email}
+                            onChange={handleChange("email")}
+                            onBlur={handleBlur("email")}
                           />
-                          {form.hasFieldError("email") && (
+                          {hasFieldError("email") && (
                             <p className="mt-1 text-sm text-red-600">
-                              {form.getFieldError("email")?.message}
+                              {getFieldError("email")?.message}
                             </p>
                           )}
                         </div>
@@ -117,18 +126,18 @@ const Login = () => {
                             autoComplete="current-password"
                             required
                             className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                              form.hasFieldError("password")
+                              hasFieldError("password")
                                 ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                 : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                             }`}
                             placeholder="Enter your password"
-                            value={form.values.password}
-                            onChange={form.handleChange("password")}
-                            onBlur={form.handleBlur("password")}
+                            value={values.password}
+                            onChange={handleChange("password")}
+                            onBlur={handleBlur("password")}
                           />
-                          {form.hasFieldError("password") && (
+                          {hasFieldError("password") && (
                             <p className="mt-1 text-sm text-red-600">
-                              {form.getFieldError("password")?.message}
+                              {getFieldError("password")?.message}
                             </p>
                           )}
                         </div>
@@ -167,10 +176,10 @@ const Login = () => {
                       <div>
                         <button
                           type="submit"
-                          disabled={form.isSubmitting || !form.isValid}
+                          disabled={isSubmitting || !isValid}
                           className="flex w-full justify-center rounded-xl bg-green-600 px-8 py-3 text-base font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400 sm:text-lg"
                         >
-                          {form.isSubmitting ? "Signing in..." : "Sign in"}
+                          {isSubmitting ? "Signing in..." : "Sign in"}
                         </button>
                       </div>
                     </form>

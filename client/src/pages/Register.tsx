@@ -5,6 +5,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { register } from "../features/userRegisterSlice";
 import { useFormState, validators } from "../hooks/useFormState";
+import { getPasswordStrength } from "../utils/passwordUtils";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,8 +17,16 @@ const Register = () => {
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
-  // Initialize form with validation
-  const form = useFormState({
+  const {
+    values,
+    hasFieldError,
+    getFieldError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+  } = useFormState({
     name: {
       initialValue: "",
       required: true,
@@ -43,7 +52,7 @@ const Register = () => {
         if (!value) {
           return "Confirm password is required";
         }
-        const password = form.values.password;
+        const password = values.password;
         if (value !== password) {
           return "Passwords do not match";
         }
@@ -68,30 +77,7 @@ const Register = () => {
     );
   };
 
-  const getPasswordStrength = (password: string) => {
-    if (password.length === 0)
-      return { strength: 0, text: "", color: "", width: "0%" };
-    if (password.length < 6)
-      return { strength: 1, text: "Weak", color: "bg-red-500", width: "25%" };
-    if (password.length < 8)
-      return {
-        strength: 2,
-        text: "Fair",
-        color: "bg-yellow-500",
-        width: "50%",
-      };
-    if (password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)) {
-      return {
-        strength: 4,
-        text: "Strong",
-        color: "bg-green-500",
-        width: "100%",
-      };
-    }
-    return { strength: 3, text: "Good", color: "bg-blue-500", width: "75%" };
-  };
-
-  const passwordStrength = getPasswordStrength(form.values.password);
+  const passwordStrength = getPasswordStrength(values.password);
 
   return (
     <>
@@ -123,7 +109,7 @@ const Register = () => {
                   <div className="rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-200">
                     <form
                       className="space-y-6"
-                      onSubmit={form.handleSubmit(handleRegister)}
+                      onSubmit={handleSubmit(handleRegister)}
                     >
                       <div className="space-y-5">
                         {/* Personal Information Section */}
@@ -145,18 +131,18 @@ const Register = () => {
                               type="text"
                               required
                               className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                                form.hasFieldError("name")
+                                hasFieldError("name")
                                   ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                   : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                               }`}
                               placeholder="Enter your full name"
-                              value={form.values.name}
-                              onChange={form.handleChange("name")}
-                              onBlur={form.handleBlur("name")}
+                              value={values.name}
+                              onChange={handleChange("name")}
+                              onBlur={handleBlur("name")}
                             />
-                            {form.hasFieldError("name") && (
+                            {hasFieldError("name") && (
                               <p className="mt-1 text-sm text-red-600">
-                                {form.getFieldError("name")?.message}
+                                {getFieldError("name")?.message}
                               </p>
                             )}
                           </div>
@@ -175,18 +161,18 @@ const Register = () => {
                               autoComplete="email"
                               required
                               className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                                form.hasFieldError("email")
+                                hasFieldError("email")
                                   ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                   : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                               }`}
                               placeholder="Enter your email address"
-                              value={form.values.email}
-                              onChange={form.handleChange("email")}
-                              onBlur={form.handleBlur("email")}
+                              value={values.email}
+                              onChange={handleChange("email")}
+                              onBlur={handleBlur("email")}
                             />
-                            {form.hasFieldError("email") && (
+                            {hasFieldError("email") && (
                               <p className="mt-1 text-sm text-red-600">
-                                {form.getFieldError("email")?.message}
+                                {getFieldError("email")?.message}
                               </p>
                             )}
                           </div>
@@ -211,23 +197,23 @@ const Register = () => {
                               type="password"
                               required
                               className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                                form.hasFieldError("password")
+                                hasFieldError("password")
                                   ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                   : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                               }`}
                               placeholder="Create a strong password"
-                              value={form.values.password}
-                              onChange={form.handleChange("password")}
-                              onBlur={form.handleBlur("password")}
+                              value={values.password}
+                              onChange={handleChange("password")}
+                              onBlur={handleBlur("password")}
                             />
-                            {form.hasFieldError("password") && (
+                            {hasFieldError("password") && (
                               <p className="mt-1 text-sm text-red-600">
-                                {form.getFieldError("password")?.message}
+                                {getFieldError("password")?.message}
                               </p>
                             )}
 
                             {/* Password Strength Indicator */}
-                            {form.values.password && (
+                            {values.password && (
                               <div className="mt-2">
                                 <div className="mb-1 flex justify-between text-xs text-gray-600">
                                   <span>Password strength</span>
@@ -268,18 +254,18 @@ const Register = () => {
                               type="password"
                               required
                               className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${
-                                form.hasFieldError("confirmPassword")
+                                hasFieldError("confirmPassword")
                                   ? "border-red-300 focus:border-red-500 focus:ring-red-200"
                                   : "border-gray-300 focus:border-green-500 focus:ring-green-200"
                               }`}
                               placeholder="Confirm your password"
-                              value={form.values.confirmPassword}
-                              onChange={form.handleChange("confirmPassword")}
-                              onBlur={form.handleBlur("confirmPassword")}
+                              value={values.confirmPassword}
+                              onChange={handleChange("confirmPassword")}
+                              onBlur={handleBlur("confirmPassword")}
                             />
-                            {form.hasFieldError("confirmPassword") && (
+                            {hasFieldError("confirmPassword") && (
                               <p className="mt-1 text-sm text-red-600">
-                                {form.getFieldError("confirmPassword")?.message}
+                                {getFieldError("confirmPassword")?.message}
                               </p>
                             )}
                           </div>
@@ -289,10 +275,10 @@ const Register = () => {
                       <div className="pt-4">
                         <button
                           type="submit"
-                          disabled={form.isSubmitting || !form.isValid}
+                          disabled={isSubmitting || !isValid}
                           className="flex w-full justify-center rounded-xl bg-green-600 px-8 py-3 text-base font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400 sm:text-lg"
                         >
-                          {form.isSubmitting
+                          {isSubmitting
                             ? "Creating Account..."
                             : "Create Account"}
                         </button>
