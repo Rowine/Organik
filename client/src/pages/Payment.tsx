@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { savePaymentMethod } from '../features/cartSlice'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { useFormState } from '../hooks/useFormState'
 import {
   CreditCardIcon,
   ShieldCheckIcon,
@@ -20,11 +20,28 @@ const Payment = () => {
     navigate('/shipping')
   }
 
-  const [paymentMethod, setPaymentMethod] = useState('Paypal')
+  const {
+    values,
+    hasFieldError,
+    getFieldError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+  } = useFormState({
+    paymentMethod: {
+      initialValue: 'PayPal',
+      required: true,
+      validate: (value: string) => {
+        if (!value) return "Please select a payment method";
+        return null;
+      },
+    },
+  });
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    dispatch(savePaymentMethod(paymentMethod))
+  const submitHandler = async (values: Record<string, any>) => {
+    dispatch(savePaymentMethod(values.paymentMethod))
     navigate('/placeorder')
   }
   return (
@@ -54,7 +71,7 @@ const Payment = () => {
               </div>
 
               {/* Payment Options */}
-              <form onSubmit={submitHandler} className='space-y-6'>
+              <form onSubmit={handleSubmit(submitHandler)} className='space-y-6'>
                 <div className='space-y-4'>
                   <h3 className='text-lg font-medium text-gray-900 mb-4'>
                     Available Payment Methods
@@ -67,15 +84,16 @@ const Payment = () => {
                       id='paypal'
                       name='paymentMethod'
                       value='PayPal'
-                      checked={paymentMethod === 'PayPal'}
-                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      checked={values.paymentMethod === 'PayPal'}
+                      onChange={handleChange("paymentMethod")}
+                      onBlur={handleBlur("paymentMethod")}
                       className='sr-only'
                     />
                     <label
                       htmlFor='paypal'
-                      className={`relative flex cursor-pointer rounded-2xl border-2 p-6 transition-all ${paymentMethod === 'PayPal'
-                          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      className={`relative flex cursor-pointer rounded-2xl border-2 p-6 transition-all ${values.paymentMethod === 'PayPal'
+                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         }`}
                     >
                       <div className='flex w-full items-center justify-between'>
@@ -101,7 +119,7 @@ const Payment = () => {
                           </div>
                         </div>
                         <div className='flex-shrink-0'>
-                          {paymentMethod === 'PayPal' && (
+                          {values.paymentMethod === 'PayPal' && (
                             <CheckCircleIcon className='w-6 h-6 text-blue-600' />
                           )}
                         </div>
@@ -140,9 +158,12 @@ const Payment = () => {
                 <div className='pt-6'>
                   <button
                     type='submit'
-                    className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-4 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                    disabled={isSubmitting || !isValid}
+                    className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-4 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400'
                   >
-                    <span>Continue to Review Order</span>
+                    <span>
+                      {isSubmitting ? "Processing..." : "Continue to Review Order"}
+                    </span>
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

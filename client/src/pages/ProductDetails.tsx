@@ -9,6 +9,7 @@ import { createProductReview } from "../features/productCreateReviewSlice";
 import { resetProductCreateReview } from "../features/productCreateReviewSlice";
 import Message from "../components/Message";
 import Meta from "../components/Meta";
+import { useFormState, validators } from "../hooks/useFormState";
 import {
   ShoppingCartIcon,
   HeartIcon,
@@ -21,8 +22,6 @@ import { ProductDetailsSkeleton } from "../components/loading/skeletons";
 
 const ProductDetails = () => {
   const [qty, setQty] = useState(1);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
 
   const dispatch = useAppDispatch();
   const productDetails = useAppSelector((state) => state.productDetails);
@@ -43,15 +42,42 @@ const ProductDetails = () => {
 
   const { id: productId } = useParams<keyof IParams>() as IParams;
 
+  const {
+    values,
+    hasFieldError,
+    getFieldError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+    setValue,
+  } = useFormState({
+    rating: {
+      initialValue: "0",
+      required: true,
+      validate: (value: string) => {
+        const numValue = Number(value);
+        if (!value || numValue < 1) return "Please select a rating";
+        return null;
+      },
+    },
+    comment: {
+      initialValue: "",
+      required: true,
+      validate: validators.minLength(10, "Comment must be at least 10 characters"),
+    },
+  });
+
   useEffect(() => {
     if (successProductReview) {
       alert("Review Submitted!");
-      setRating(0);
-      setComment("");
+      setValue("rating", "0");
+      setValue("comment", "");
       dispatch(resetProductCreateReview());
     }
     dispatch(listProductDetails(productId));
-  }, [dispatch, successProductReview]);
+  }, [dispatch, successProductReview, productId, setValue]);
 
   const navigate = useNavigate();
 
@@ -63,16 +89,13 @@ const ProductDetails = () => {
     navigate(`/like/${productId}?qty=${qty}`);
   };
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const submitHandler = async (values: Record<string, any>) => {
     const review = {
       name: userInfo?.name,
-      rating,
-      comment,
+      rating: Number(values.rating),
+      comment: values.comment,
     } as IReview;
     dispatch(createProductReview({ productId, review }));
-    setRating(0);
-    setComment("");
   };
 
   const ReviewCard = ({ review }: { review: IReview }) => (
@@ -110,10 +133,10 @@ const ProductDetails = () => {
                 {error.code === "UNAUTHORIZED"
                   ? "You need to login"
                   : error.code === "ACCESS_FORBIDDEN"
-                  ? "You do not have permission"
-                  : error.code === "NOT_FOUND"
-                  ? "Product not found"
-                  : getUserFriendlyMessage(error) + ". Please try again later."}
+                    ? "You do not have permission"
+                    : error.code === "NOT_FOUND"
+                      ? "Product not found"
+                      : getUserFriendlyMessage(error) + ". Please try again later."}
               </Message>
             </div>
           ) : (
@@ -202,11 +225,10 @@ const ProductDetails = () => {
 
                     <div className="flex space-x-4">
                       <button
-                        className={`flex flex-1 items-center justify-center space-x-2 rounded-xl py-4 px-6 font-medium transition-all ${
-                          product.countInStock === 0
-                            ? "cursor-not-allowed bg-gray-300 text-gray-500"
-                            : "bg-green-600 text-white hover:bg-green-500 hover:shadow-lg"
-                        }`}
+                        className={`flex flex-1 items-center justify-center space-x-2 rounded-xl py-4 px-6 font-medium transition-all ${product.countInStock === 0
+                          ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                          : "bg-green-600 text-white hover:bg-green-500 hover:shadow-lg"
+                          }`}
                         disabled={product.countInStock === 0}
                         onClick={addToCartHandler}
                       >
@@ -219,11 +241,10 @@ const ProductDetails = () => {
                       </button>
 
                       <button
-                        className={`flex items-center justify-center rounded-xl py-4 px-6 transition-all ${
-                          product.countInStock === 0
-                            ? "cursor-not-allowed bg-gray-300 text-gray-500"
-                            : "bg-pink-600 text-white hover:bg-pink-500 hover:shadow-lg"
-                        }`}
+                        className={`flex items-center justify-center rounded-xl py-4 px-6 transition-all ${product.countInStock === 0
+                          ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                          : "bg-pink-600 text-white hover:bg-pink-500 hover:shadow-lg"
+                          }`}
                         disabled={product.countInStock === 0}
                         onClick={addToLikeHandler}
                       >
@@ -303,7 +324,7 @@ const ProductDetails = () => {
                     )}
 
                     {userInfo ? (
-                      <form onSubmit={submitHandler} className="space-y-4">
+                      <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
                         <div>
                           <label
                             htmlFor="rating"
@@ -313,9 +334,13 @@ const ProductDetails = () => {
                           </label>
                           <select
                             id="rating"
-                            value={rating}
-                            onChange={(e) => setRating(Number(e.target.value))}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            value={values.rating}
+                            onChange={handleChange("rating")}
+                            onBlur={handleBlur("rating")}
+                            className={`w-full rounded-xl border px-4 py-3 focus:outline-none focus:ring-2 ${hasFieldError("rating")
+                              ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-green-500 focus:ring-green-200"
+                              }`}
                           >
                             <option value="">Select rating...</option>
                             <option value="1">⭐ 1 - Poor</option>
@@ -324,6 +349,11 @@ const ProductDetails = () => {
                             <option value="4">⭐⭐⭐⭐ 4 - Very Good</option>
                             <option value="5">⭐⭐⭐⭐⭐ 5 - Excellent</option>
                           </select>
+                          {hasFieldError("rating") && (
+                            <p className="mt-1 text-sm text-red-600">
+                              {getFieldError("rating")?.message}
+                            </p>
+                          )}
                         </div>
 
                         <div>
@@ -336,18 +366,28 @@ const ProductDetails = () => {
                           <textarea
                             id="comment"
                             rows={4}
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            value={values.comment}
+                            onChange={handleChange("comment")}
+                            onBlur={handleBlur("comment")}
+                            className={`w-full rounded-xl border px-4 py-3 focus:outline-none focus:ring-2 ${hasFieldError("comment")
+                              ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                              : "border-gray-300 focus:border-green-500 focus:ring-green-200"
+                              }`}
                             placeholder="Share your experience with this product..."
                           />
+                          {hasFieldError("comment") && (
+                            <p className="mt-1 text-sm text-red-600">
+                              {getFieldError("comment")?.message}
+                            </p>
+                          )}
                         </div>
 
                         <button
                           type="submit"
-                          className="w-full rounded-xl bg-green-600 py-3 px-4 font-medium text-white transition-colors hover:bg-green-500"
+                          disabled={isSubmitting || !isValid}
+                          className="w-full rounded-xl bg-green-600 py-3 px-4 font-medium text-white transition-colors hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-gray-400"
                         >
-                          Submit Review
+                          {isSubmitting ? "Submitting Review..." : "Submit Review"}
                         </button>
                       </form>
                     ) : (

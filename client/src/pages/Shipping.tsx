@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { saveShippingAddress } from '../features/cartSlice'
 import CheckoutSteps from '../components/CheckoutSteps'
+import { useFormState, validators } from '../hooks/useFormState'
 import {
   TruckIcon,
   MapPinIcon,
@@ -16,17 +17,44 @@ const Shipping = () => {
 
   const { shippingAddress } = useAppSelector((state) => state.cart)
 
-  const [address, setAddress] = useState(shippingAddress.address)
-  const [city, setCity] = useState(shippingAddress.city)
-  const [postalCode, setPostalCode] = useState(shippingAddress.postalCode)
+  const {
+    values,
+    hasFieldError,
+    getFieldError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitting,
+    isValid,
+    setValue,
+  } = useFormState({
+    address: {
+      initialValue: shippingAddress.address || "",
+      required: true,
+      validate: validators.minLength(5, "Address must be at least 5 characters"),
+    },
+    city: {
+      initialValue: shippingAddress.city || "",
+      required: true,
+      validate: validators.minLength(2, "City must be at least 2 characters"),
+    },
+    postalCode: {
+      initialValue: shippingAddress.postalCode || "",
+      required: true,
+      validate: (value: string) => {
+        if (!value) return "Postal code is required";
+        if (!/^\d{4}$/.test(value)) return "Postal code must be 4 digits";
+        return null;
+      },
+    },
+  });
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const submitHandler = async (values: Record<string, any>) => {
     dispatch(
       saveShippingAddress({
-        address,
-        city,
-        postalCode,
+        address: values.address,
+        city: values.city,
+        postalCode: values.postalCode,
       })
     )
     navigate('/payment')
@@ -58,7 +86,7 @@ const Shipping = () => {
               </div>
 
               {/* Form */}
-              <form onSubmit={submitHandler} className='space-y-6'>
+              <form onSubmit={handleSubmit(submitHandler)} className='space-y-6'>
                 {/* Address Field */}
                 <div>
                   <label htmlFor='address' className='flex items-center text-sm font-medium text-gray-700 mb-2'>
@@ -71,13 +99,23 @@ const Shipping = () => {
                     id='address'
                     required
                     placeholder='123 Main Street, Apartment 4B'
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                    value={values.address}
+                    onChange={handleChange("address")}
+                    onBlur={handleBlur("address")}
+                    className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${hasFieldError("address")
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                      : "border-gray-300 focus:border-green-500 focus:ring-green-200"
+                      }`}
                   />
-                  <p className='mt-1 text-xs text-gray-500'>
-                    Include apartment, suite, or unit number if applicable
-                  </p>
+                  {hasFieldError("address") ? (
+                    <p className='mt-1 text-sm text-red-600'>
+                      {getFieldError("address")?.message}
+                    </p>
+                  ) : (
+                    <p className='mt-1 text-xs text-gray-500'>
+                      Include apartment, suite, or unit number if applicable
+                    </p>
+                  )}
                 </div>
 
                 {/* City and Postal Code Row */}
@@ -93,10 +131,19 @@ const Shipping = () => {
                       id='city'
                       required
                       placeholder='Manila'
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                      value={values.city}
+                      onChange={handleChange("city")}
+                      onBlur={handleBlur("city")}
+                      className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${hasFieldError("city")
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-green-500 focus:ring-green-200"
+                        }`}
                     />
+                    {hasFieldError("city") && (
+                      <p className='mt-1 text-sm text-red-600'>
+                        {getFieldError("city")?.message}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -110,10 +157,19 @@ const Shipping = () => {
                       id='postalCode'
                       placeholder='1000'
                       required
-                      value={postalCode}
-                      onChange={(e) => setPostalCode(e.target.value)}
-                      className='mt-1 block w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200'
+                      value={values.postalCode}
+                      onChange={handleChange("postalCode")}
+                      onBlur={handleBlur("postalCode")}
+                      className={`mt-1 block w-full rounded-xl border px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors focus:outline-none focus:ring-2 ${hasFieldError("postalCode")
+                        ? "border-red-300 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-green-500 focus:ring-green-200"
+                        }`}
                     />
+                    {hasFieldError("postalCode") && (
+                      <p className='mt-1 text-sm text-red-600'>
+                        {getFieldError("postalCode")?.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -121,9 +177,12 @@ const Shipping = () => {
                 <div className='pt-6'>
                   <button
                     type='submit'
-                    className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-4 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+                    disabled={isSubmitting || !isValid}
+                    className='w-full flex justify-center items-center space-x-2 rounded-xl bg-green-600 py-4 px-6 font-medium text-white transition-all hover:bg-green-500 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-400'
                   >
-                    <span>Continue to Payment</span>
+                    <span>
+                      {isSubmitting ? "Processing..." : "Continue to Payment"}
+                    </span>
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
