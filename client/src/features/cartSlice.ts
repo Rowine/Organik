@@ -2,6 +2,22 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import ICartState from "../interfaces/ICartState";
 import { CartError, ResourceError } from "../types/errors";
+import {
+  syncWithLocalStorage,
+  clearStoreLocalStorage,
+} from "../utils/localStorage";
+
+/**
+ * Cart-specific utility functions for localStorage operations
+ * These functions provide safe localStorage operations with proper error handling
+ */
+const syncCartWithLocalStorage = (key: string, value: any) => {
+  try {
+    syncWithLocalStorage(key, value);
+  } catch (error) {
+    console.error(`Failed to sync cart ${key} with localStorage:`, error);
+  }
+};
 
 interface IAddToCart {
   id: string;
@@ -28,7 +44,7 @@ export const addToCart = createAsyncThunk(
       const {
         cart: { cartItems },
       } = getState() as { cart: ICartState };
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      syncCartWithLocalStorage("cartItems", cartItems);
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const status = error.response.status;
@@ -120,23 +136,17 @@ export const cartSlice = createSlice({
         (x) => x.product !== action.payload
       );
 
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      syncCartWithLocalStorage("cartItems", state.cartItems);
     },
     saveShippingAddress: (state, action) => {
       state.shippingAddress = action.payload;
 
-      localStorage.setItem(
-        "shippingAddress",
-        JSON.stringify(state.shippingAddress)
-      );
+      syncCartWithLocalStorage("shippingAddress", state.shippingAddress);
     },
     savePaymentMethod: (state, action) => {
       state.paymentMethod = action.payload;
 
-      localStorage.setItem(
-        "paymentMethod",
-        JSON.stringify(state.paymentMethod)
-      );
+      syncCartWithLocalStorage("paymentMethod", state.paymentMethod);
     },
     savePrices: (state, action) => {
       state.itemsPrice = action.payload.itemsPrice;
@@ -145,7 +155,7 @@ export const cartSlice = createSlice({
     },
     resetCart: (state) => {
       state.cartItems = [];
-      localStorage.removeItem("cartItems");
+      syncCartWithLocalStorage("cartItems", []);
     },
   },
   extraReducers: (builder) => {

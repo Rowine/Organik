@@ -26,3 +26,6 @@ dist-ssr
 
 # for refactoring
 REFACTORING_ROADMAP.md
+
+# Ignore README.md files in src/ directory
+client/src/**/README.md
