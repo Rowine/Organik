@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { Link, useNavigate } from 'react-router-dom'
 import Message from '../components/Message'
 import CheckoutSteps from '../components/CheckoutSteps'
-import { savePrices } from '../features/cartSlice'
+import { savePrices, resetCart } from '../features/cartSlice'
 import { createOrder } from '../features/orderSlice'
 import { getUserFriendlyMessage } from '../utils/errorUtils'
 import {
@@ -38,9 +38,10 @@ const PlaceOrder = () => {
 
   useEffect(() => {
     if (loading === 'succeeded') {
+      dispatch(resetCart())
       navigate(`/order/${order?._id}`)
     }
-  }, [loading, navigate, order])
+  }, [loading, navigate, order, dispatch])
 
   const placeOrderHandler = () => {
     dispatch(
