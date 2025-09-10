@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IUserLoginState from "../interfaces/IUserLoginState";
 import { IUser } from "../interfaces/IUserLoginState";
+import { syncWithLocalStorage } from "../utils/localStorage";
 import { ApiError, ValidationError } from "../types/errors";
 
 export const updateUserProfile = createAsyncThunk(
@@ -77,6 +78,7 @@ export const userUpdateProfileSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.userInfo = action.payload;
+        syncWithLocalStorage("userInfo", action.payload);
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = "failed";

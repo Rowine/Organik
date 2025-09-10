@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IUserLoginState, { IUser } from "../interfaces/IUserLoginState";
 import { ApiError, AuthError } from "../types/errors";
+import { syncWithLocalStorage } from "../utils/localStorage";
 
 interface ILogin {
   email: string;
@@ -24,7 +25,7 @@ export const login = createAsyncThunk(
         config
       );
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      syncWithLocalStorage("userInfo", data);
 
       return data;
     } catch (error) {
@@ -80,7 +81,7 @@ export const userLoginSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.userInfo = null;
-      localStorage.removeItem("userInfo");
+      syncWithLocalStorage("userInfo", null);
     },
   },
   extraReducers: (builder) => {

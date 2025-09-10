@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login } from "./userLoginSlice";
 import IUserLoginState from "../interfaces/IUserLoginState";
+import { syncWithLocalStorage } from "../utils/localStorage";
 import { IUser } from "../interfaces/IUserLoginState";
 import { ValidationError, ApiError } from "../types/errors";
 
@@ -32,7 +33,7 @@ export const register = createAsyncThunk(
 
       dispatch(login({ email, password }));
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      syncWithLocalStorage("userInfo", data);
 
       return data;
     } catch (error) {
