@@ -116,6 +116,9 @@ export const useCartStorage = () => {
     setStoredPaymentMethod("");
   };
 
+  // Get error from Redux state
+  const { error } = useAppSelector((state) => state.cart);
+
   return {
     // Values
     cartItems: storedCartItems,
@@ -126,8 +129,8 @@ export const useCartStorage = () => {
     updatePaymentMethod,
     clearCartStorage,
     // State
-    isLoading: false, // Combined loading state if needed
-    hasError: false, // Combined error state if needed
+    isLoading: false,
+    error, // Return the actual error object from Redux
   };
 };
 

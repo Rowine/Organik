@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useAppDispatch } from '../app/hooks'
 import Message from '../components/Message'
 import { addToCart, removeFromCart } from '../features/cartSlice'
 import { getUserFriendlyMessage } from '../utils/errorUtils'
+import useCartStorage from '../hooks/useCartStorage'
 import {
   ShoppingCartIcon,
   ArrowLeftIcon,
@@ -19,7 +20,7 @@ const Cart = () => {
 
   const qty = location.search ? Number(location.search.split('=')[1]) : 1
 
-  const { cartItems, error: cartError } = useAppSelector((state) => state.cart)
+  const { cartItems, error: cartError } = useCartStorage()
 
   useEffect(() => {
     if (id) {
