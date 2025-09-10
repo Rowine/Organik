@@ -1,6 +1,6 @@
 import { CartError, ResourceError } from "../types/errors";
 
-export interface ICartItems {
+export interface ICartItem {
   _id: string;
   product: string;
   name: string;
@@ -12,7 +12,7 @@ export interface ICartItems {
 
 export default interface ICartState {
   loading: "idle" | "pending" | "succeeded" | "failed";
-  cartItems: ICartItems[];
+  cartItems: ICartItem[];
   shippingAddress: {
     address: string;
     city: string;
