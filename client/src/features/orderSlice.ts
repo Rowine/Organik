@@ -2,11 +2,11 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import IOrderState from "../interfaces/IOrderState";
 import IUserLoginState from "../interfaces/IUserLoginState";
-import { ICartItems } from "../interfaces/ICartState";
+import { ICartItem } from "../interfaces/ICartState";
 import { ApiError, ValidationError } from "../types/errors";
 
 interface IOrderProps {
-  orderItems: ICartItems[];
+  orderItems: ICartItem[];
   shippingAddress: {
     address: string;
     city: string;

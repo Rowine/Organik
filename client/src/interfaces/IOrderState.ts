@@ -1,4 +1,4 @@
-import { ICartItems } from "./ICartState";
+import { ICartItem } from "./ICartState";
 import { ApiError } from "../types/errors";
 
 export default interface IOrderState {
@@ -6,7 +6,7 @@ export default interface IOrderState {
   order: {
     _id: string;
     user: string;
-    orderItems: ICartItems[];
+    orderItems: ICartItem[];
     shippingAddress: {
       address: string;
       city: string;
