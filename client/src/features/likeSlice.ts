@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import ILikeState from "../interfaces/ILikeState";
 import { ResourceError, ApiError } from "../types/errors";
+import { syncWithLocalStorage } from "../utils/localStorage";
 
 interface IAddToLike {
   id: string;
@@ -28,7 +29,7 @@ export const addToLike = createAsyncThunk(
       const {
         like: { likeItems },
       } = getState() as { like: ILikeState };
-      localStorage.setItem("likeItems", JSON.stringify(likeItems));
+      syncWithLocalStorage("likeItems", likeItems);
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
         const status = error.response.status;
@@ -85,11 +86,11 @@ export const likeSlice = createSlice({
         (x) => x.product !== action.payload
       );
 
-      localStorage.setItem("likeItems", JSON.stringify(state.likeItems));
+      syncWithLocalStorage("likeItems", state.likeItems);
     },
     resetLike: (state) => {
       state.likeItems = [];
-      localStorage.removeItem("cartItems");
+      syncWithLocalStorage("likeItems", []);
     },
   },
   extraReducers: (builder) => {

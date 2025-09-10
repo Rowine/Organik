@@ -22,7 +22,6 @@ import userListSlice from "../features/userListSlice";
 import userDeleteSlice from "../features/userDeleteSlice";
 import ICartState from "../interfaces/ICartState";
 import IUserLoginState from "../interfaces/IUserLoginState";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const reducer = {
   productList: productListSlice,
