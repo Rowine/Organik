@@ -106,12 +106,12 @@ const Category = () => {
                 {typeof error === "string"
                   ? error + ". Please try again later."
                   : error.code === "UNAUTHORIZED"
-                  ? "You need to login"
-                  : error.code === "ACCESS_FORBIDDEN"
-                  ? "You do not have permission"
-                  : error.code === "NOT_FOUND"
-                  ? "Category not found"
-                  : getUserFriendlyMessage(error) + ". Please try again later."}
+                    ? "You need to login"
+                    : error.code === "ACCESS_FORBIDDEN"
+                      ? "You do not have permission"
+                      : error.code === "NOT_FOUND"
+                        ? "Category not found"
+                        : getUserFriendlyMessage(error) + ". Please try again later."}
               </Message>
             </div>
           ) : categoryProducts.length === 0 ? (
@@ -150,15 +150,6 @@ const Category = () => {
                       </button>
                     )}
                   </div>
-                </div>
-                <div className="hidden items-center space-x-4 sm:flex">
-                  <span className="text-sm text-gray-500">Sort by:</span>
-                  <select className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500">
-                    <option>Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Customer Rating</option>
-                  </select>
                 </div>
               </div>
 
